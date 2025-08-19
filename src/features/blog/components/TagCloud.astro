@@ -10,7 +10,7 @@ interface Props {
   maxTags?: number;
 }
 
-const { posts, lang, maxTags = 8 } = Astro.props;
+const { posts, lang, maxTags } = Astro.props;
 
 // Aggregate all tags and count their frequency
 const tagCounts = new Map<string, number>();
@@ -23,17 +23,21 @@ posts.forEach(post => {
   }
 });
 
-// Sort tags by frequency (most used first) and limit to maxTags
-const sortedTags = Array.from(tagCounts.entries())
-  .sort(([,a], [,b]) => b - a)
-  .slice(0, maxTags)
-  .map(([tag, count]) => ({ tag, count }));
+// Sort tags by frequency (most used first) and optionally limit to maxTags
+let sortedTagsArray = Array.from(tagCounts.entries())
+  .sort(([,a], [,b]) => b - a);
+
+if (maxTags) {
+  sortedTagsArray = sortedTagsArray.slice(0, maxTags);
+}
+
+const sortedTags = sortedTagsArray.map(([tag, count]) => ({ tag, count }));
 ---
 
 {sortedTags.length > 0 && (
-  <div class="mb-6">
-    <h3 class="text-sm font-medium text-muted-foreground mb-3">Popular Tags</h3>
-    <div class="flex flex-wrap gap-2">
+  <div class="mb-8 max-w-4xl mx-auto">
+    <h3 class="text-sm font-medium text-muted-foreground mb-4 text-center">Popular Tags</h3>
+    <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
       {
         sortedTags.map(({ tag, count }) => (
           <a
@@ -42,7 +46,7 @@ const sortedTags = Array.from(tagCounts.entries())
           >
             <Badge 
               variant="secondary" 
-              className="text-xs px-2 py-1 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+              className="text-xs px-3 py-1.5 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer whitespace-nowrap"
             >
               {tag} ({count})
             </Badge>

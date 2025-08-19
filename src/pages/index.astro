@@ -22,28 +22,22 @@ const sortedPosts = allPosts.sort(
 
 const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 3);
 
-// Skills data from the original projects service
+// Skills data based on CV and actual experience
 const skills = [
-  {
-    title: "Frontend Development",
-    description: "I am not expanding this skill tree since it moves too fast, and CSS is hard.",
-    iconName: "MonitorSmartphone",
-    technologies: [
-      { id: "html5", name: "HTML" },
-      { id: "css3", name: "CSS" },
-      { id: "javascript", name: "JavaScript" },
-      { id: "typescript", name: "TypeScript" }
-    ]
-  },
   {
     title: "Backend Development", 
     description: "I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.",
     iconName: "ServerCog",
     technologies: [
-      { id: "nodejs", name: "Node.js" },
+      { id: "java", name: "Java" },
+      { id: "spring", name: "Spring Ecosystem" },
       { id: "python", name: "Python" },
+      { id: "django", name: "Django" },
       { id: "postgresql", name: "PostgreSQL" },
-      { id: "redis", name: "Redis" }
+      { id: "redis", name: "Redis" },
+      { id: "kafka", name: "Kafka" },
+      { id: "nats", name: "NATS" },
+      { id: "clickhouse", name: "ClickHouse" }
     ]
   },
   {
@@ -54,7 +48,8 @@ const skills = [
       { id: "pytorch", name: "PyTorch" },
       { id: "huggingface", name: "Hugging Face" },
       { id: "python", name: "Python" },
-      { id: "computervision", name: "Computer Vision" }
+      { id: "computervision", name: "Computer Vision" },
+      { id: "wandb", name: "Weights & Biases" }
     ]
   },
   {
@@ -62,10 +57,30 @@ const skills = [
     description: "Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.",
     iconName: "Network",
     technologies: [
-      { id: "docker", name: "Docker" },
       { id: "kubernetes", name: "Kubernetes" },
-      { id: "git", name: "Git" },
-      { id: "linux", name: "Linux" }
+      { id: "rancher", name: "Rancher" },
+      { id: "docker", name: "Docker" },
+      { id: "cilium", name: "Cilium" },
+      { id: "prometheus", name: "Prometheus" },
+      { id: "grafana", name: "Grafana" },
+      { id: "keycloak", name: "Keycloak" },
+      { id: "linux", name: "Linux" },
+      { id: "fleetcd", name: "FleetCD" },
+      { id: "nginx", name: "NGINX" },
+      { id: "cloudflare", name: "Cloudflare" }
+    ]
+  },
+  {
+    title: "Frontend Development",
+    description: "I am not expanding this skill tree since it moves too fast, and CSS is hard.",
+    iconName: "MonitorSmartphone",
+    technologies: [
+      { id: "javascript", name: "JavaScript" },
+      { id: "vuejs", name: "Vue.js" },
+      { id: "android", name: "Android" },
+      { id: "java", name: "Java" },
+      { id: "qt", name: "Qt" },
+      { id: "astro", name: "Astro" }
     ]
   }
 ];

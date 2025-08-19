@@ -67,6 +67,10 @@ import {
   SiOpencv,
   SiFluentd,
   SiNatsdotio,
+  SiGitlab,
+  SiNginx,
+  SiQt,
+  SiCloudflare,
 } from 'react-icons/si';
 
 // Define the mapping from iconName to Lucide icon component
@@ -131,6 +135,11 @@ const techIconComponents: Record<string, IconType> = {
   android: SiAndroid,
   git: SiGit,
   amazonservices: SiAmazon,
+  gitlab: SiGitlab,
+  nginx: SiNginx,
+  fleetcd: SiGitlab, // Using GitLab icon for FleetCD (GitOps)
+  qt: SiQt,
+  cloudflare: SiCloudflare,
 };
 
 // Define Technology type locally if not available from '@/data/skills'
@@ -151,55 +160,47 @@ const IconComponent = iconComponents[iconName];
 ---
 
 <Card
-  className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300 gap-3 pt-2"
+  className="group relative overflow-hidden h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-card border border-border/50 hover:border-primary/30"
 >
   <CardHeader className="pb-3 pt-4">
-    {/* Adjusted padding for consistency */}
-    {/* User's modified header structure - ensure it's correctly aligned */}
-    {/* CardTitle itself is not a flex container, the div inside it is. */}
-    <div class="flex items-start">
-      {/* This div will be the flex container for icon and title text block */}
-      <div class="mr-4 flex-shrink-0">
-        {/* Icon container */}
-        <span
-          class="inline-flex items-center justify-center p-2 bg-primary/10 rounded-lg"
-        >
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <div class="absolute inset-0 bg-primary/20 rounded-lg blur-sm"></div>
+        <span class="relative inline-flex items-center justify-center p-2 bg-primary/10 rounded-lg border border-primary/20">
           <IconComponent className="size-5 text-primary" />
         </span>
       </div>
       <div class="flex-grow">
-        {/* Title block, allows title to wrap */}
-        <CardTitle
-          className="text-lg font-semibold group-hover:text-primary transition-colors"
-        >
+        <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
           {title}
         </CardTitle>
       </div>
     </div>
   </CardHeader>
 
-  <CardContent className="flex-grow pt-2 pb-3">
-    {/* flex-grow pushes footer down, padding adjusted */}
-    {
-      /* Description text indented to align with title. Calculation: icon div's mr-4 (1rem) + icon span's effective width (approx 2.25rem) = 3.25rem */
-    }
-    <p class="text-sm text-muted-foreground line-clamp-3 pl-[3.25rem]">
+  <CardContent className="flex-grow px-4 pb-3">
+    <p class="text-sm text-muted-foreground leading-relaxed">
       {description}
     </p>
   </CardContent>
 
   {
     technologies && technologies.length > 0 && (
-      <CardFooter className="pt-3 pb-4 flex flex-wrap gap-x-3 gap-y-2 justify-start items-center">
-        {technologies.map((tech) => {
-          const TechIcon = techIconComponents[tech.id.toLowerCase()];
-          return TechIcon ? (
-            <TechIcon
-              className="size-5 text-muted-foreground hover:text-primary transition-colors"
-              title={tech.name}
-            />
-          ) : null;
-        })}
+      <CardFooter className="pt-3 pb-4 border-t border-border/50">
+        <div class="w-full">
+          <h4 class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Technologies</h4>
+          <div class="flex flex-wrap gap-2">
+            {technologies.map((tech) => {
+              const TechIcon = techIconComponents[tech.id.toLowerCase()];
+              return TechIcon ? (
+                <div class="group/tech flex items-center gap-1.5 px-2 py-1.5 bg-muted/50 rounded-md hover:bg-primary/10 hover:scale-105 transition-all duration-200 cursor-pointer" title={tech.name}>
+                  <TechIcon className="size-3.5 text-muted-foreground group-hover/tech:text-primary transition-colors" />
+                  <span class="text-xs font-medium text-muted-foreground group-hover/tech:text-primary transition-colors">{tech.name}</span>
+                </div>
+              ) : null;
+            })}
+          </div>
+        </div>
       </CardFooter>
     )
   }
