@@ -45,26 +45,30 @@ export type FilteredPostsListProps = {
   allPosts: Array<PostDataForFilter>;
   texts: BlogFiltersProps['texts'] & { noPostsFound: string };
   lang: string;
+  initialSearchQuery?: string;
+  initialTag?: string;
 };
 
 export function FilteredPostsList({
   allPosts,
   texts,
   lang,
+  initialSearchQuery = '',
+  initialTag = '',
 }: FilteredPostsListProps) {
-  // Read URL parameters directly in the component
-  const getUrlParams = () => {
-    if (typeof window === 'undefined') return { q: '', tag: '' };
-    const params = new URLSearchParams(window.location.search);
-    return {
-      q: params.get('q') || '',
-      tag: params.get('tag') || ''
-    };
-  };
-
-  const { q: initialSearchQuery, tag: initialTag } = getUrlParams();
   const [searchQuery, setSearchQuery] = React.useState(initialSearchQuery);
   const [selectedTag, setSelectedTag] = React.useState(initialTag);
+
+  // Fallback to URL params if no initial props (for client-only scenarios)
+  React.useEffect(() => {
+    if (!initialSearchQuery && !initialTag && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlQuery = params.get('q') || '';
+      const urlTag = params.get('tag') || '';
+      if (urlQuery) setSearchQuery(urlQuery);
+      if (urlTag) setSelectedTag(urlTag);
+    }
+  }, [initialSearchQuery, initialTag]);
 
   // Update URL when filters change
   React.useEffect(() => {

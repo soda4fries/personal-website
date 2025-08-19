@@ -57,10 +57,12 @@ const pageDescription = t('pageDescription');
   <div class="container mx-auto px-4 py-8 md:py-12">
     <Heading title={t('title')} description={t('description')} />
     <FilteredPostsList
-      client:only="react"
+      client:load
       allPosts={posts.map(transformPostForClientFilter)}
       texts={componentTexts}
       lang={lang}
+      initialSearchQuery={initialSearchQuery}
+      initialTag={initialTag}
     />
 
     {/* Container for posts and "no posts found" message */}
