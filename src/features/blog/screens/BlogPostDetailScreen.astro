@@ -144,7 +144,7 @@ const pageDescription = post.description;
         // Scroll highlighting
         function highlightCurrentSection() {
           let current = '';
-          const scrollPosition = window.scrollY + 100;
+          const scrollPosition = window.scrollY + (window.innerHeight / 2);
           // Only select headings that have IDs (from our TOC)
           const headings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'))
             .filter(h => h.id) // Ensure they have IDs
