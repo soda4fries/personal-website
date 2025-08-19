@@ -12,6 +12,8 @@ isDraft: false
 featured: true
 ---
 
+import { Image } from 'astro:assets';
+
 ## What is TCP/IP?
 
 TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental communication protocol suite that powers the internet. It defines how data should be packaged, addressed, transmitted, routed, and received across networks.
@@ -19,6 +21,14 @@ TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental comm
 ## The Four Layers
 
 TCP/IP operates on four distinct layers:
+
+<Image 
+  src="/images/blog/tcp-network-diagram.webp" 
+  alt="TCP/IP Network Layers diagram showing the four-layer architecture"
+  width={600} 
+  height={400}
+  class="rounded-lg shadow-md my-6"
+/>
 
 1. **Application Layer** - Where applications like HTTP, FTP, and SMTP operate
 2. **Transport Layer** - TCP and UDP protocols ensure reliable data delivery

@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getTranslatedProjects, ProjectsScreen } from '@/features/projects';
+import { ProjectsScreen } from '@/features/projects';
 import { ui, type LanguageCode, defaultLanguage, languages } from '@/i18n/ui';
+import { getCollection } from 'astro:content';
 
 let lang: LanguageCode;
 const currentLocale = Astro.currentLocale;
@@ -13,15 +14,40 @@ if (currentLocale && currentLocale in languages) {
 }
 
 const t = ui[lang] as (typeof ui)[typeof defaultLanguage];
-const projects = getTranslatedProjects(lang);
+
+// Get projects from content collections
+const projectEntries = await getCollection('projects', ({ data }) => {
+  return data.isDraft !== true;
+});
+
+// Sort projects by date (most recent first)
+const sortedProjects = projectEntries.sort((a, b) => {
+  return a.data.dateText.localeCompare(b.data.dateText) * -1;
+});
+
+// Convert to format expected by ProjectsScreen
+const projects = sortedProjects.map((project) => ({
+  id: project.id,
+  slug: project.id,
+  title: project.data.title,
+  description: project.data.description,
+  imageUrl: project.data.imageUrl,
+  imageAltText: project.data.imageAltText,
+  categoryText: project.data.categoryText,
+  dateText: project.data.dateText,
+  tags: project.data.tags,
+  keyFeaturesTranslated: project.data.keyFeatures,
+  projectUrl: project.data.projectUrl,
+  codeUrl: project.data.codeUrl,
+}));
 
 const projectsPageTranslations = t.projectsPage;
 const metaTitle =
   projectsPageTranslations?.metaTitle ??
   projectsPageTranslations?.title ??
-  'Mes Projets';
+  'Projects';
 const metaDescription =
-  projectsPageTranslations?.metaDescription ?? 'Liste de tous mes projets.';
+  projectsPageTranslations?.metaDescription ?? 'List of all my projects.';
 ---
 
 <BaseLayout pageTitle={metaTitle} pageDescription={metaDescription}>

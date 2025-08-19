@@ -12,6 +12,8 @@ isDraft: false
 featured: true
 ---
 
+import { Image } from 'astro:assets';
+
 ## What are Neural Networks?
 
 Neural networks are computational models inspired by biological neural networks in the human brain. They consist of interconnected nodes (neurons) that process information and learn patterns from data.
@@ -19,6 +21,14 @@ Neural networks are computational models inspired by biological neural networks 
 ## Basic Structure
 
 A neural network typically consists of:
+
+<Image 
+  src="/images/blog/neural-network-example.webp" 
+  alt="Neural Network Architecture showing input layer, hidden layers, and output layer"
+  width={600} 
+  height={400}
+  class="rounded-lg shadow-md my-6"
+/>
 
 1. **Input Layer** - Receives raw data
 2. **Hidden Layers** - Process and transform data

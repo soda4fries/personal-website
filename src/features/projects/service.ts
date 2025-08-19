@@ -1,171 +1,63 @@
-// Import i18n utilities
-import { ui, defaultLanguage, type LanguageCode } from '@/i18n/ui';
-import placeholderImage from '@/assets/placeholder.webp';
+// Import content collections
+import { getCollection } from 'astro:content';
+import { defaultLanguage, type LanguageCode } from '@/i18n/ui';
 import type {
-  ProjectData,
   SkillData,
-  TranslatedProject,
   TranslatedSkill,
 } from './type';
 
-const projectsListUnsorted: Array<ProjectData> = [
-  {
-    id: 'sampleProject', // Unique identifier for translations
-    slug: 'sample-project', // Used in the URL
-    imageUrl: placeholderImage, // Use imported ImageMetadata
-    // projectUrl: '#', // Optional: Link to the live project
-    // codeUrl: '#', // Optional: Link to the source code
-    tags: ['Astro', 'TypeScript', 'Template'], // Generic tags
-    category: 'Web Application', // Generic category
-    date: '2025-01-01', // Generic date
-    galleryImages: [
-      // Optional: Gallery images for the project
-      // {
-      //   id: 'sampleGalleryImage1',
-      //   src: placeholderImage, // Placeholder, needs ImageMetadata
-      // },
-    ],
-    keyFeatures: [
-      // Key features (IDs for translation)
-      { id: 'responsiveDesign' },
-      { id: 'contentManagement' },
-    ],
-    technologiesUsed: [
-      // Technologies used (IDs for display)
-      { id: 'astro', name: 'Astro' },
-      { id: 'typescript', name: 'TypeScript' },
-      { id: 'tailwindcss', name: 'TailwindCSS' },
-    ],
-  },
-];
+// Import project-related types from Astro content
+type ProjectEntry = Awaited<ReturnType<typeof getCollection<'projects'>>>[0];
 
-export const projectsList = [...projectsListUnsorted].sort((a, b) => {
-  // Sort by date, most recent first. Ensure 'date' is a valid date string.
-  const dateA = new Date(a.date);
-  const dateB = new Date(b.date);
-  return dateB.getTime() - dateA.getTime();
-});
+export async function getProjectsList() {
+  const projects = await getCollection('projects', ({ data }) => {
+    return data.isDraft !== true;
+  });
+  
+  // Sort by date, most recent first
+  return projects.sort((a, b) => {
+    // Since dateText is a string, we'll use it for sorting
+    // You might want to add a proper date field later for better sorting
+    return a.data.dateText.localeCompare(b.data.dateText) * -1;
+  });
+}
 
-// Helper function to translate a single project
-function translateProject(
-  project: ProjectData,
-  lang: LanguageCode
-): TranslatedProject {
-  type ProjectIdKey =
-    keyof (typeof ui)[typeof defaultLanguage]['projectsContent'];
-  const currentProjectId = project.id as ProjectIdKey;
+// Function to get a single project by its ID
+export async function getProjectBySlug(slug: string): Promise<ProjectEntry | undefined> {
+  const projects = await getProjectsList();
+  return projects.find((project) => project.id === slug);
+}
 
-  const projectContentSource = ui[lang]?.projectsContent?.[currentProjectId]
-    ? ui[lang].projectsContent
-    : ui[defaultLanguage].projectsContent;
+// Function to get projects filtered by language if needed
+export async function getProjectsByLanguage(lang: LanguageCode = defaultLanguage) {
+  const projects = await getCollection('projects', ({ data }) => {
+    return data.isDraft !== true && (data.lang === lang || !data.lang);
+  });
+  
+  return projects.sort((a, b) => {
+    return a.data.dateText.localeCompare(b.data.dateText) * -1;
+  });
+}
 
-  const i18nData = projectContentSource[currentProjectId];
-
-  if (!i18nData) {
-    // Fallback if translation for the project ID is missing
-    // This might happen if i18n/ui.ts is not updated after adding a new project
-    console.warn(
-      `Translation missing for project ID: ${project.id} in language: ${lang}. Using default values.`
-    );
-    return {
-      ...project,
-      title: project.id, // Fallback title
-      description: 'Description missing for this project.', // Fallback description
-      imageAltText: 'Placeholder image', // Fallback alt text
-      categoryText: project.category,
-      dateText: project.date,
-      detailedDescription: 'Detailed description missing.',
-      keyFeaturesTranslated:
-        project.keyFeatures?.map((kf) => ({
-          ...kf,
-          title: kf.id,
-          description: 'N/A',
-        })) ?? [],
-      galleryImagesTranslated:
-        project.galleryImages?.map((gi) => ({
-          ...gi,
-          alt: 'N/A',
-          caption: 'N/A',
-        })) ?? [],
-      challenges: 'Challenges information missing.',
-      learnings: 'Learnings information missing.',
-    };
-  }
-
-  const keyFeaturesTranslated =
-    project.keyFeatures?.map((kf) => {
-      const typedKeyFeatures = i18nData?.keyFeatures as Record<
-        string,
-        { title: string; description: string } | undefined
-      >;
-      const featureTranslations = typedKeyFeatures?.[kf.id] ?? {
-        title: kf.id,
-        description: 'Description missing',
-      };
-      return {
-        ...kf,
-        title: featureTranslations.title,
-        description: featureTranslations.description,
-      };
-    }) ?? [];
-
-  const galleryImagesTranslated =
-    project.galleryImages?.map((gi) => {
-      const typedGalleryImages = i18nData?.galleryImages as Record<
-        string,
-        { alt: string; caption: string } | undefined
-      >;
-      const imageTranslations = typedGalleryImages?.[gi.id] ?? {
-        alt: `Alt text for ${gi.id} missing`,
-        caption: '',
-      };
-      return {
-        ...gi, // This includes src and id
-        alt: imageTranslations.alt,
-        caption: imageTranslations.caption,
-      };
-    }) ?? [];
-
+// For backward compatibility - convert ProjectEntry to something similar to old TranslatedProject
+export function convertProjectEntry(project: ProjectEntry) {
   return {
-    ...project,
-    title: i18nData.title,
-    description: i18nData.description,
-    imageAltText: i18nData.imageAltText,
-    categoryText: i18nData.categoryText ?? project.category,
-    dateText: i18nData.dateText ?? project.date,
-    detailedDescription:
-      i18nData?.detailedDescription ?? 'Detailed description missing',
-    keyFeaturesTranslated,
-    galleryImagesTranslated,
-    challenges: i18nData?.challenges ?? 'Challenges information missing',
-    learnings: i18nData?.learnings ?? 'Learnings information missing',
+    id: project.id,
+    slug: project.id,
+    title: project.data.title,
+    description: project.data.description,
+    imageUrl: project.data.imageUrl,
+    imageAltText: project.data.imageAltText,
+    categoryText: project.data.categoryText,
+    dateText: project.data.dateText,
+    tags: project.data.tags,
+    keyFeatures: project.data.keyFeatures,
+    projectUrl: project.data.projectUrl,
+    codeUrl: project.data.codeUrl,
+    technologies: project.data.technologies,
+    body: project.body,
+    collection: project.collection,
   };
-}
-
-// Function to get projects with translated content
-export function getTranslatedProjects(
-  lang: LanguageCode | undefined
-): Array<TranslatedProject> {
-  const currentLang = lang || defaultLanguage;
-  return projectsList.map((project) => translateProject(project, currentLang));
-}
-
-// Function to get a single project by its slug (untranslated)
-export function getProjectBySlug(slug: string): ProjectData | undefined {
-  return projectsList.find((project) => project.slug === slug);
-}
-
-// Function to get a single translated project by its slug
-export function getTranslatedProjectBySlug(
-  slug: string,
-  lang: LanguageCode | undefined
-): TranslatedProject | undefined {
-  const project = getProjectBySlug(slug);
-  if (!project) {
-    return undefined;
-  }
-  const currentLang = lang || defaultLanguage;
-  return translateProject(project, currentLang);
 }
 
 // Skills
@@ -207,38 +99,12 @@ export const skillsList: Array<SkillData> = [
 ];
 
 // Function to get skills with translated content
-export function getTranslatedSkills(
-  lang: LanguageCode | undefined
-): Array<TranslatedSkill> {
-  const currentLang = lang ?? defaultLanguage;
-
-  return skillsList.map((skill) => {
-    type SkillIdKey =
-      keyof (typeof ui)[typeof defaultLanguage]['skillsContent'];
-    const currentSkillId = skill.id as SkillIdKey;
-
-    const skillContentSource = ui[currentLang]?.skillsContent?.[currentSkillId]
-      ? ui[currentLang].skillsContent
-      : ui[defaultLanguage].skillsContent;
-
-    const skillTranslations = skillContentSource[currentSkillId];
-
-    if (!skillTranslations) {
-      // Fallback if translation for the skill ID is missing
-      console.warn(
-        `Translation missing for skill ID: ${skill.id} in language: ${lang}. Using default values.`
-      );
-      return {
-        ...skill,
-        title: skill.id, // Fallback title
-        description: 'Description missing for this skill.', // Fallback description
-      };
-    }
-
-    return {
-      ...skill, // This includes id and iconName
-      title: skillTranslations.title,
-      description: skillTranslations.description,
-    };
-  });
+export function getTranslatedSkills(): Array<TranslatedSkill> {
+  // For now, return basic skill data without translations
+  // You can add i18n support later if needed
+  return skillsList.map((skill) => ({
+    ...skill,
+    title: skill.id, // Fallback title - you can improve this later
+    description: 'Skill description', // Fallback description
+  }));
 }

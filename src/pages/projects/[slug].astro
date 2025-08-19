@@ -1,33 +1,36 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import {
-  ProjectScreen,
-  getTranslatedProjects,
-  type TranslatedProject,
-} from '@/features/projects';
-import { ui, type LanguageCode } from '@/i18n/ui';
+import ProjectLayout from '@/features/projects/layouts/ProjectLayout.astro';
+import { ui, type LanguageCode, defaultLanguage } from '@/i18n/ui';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  // Since this is a single-language site, just use the default language
-  const projects = getTranslatedProjects('en');
+  const projects = await getCollection('projects', ({ data }) => {
+    return data.isDraft !== true;
+  });
   
   return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project, lang: 'en' as LanguageCode },
+    params: { slug: project.id },
+    props: { project },
   }));
 }
-const { project, lang } = Astro.props as { project: TranslatedProject; lang: LanguageCode };
 
+const { project } = Astro.props;
+const lang = defaultLanguage as LanguageCode;
 const t = ui[lang];
 
 if (!project) {
   return Astro.redirect('/404');
 }
 
-const pageTitle = `${project.title} | ${t.site.title}`;
-const pageDescription = project.detailedDescription ?? project.description;
+const { Content } = await render(project);
+
+const pageTitle = `${project.data.title} | ${t.site.title}`;
+const pageDescription = project.data.description;
 ---
 
 <BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
-  <ProjectScreen project={project} t={t} lang={lang} />
+  <ProjectLayout project={project.data} t={t} lang={lang}>
+    <Content />
+  </ProjectLayout>
 </BaseLayout>

@@ -59,7 +59,7 @@ export const ui = {
       },
     },
     site: {
-      title: 'My Awesome Template',
+      title: 'Mahdinur',
       description:
         'A modern and performant Astro template to kickstart your project.',
     },
