@@ -14,7 +14,7 @@ import { formatDate } from '@/lib/utils';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { Clock } from 'lucide-react';
+import { Clock, ChevronRight } from 'lucide-react';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -27,14 +27,14 @@ const t = useTranslations(lang, 'blogPost');
 
 <a
   href={getRelativeLocaleUrl(lang, `/blog/${post.id}`)}
-  class="block group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  class="group block rounded-xl border border-border/50 bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 overflow-hidden h-full"
 >
   <Card
-    className="rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 pt-0 h-full flex flex-col"
+    className="group bg-transparent border-none transition-none shadow-none pt-0 h-full flex flex-col"
   >
     {
       post.data.heroImage ? (
-        <div class="w-full h-48 overflow-hidden rounded-t-lg flex-shrink-0">
+        <div class="w-full h-48 overflow-hidden rounded-t-xl flex-shrink-0">
           <Image
             src={post.data.heroImage.url}
             alt={post.data.heroImage.alt}
@@ -94,8 +94,16 @@ const t = useTranslations(lang, 'blogPost');
     </CardContent>
     <CardFooter className="mt-auto flex-shrink-0">
       <span class="text-sm text-primary font-medium group-hover:underline">
-        {t('readMore')} &rarr;
+        {t('readMore')}
+        <ChevronRight
+          className="ml-1 size-4 transition-transform group-hover:translate-x-0.5"
+        />
       </span>
     </CardFooter>
+      <!-- Effect hover  -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
+    >
+    </div>
   </Card>
 </a>
