@@ -21,7 +21,7 @@ const projectsPageTranslations = t.projectsPage; // For easier access
     projects && projects.length > 0 ? (
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project: TranslatedProject) => {
-          const projectUrl = `${lang === 'fr' ? '' : '/' + lang}/projects/${project.slug}`;
+          const projectUrl = `/projects/${project.slug}`;
           return (
             <a
               href={projectUrl}

@@ -8,26 +8,20 @@ import {
 import { ui, type LanguageCode } from '@/i18n/ui';
 
 export async function getStaticPaths() {
-  const lang = Astro.currentLocale as LanguageCode;
-  const paths = [];
-
-  const projects = getTranslatedProjects(lang);
-  for (const project of projects) {
-    paths.push({
-      params: { slug: project.slug },
-      props: { project },
-    });
-  }
-  return paths;
+  // Since this is a single-language site, just use the default language
+  const projects = getTranslatedProjects('en');
+  
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project, lang: 'en' as LanguageCode },
+  }));
 }
-const lang = Astro.currentLocale as LanguageCode;
-const { project } = Astro.props as { project: TranslatedProject };
+const { project, lang } = Astro.props as { project: TranslatedProject; lang: LanguageCode };
 
 const t = ui[lang];
 
 if (!project) {
-  const base = lang === 'fr' ? '' : `/${lang}`;
-  return Astro.redirect(`${base}/404`);
+  return Astro.redirect('/404');
 }
 
 const pageTitle = `${project.title} | ${t.site.title}`;

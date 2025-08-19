@@ -11,16 +11,17 @@ import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { ArrowLeft, Clock, Pencil } from 'lucide-react';
 import BlogPostCard from '../components/BlogPostCard.astro';
-import TableOfContents from '../components/TableOfContents.astro';
+import TableOfContents, { type Heading as TocHeading } from '../components/TableOfContents.astro';
 
 type Props = {
   post: CollectionEntry<'blog'>['data'];
   lang: LanguageCode;
   relatedPosts: Array<CollectionEntry<'blog'>>;
   filePath: string;
+  headings?: TocHeading[];
 };
 
-const { post, lang, relatedPosts, filePath } = Astro.props;
+const { post, lang, relatedPosts, filePath, headings = [] } = Astro.props;
 
 // Construct the GitHub edit URL
 const GITHUB_USER = 'YOUR_GITHUB_USERNAME';
@@ -98,7 +99,7 @@ const pageDescription = post.description;
     </header>
 
     <!-- Table of Contents -->
-    <TableOfContents {lang} />
+    <TableOfContents {lang} {headings} />
 
     <div class="prose prose-lg dark:prose-invert max-w-none mx-auto">
       <slot />
@@ -133,4 +134,88 @@ const pageDescription = post.description;
       ) : null
     }
   </article>
+
+  <script>
+    // TOC functionality - runs after all content is rendered
+    const tocLinks = document.querySelectorAll('.toc-link');
+    
+    if (tocLinks.length > 0) {
+      // Scroll highlighting
+      function highlightCurrentSection() {
+        let current = '';
+        const scrollPosition = window.scrollY + 100;
+        // Only select headings that have IDs (from our TOC)
+        const headings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'))
+          .filter(h => h.id) // Ensure they have IDs
+          .sort((a, b) => (a as HTMLElement).offsetTop - (b as HTMLElement).offsetTop) as HTMLElement[]; // Sort by position on page
+        
+        // Clear all highlighting first
+        tocLinks.forEach(link => {
+          link.classList.remove('bg-orange-500', 'text-white');
+          link.classList.add('text-muted-foreground');
+        });
+        
+        if (headings.length === 0) return;
+        
+        // If at the very top of the page, highlight the first heading
+        if (scrollPosition < headings[0].offsetTop) {
+          current = headings[0].id;
+        } else {
+          // Find current heading based on scroll position
+          for (let i = headings.length - 1; i >= 0; i--) {
+            const heading = headings[i];
+            if (heading.offsetTop <= scrollPosition) {
+              current = heading.id;
+              break;
+            }
+          }
+        }
+        
+        // Highlight only the matching TOC link
+        if (current) {
+          tocLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${current}`) {
+              link.classList.remove('text-muted-foreground');
+              link.classList.add('bg-orange-500', 'text-white');
+            }
+          });
+        }
+      }
+      
+      // Smooth scroll and mobile TOC close
+      tocLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href')?.substring(1);
+          const target = targetId ? document.getElementById(targetId) : null;
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (window.innerWidth < 1024) {
+              const details = document.querySelector('#mobile-toc details') as HTMLDetailsElement;
+              if (details) details.open = false;
+            }
+          }
+        });
+      });
+
+      // Initialize highlighting - ensure all links start with correct classes
+      tocLinks.forEach(link => {
+        link.classList.add('text-muted-foreground');
+      });
+      highlightCurrentSection();
+      
+      // Scroll event with throttling
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            highlightCurrentSection();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    }
+  </script>
 </BaseLayout>
