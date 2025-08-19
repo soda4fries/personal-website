@@ -89,7 +89,7 @@ const pageDescription = post.description;
         post.tags && post.tags.length > 0 && (
           <div class="mt-4 flex flex-wrap gap-2">
             {post.tags.map((tag: string) => (
-              <span class="px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full transition-colors hover:bg-primary hover:text-primary-foreground">
+              <span class="px-3 py-1 text-xs font-medium bg-muted text-muted-foreground rounded-full transition-colors hover:bg-primary hover:text-primary-foreground">
                 {tag}
               </span>
             ))}
@@ -152,7 +152,7 @@ const pageDescription = post.description;
           
           // Clear all highlighting first
           tocLinks.forEach(link => {
-            link.classList.remove('bg-orange-500', 'text-white');
+            link.classList.remove('bg-primary', 'text-primary-foreground');
             link.classList.add('text-muted-foreground');
           });
           
@@ -178,7 +178,7 @@ const pageDescription = post.description;
               const href = link.getAttribute('href');
               if (href === `#${current}`) {
                 link.classList.remove('text-muted-foreground');
-                link.classList.add('bg-orange-500', 'text-white');
+                link.classList.add('bg-primary', 'text-primary-foreground');
               }
             });
           }
