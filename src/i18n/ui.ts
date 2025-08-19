@@ -128,6 +128,7 @@ export const ui = {
       readingTimeSuffix: 'min read',
       relatedPostsTitle: 'Continue Reading',
       readMore: 'Read more',
+      editOnGithub: 'Edit on GitHub',
     },
     toc: {
       title: 'Table of Contents',

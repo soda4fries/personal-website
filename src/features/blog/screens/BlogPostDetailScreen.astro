@@ -11,6 +11,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { ArrowLeft, Clock, Pencil } from 'lucide-react';
 import BlogPostCard from '../components/BlogPostCard.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
 type Props = {
   post: CollectionEntry<'blog'>['data'];
@@ -95,6 +96,9 @@ const pageDescription = post.description;
         )
       }
     </header>
+
+    <!-- Table of Contents -->
+    <TableOfContents {lang} />
 
     <div class="prose prose-lg dark:prose-invert max-w-none mx-auto">
       <slot />
