@@ -1,0 +1,73 @@
+---
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import type { LanguageCode } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/ui';
+import { formatDate } from '@/lib/utils';
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Calendar } from 'lucide-react';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang: LanguageCode;
+}
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang, 'blogPost');
+---
+
+<a
+  href={getRelativeLocaleUrl(lang, `/blog/${post.id}`)}
+  class="block group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+>
+  <Card
+    className="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col border-l-3 border-l-primary/30 hover:border-l-primary"
+  >
+    <CardHeader className="pb-2 pt-3">
+      <CardTitle
+        className="text-base font-semibold line-clamp-2 group-hover:text-primary transition-colors leading-tight mb-1"
+      >
+        {post.data.title}
+      </CardTitle>
+      <div class="flex items-center text-xs text-muted-foreground">
+        <Calendar className="mr-1 size-3 flex-shrink-0" />
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate, lang)}
+        </time>
+      </div>
+    </CardHeader>
+    
+    <CardContent className="flex-grow pt-0 pb-3 space-y-2">
+      {
+        post.data.description && (
+          <p class="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            {post.data.description}
+          </p>
+        )
+      }
+      
+      {
+        post.data.tags && post.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-1">
+            {post.data.tags.slice(0, 2).map((tag: string) => (
+              <Badge variant="outline" key={tag} className="text-xs px-1.5 py-0.5 rounded-md">
+                {tag}
+              </Badge>
+            ))}
+            {post.data.tags.length > 2 && (
+              <Badge variant="outline" key="more" className="text-xs px-1.5 py-0.5 rounded-md">
+                +{post.data.tags.length - 2}
+              </Badge>
+            )}
+          </div>
+        )
+      }
+    </CardContent>
+  </Card>
+</a>

@@ -1,0 +1,54 @@
+---
+import { Badge } from '@/components/ui/badge';
+import type { LanguageCode } from '@/i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props {
+  posts: Array<CollectionEntry<'blog'>>;
+  lang: LanguageCode;
+  maxTags?: number;
+}
+
+const { posts, lang, maxTags = 8 } = Astro.props;
+
+// Aggregate all tags and count their frequency
+const tagCounts = new Map<string, number>();
+
+posts.forEach(post => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => {
+      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+    });
+  }
+});
+
+// Sort tags by frequency (most used first) and limit to maxTags
+const sortedTags = Array.from(tagCounts.entries())
+  .sort(([,a], [,b]) => b - a)
+  .slice(0, maxTags)
+  .map(([tag, count]) => ({ tag, count }));
+---
+
+{sortedTags.length > 0 && (
+  <div class="mb-6">
+    <h3 class="text-sm font-medium text-muted-foreground mb-3">Popular Tags</h3>
+    <div class="flex flex-wrap gap-2">
+      {
+        sortedTags.map(({ tag, count }) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class="group"
+          >
+            <Badge 
+              variant="secondary" 
+              className="text-xs px-2 py-1 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+            >
+              {tag} ({count})
+            </Badge>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+)}

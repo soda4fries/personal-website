@@ -1,0 +1,20 @@
+---
+import AboutMeLayout from '@/features/about-me/layouts/AboutMeLayout.astro';
+import { defaultLanguage } from '@/i18n/ui';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const aboutMe = await getCollection('about-me', ({ data, id }) => {
+    return data.isDraft !== true && id.startsWith(`${defaultLanguage}/`);
+  });
+
+  return aboutMe.map((content) => ({
+    params: { slug: content.id },
+    props: { content },
+  }));
+}
+
+const { content } = Astro.props;
+---
+
+<AboutMeLayout content={content} />

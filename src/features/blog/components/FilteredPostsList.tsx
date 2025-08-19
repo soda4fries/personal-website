@@ -45,44 +45,37 @@ export type FilteredPostsListProps = {
   allPosts: Array<PostDataForFilter>;
   texts: BlogFiltersProps['texts'] & { noPostsFound: string };
   lang: string;
-  initialSearchQuery?: string;
-  initialTag?: string;
 };
 
-// Note: We are not using useStore here to read initial values from the store,
-// because initialSearchQuery and initialTag are passed as props from Astro.
-// The component will initialize its own state from these props, then update the store.
 export function FilteredPostsList({
   allPosts,
   texts,
   lang,
-  initialSearchQuery = '',
-  initialTag = '',
 }: FilteredPostsListProps) {
+  // Read URL parameters directly in the component
+  const getUrlParams = () => {
+    if (typeof window === 'undefined') return { q: '', tag: '' };
+    const params = new URLSearchParams(window.location.search);
+    return {
+      q: params.get('q') || '',
+      tag: params.get('tag') || ''
+    };
+  };
+
+  const { q: initialSearchQuery, tag: initialTag } = getUrlParams();
   const [searchQuery, setSearchQuery] = React.useState(initialSearchQuery);
   const [selectedTag, setSelectedTag] = React.useState(initialTag);
 
+  // Update URL when filters change
   React.useEffect(() => {
-    // Met à jour l'URL lorsque les filtres changent
-    const params = new URLSearchParams(window.location.search);
-    if (searchQuery) {
-      params.set('q', searchQuery);
-    } else {
-      params.delete('q');
-    }
-    if (selectedTag) {
-      params.set('tag', selectedTag);
-    } else {
-      params.delete('tag');
-    }
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('q', searchQuery);
+    if (selectedTag) params.set('tag', selectedTag);
 
-    window.history.replaceState(
-      {},
-      '',
-      `${window.location.pathname}?${params.toString()}`
-    );
-    searchQueryAtom.set(searchQuery);
-    selectedTagAtom.set(selectedTag);
+    const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+    if (newUrl !== window.location.href.split('#')[0]) {
+      window.history.replaceState({}, '', newUrl);
+    }
   }, [searchQuery, selectedTag]);
 
   const filteredPosts = React.useMemo(() => {
@@ -102,13 +95,68 @@ export function FilteredPostsList({
       posts = posts.filter((post) => post.tags?.includes(selectedTag));
     }
 
-    const postIds = posts.map((p) => p.id);
-    filteredPostIdsAtom.set(postIds);
-    if (!filtersInitializedAtom.get()) {
-      filtersInitializedAtom.set(true);
-    }
     return posts;
   }, [allPosts, searchQuery, selectedTag]);
+
+  // Update filtering and DOM directly
+  React.useEffect(() => {
+    let posts = allPosts;
+
+    if (searchQuery) {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      posts = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(lowerCaseQuery) ||
+          post.description.toLowerCase().includes(lowerCaseQuery) ||
+          post.body.toLowerCase().includes(lowerCaseQuery)
+      );
+    }
+
+    if (selectedTag) {
+      posts = posts.filter((post) => post.tags?.includes(selectedTag));
+    }
+
+    const postIds = posts.map((p) => p.id);
+    
+    // Update store atoms
+    filteredPostIdsAtom.set(postIds);
+    filtersInitializedAtom.set(true);
+
+    // Also directly update the DOM
+    updatePostVisibility(postIds);
+  }, [allPosts, searchQuery, selectedTag]);
+
+  const updatePostVisibility = (visiblePostIds: string[]) => {
+    const postsContainer = document.getElementById('blog-posts-container');
+    const noPostsFilteredMessage = document.getElementById('no-posts-filtered-message');
+    const allPostCardWrappers = document.querySelectorAll('.blog-post-card-wrapper');
+    
+    if (!postsContainer || !noPostsFilteredMessage) return;
+
+    let visibleCount = 0;
+
+    allPostCardWrappers.forEach((wrapper) => {
+      const postIdAttribute = wrapper.getAttribute('data-post-id');
+      if (postIdAttribute !== null) {
+        if (visiblePostIds.includes(postIdAttribute)) {
+          wrapper.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          wrapper.classList.add('hidden');
+        }
+      } else {
+        wrapper.classList.add('hidden');
+      }
+    });
+
+    if (visibleCount === 0) {
+      postsContainer.style.display = 'none';
+      noPostsFilteredMessage.classList.remove('hidden');
+    } else {
+      postsContainer.style.display = 'grid';
+      noPostsFilteredMessage.classList.add('hidden');
+    }
+  };
 
   // Extract unique tags for the BlogFilters component
   const uniqueTagsForFilter = React.useMemo(() => {
@@ -119,14 +167,22 @@ export function FilteredPostsList({
     }));
   }, [allPosts]);
 
+  const handleSearchChange = React.useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleTagChange = React.useCallback((tag: string) => {
+    setSelectedTag(tag);
+  }, []);
+
   return (
     <BlogFilters
       allTags={uniqueTagsForFilter}
       currentSearchQuery={searchQuery}
       currentTag={selectedTag}
       texts={texts}
-      onSearchChange={setSearchQuery}
-      onTagChange={setSelectedTag}
+      onSearchChange={handleSearchChange}
+      onTagChange={handleTagChange}
     />
   );
 }

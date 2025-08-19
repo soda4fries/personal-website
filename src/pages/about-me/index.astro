@@ -1,0 +1,17 @@
+---
+import AboutMeScreen from '@/features/about-me/screens/AboutMeScreen.astro';
+import { defaultLanguage, type LanguageCode } from '@/i18n/ui';
+import { getCollection } from 'astro:content';
+
+const lang = (Astro.currentLocale as LanguageCode) || 'fr';
+
+const aboutMeContent = await getCollection('about-me', ({ data, id }) => {
+  return data.isDraft !== true && id.startsWith(`${defaultLanguage}/`);
+});
+
+const sortedContent = aboutMeContent.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<AboutMeScreen content={sortedContent} lang={lang} />

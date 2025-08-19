@@ -1,12 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
+import { getCollection } from 'astro:content';
+import BlogHomeScreen from '@/features/blog/screens/BlogHomeScreen.astro';
 import {
-  PortfolioScreen,
-  getTranslatedProjects,
   getTranslatedSkills,
   type TranslatedSkill,
-  type TranslatedProject,
 } from '@/features/projects';
 
 const lang =
@@ -16,28 +15,38 @@ const t = useTranslations(lang, 'homePage');
 const pageTitle = t('pageTitle');
 const pageDescription = t('pageDescription');
 
-const projects: Array<TranslatedProject> = getTranslatedProjects(lang);
+// Get featured blog posts
+const allPosts = await getCollection('blog', ({ data, id }) => {
+  return data.isDraft !== true && id.startsWith(`${defaultLanguage}/`);
+});
+
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 3);
+
+// Get skills
 const skills: Array<TranslatedSkill> = getTranslatedSkills(lang);
 
 const layoutProps = {
   lang,
-  projects,
+  posts: featuredPosts,
+  allPosts: sortedPosts, // Pass all posts for tag cloud
   skills,
   heroGreeting: t('heroGreeting'),
   heroSubtitlePart1: t('heroSubtitlePart1'),
   heroSubtitlePart2: t('heroSubtitlePart2'),
   heroIntroduction: t('heroIntroduction'),
-  heroViewWorkButton: t('heroViewWorkButton'),
+  heroViewWorkButton: 'View My Blog',
   heroContactButton: t('heroContactButton'),
-  imageNotAvailable: t('imageNotAvailable'),
-  featuredProjectsTitle: t('featuredProjectsTitle'),
-  featuredProjectsDescription: t('featuredProjectsDescription'),
+  featuredBlogsTitle: 'Latest Blog Posts',
+  featuredBlogsDescription: 'Explore my latest thoughts on technology, development, and innovation.',
   mySkillsTitle: t('mySkillsTitle'),
   mySkillsDescription: t('mySkillsDescription'),
-  projectPreviewCtaText: t('projectCardViewProject'),
 };
 ---
 
 <BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
-  <PortfolioScreen {...layoutProps} />
+  <BlogHomeScreen {...layoutProps} />
 </BaseLayout>

@@ -4,13 +4,9 @@ import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import BottomAppBar from '@/components/BottomAppBar.astro';
-import { Home, Briefcase, FileText, Lightbulb, MessageSquare } from 'lucide-react';
+import { Home, Briefcase, FileText, User, MessageSquare } from 'lucide-react';
 import { ClientRouter } from 'astro:transitions';
 
-import {
-  prepareLanguagesForSelector,
-  type LanguageSelectorItem,
-} from '@/lib/i18n-utils';
 import { Toaster } from 'sonner';
 
 type Props = {
@@ -27,7 +23,6 @@ export type NavItem = {
 const { pageTitle, pageDescription } = Astro.props;
 const lang =
   (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
-const currentPathname = Astro.url.pathname;
 
 const tSite = useTranslations(lang, 'site');
 const tNav = useTranslations(lang, 'nav');
@@ -36,12 +31,10 @@ const navItems: Array<NavItem> = [
   { href: '/', label: tNav('home'), icon: Home },
   { href: '/projects', label: tNav('projects'), icon: Briefcase },
   { href: '/blog', label: tNav('blog'), icon: FileText },
-  { href: '/tips', label: tNav('tips'), icon: Lightbulb },
+  { href: '/about-me', label: tNav('aboutMe'), icon: User },
   { href: '/contact', label: tNav('contact'), icon: MessageSquare },
 ];
 
-const languagesForSelector: Array<LanguageSelectorItem> =
-  prepareLanguagesForSelector(currentPathname, lang);
 ---
 
 <!doctype html>
@@ -161,7 +154,6 @@ const languagesForSelector: Array<LanguageSelectorItem> =
     <header class="hidden md:block">
       <!-- passer aussi navItems mais sans le premier element dont le href === '/' -->
       <Header
-        languagesForSelector={languagesForSelector}
         navItems={navItems.filter((item) => item.href !== '/') as NavItem[]}
       />
     </header>
@@ -176,7 +168,6 @@ const languagesForSelector: Array<LanguageSelectorItem> =
     </div>
     <BottomAppBar
       navItems={navItems}
-      languagesForSelector={languagesForSelector}
     />
     <Toaster position="bottom-right" richColors client:load />
     {/* Global scripts if needed, for example for analytics */}

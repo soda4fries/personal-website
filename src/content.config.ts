@@ -20,14 +20,15 @@ const blogCollection = defineCollection({
       relatedPosts: z.array(reference('blog')),
       readingTimeMinutes: z.number().optional(), // Added by remark plugin
       isDraft: z.boolean(),
+      featured: z.boolean().optional(),
       lang: z.enum(['fr', 'en']).optional().default('fr'),
     }),
 });
 
-const tipsCollection = defineCollection({
+const aboutMeCollection = defineCollection({
   loader: glob({
     pattern: '**/*.mdx',
-    base: './src/features/tips/content',
+    base: './src/features/about-me/content',
   }),
   schema: ({ image }) =>
     z.object({
@@ -44,13 +45,13 @@ const tipsCollection = defineCollection({
         })
         .optional(),
       lang: z.enum(['fr', 'en']).optional().default('fr'),
-      relatedTips: z.array(reference('tips')).optional(),
+      relatedContent: z.array(reference('about-me')).optional(),
       featured: z.boolean().optional(),
-      difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+      category: z.enum(['personal', 'professional', 'skills', 'experience']).optional(),
     }),
 });
 
 export const collections = {
   blog: blogCollection,
-  tips: tipsCollection,
+  'about-me': aboutMeCollection,
 };

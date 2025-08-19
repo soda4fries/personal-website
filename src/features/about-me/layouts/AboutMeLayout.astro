@@ -1,0 +1,79 @@
+---
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate } from '@/lib/utils';
+import { render, type CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Pencil } from 'lucide-react';
+
+interface Props {
+  content: CollectionEntry<'about-me'>;
+}
+
+const { content } = Astro.props;
+const { Content } = await render(content);
+
+const lang = content.data.lang || 'fr';
+const t = useTranslations(lang, 'aboutMePage');
+
+const GITHUB_USER = 'YOUR_GITHUB_USERNAME';
+const GITHUB_REPO = 'YOUR_GITHUB_REPO';
+const GITHUB_BRANCH = 'YOUR_GITHUB_BRANCH';
+const editUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${content.filePath}`;
+---
+
+<BaseLayout pageTitle={content.data.title} pageDescription={content.data.description}>
+  <article
+    class="prose lg:prose-xl dark:prose-invert max-w-3xl mx-auto py-8 px-4"
+  >
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{content.data.title}</h1>
+      <p class="text-sm text-muted-foreground">
+        {formatDate(content.data.pubDate, lang)}
+        {
+          content.data.updatedDate && (
+            <span class="italic">
+              {' '}
+              {formatDate(content.data.updatedDate, lang)})
+            </span>
+          )
+        }
+      </p>
+      {
+        content.data.tags && content.data.tags.length > 0 && (
+          <div class="mt-4 flex gap-2">
+            {content.data.tags.map((tag: string) => (
+              <Badge variant="secondary" className="md:text-lg">
+                #{tag}
+              </Badge>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <Content />
+
+    <footer
+      class="mt-12 pt-8 border-t border-border flex items-center justify-between gap-4"
+    >
+      <a
+        href={getRelativeLocaleUrl(lang, `/about-me/`)}
+        class={buttonVariants({ variant: 'ghost' }) + ' no-underline'}
+      >
+        &larr; {t('backToList')}
+      </a>
+      <a
+        href={editUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={buttonVariants({ variant: 'ghost' }) + ' no-underline'}
+      >
+        <Pencil className="size-4" />
+        {t('editOnGithub')}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

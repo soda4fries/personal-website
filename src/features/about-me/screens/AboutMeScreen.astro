@@ -1,0 +1,71 @@
+---
+// src/features/about-me/screens/AboutMeScreen.astro
+import { EmptyState } from '@/components/empty-state';
+import Heading from '@/components/Heading.astro';
+import AboutMeCard from '@/features/about-me/components/AboutMeCard.astro';
+import { useTranslations, type LanguageCode } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  content: Array<CollectionEntry<'about-me'>>;
+  lang: LanguageCode;
+}
+
+const { content, lang } = Astro.props;
+const t = useTranslations(lang, 'aboutMePage');
+const featuredContent = content.filter((item) => item.data.featured);
+const regularContent = content.filter((item) => !item.data.featured);
+---
+
+<BaseLayout pageTitle={t('metaTitle')} pageDescription={t('metaDescription')}>
+  <div class="container mx-auto px-4 py-8">
+    <Heading title={t('title')} description={t('description')} />
+
+    {
+      content.length === 0 ? (
+        <EmptyState title={t('noContent')} />
+      ) : (
+        <div class="space-y-12">
+          {/* Featured Content */}
+          {featuredContent.length > 0 && (
+            <section>
+              <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <span class="text-2xl">⭐</span>
+                {t('featuredContent')}
+              </h2>
+              <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+                {featuredContent.map((item) => (
+                  <AboutMeCard content={item} lang={lang} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* All Regular Content */}
+          <section>
+            {regularContent.length > 0 && (
+              <h2 class="text-2xl font-semibold mb-6">{t('allContent')}</h2>
+            )}
+
+            {/* Responsive Grid */}
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+              {regularContent.map((item) => (
+                <AboutMeCard content={item} lang={lang} />
+              ))}
+            </div>
+          </section>
+
+          {/* Stats */}
+          <div class="text-center pt-8 border-t border-border/30">
+            <p class="text-sm text-muted-foreground mb-4">
+              {content.length}{' '}
+              {content.length > 1 ? t('contentAvailable') : t('contentItemAvailable')}
+            </p>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
