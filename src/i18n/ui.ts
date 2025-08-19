@@ -113,6 +113,12 @@ export const ui = {
       selectTagCommandPlaceholder: 'Search tag...',
       allTagsLabel: 'All tags',
       noPostsFound: 'No posts found.',
+      showingAll: 'Showing all',
+      found: 'Found',
+      of: 'of',
+      posts: 'posts',
+      matching: 'matching',
+      matchesIn: 'Matches in',
     },
     blogPost: {
       publishedOn: 'Published on: ',

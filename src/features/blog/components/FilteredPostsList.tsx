@@ -1,13 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import {
-  searchQueryAtom,
-  selectedTagAtom,
-  filteredPostIdsAtom,
-  filtersInitializedAtom,
-} from '@/stores/blogFilterStore';
 import { BlogFilters, type BlogFiltersProps } from './BlogFilters';
+import { SearchResultsInfo } from './SearchResultsInfo';
+import { BlogPostCardWithHighlight } from './BlogPostCardWithHighlight';
 // Tu devras créer ou ajuster l'import pour BlogPostCard si tu veux le rendre depuis React
 // Pour l'instant, nous allons supposer que BlogPostCard est un composant Astro et que nous devons passer les données filtrées à Astro.
 // Cela signifie que FilteredPostsList ne rendra que les filtres, et passera les posts filtrés à un slot ou à un autre composant.
@@ -38,12 +34,32 @@ export type PostDataForFilter = {
   tags?: Array<string>;
   body: string; // For searching in content
   pubDate: Date;
-  // Add any other fields from CollectionEntry<'blog'>['data'] you might need for display or filtering
+  heroImage?: {
+    url: {
+      src: string;
+      width: number;
+      height: number;
+      format: string;
+    };
+    alt: string;
+  };
+  readingTimeMinutes?: number;
 };
 
 export type FilteredPostsListProps = {
   allPosts: Array<PostDataForFilter>;
-  texts: BlogFiltersProps['texts'] & { noPostsFound: string };
+  texts: BlogFiltersProps['texts'] & { 
+    noPostsFound: string;
+    showingAll: string;
+    found: string;
+    of: string;
+    posts: string;
+    matching: string;
+    publishedOn: string;
+    readingTimeSuffix: string;
+    readMore: string;
+    matchesIn: string;
+  };
   lang: string;
   initialSearchQuery?: string;
   initialTag?: string;
@@ -102,65 +118,7 @@ export function FilteredPostsList({
     return posts;
   }, [allPosts, searchQuery, selectedTag]);
 
-  // Update filtering and DOM directly
-  React.useEffect(() => {
-    let posts = allPosts;
-
-    if (searchQuery) {
-      const lowerCaseQuery = searchQuery.toLowerCase();
-      posts = posts.filter(
-        (post) =>
-          post.title.toLowerCase().includes(lowerCaseQuery) ||
-          post.description.toLowerCase().includes(lowerCaseQuery) ||
-          post.body.toLowerCase().includes(lowerCaseQuery)
-      );
-    }
-
-    if (selectedTag) {
-      posts = posts.filter((post) => post.tags?.includes(selectedTag));
-    }
-
-    const postIds = posts.map((p) => p.id);
-    
-    // Update store atoms
-    filteredPostIdsAtom.set(postIds);
-    filtersInitializedAtom.set(true);
-
-    // Also directly update the DOM
-    updatePostVisibility(postIds);
-  }, [allPosts, searchQuery, selectedTag]);
-
-  const updatePostVisibility = (visiblePostIds: string[]) => {
-    const postsContainer = document.getElementById('blog-posts-container');
-    const noPostsFilteredMessage = document.getElementById('no-posts-filtered-message');
-    const allPostCardWrappers = document.querySelectorAll('.blog-post-card-wrapper');
-    
-    if (!postsContainer || !noPostsFilteredMessage) return;
-
-    let visibleCount = 0;
-
-    allPostCardWrappers.forEach((wrapper) => {
-      const postIdAttribute = wrapper.getAttribute('data-post-id');
-      if (postIdAttribute !== null) {
-        if (visiblePostIds.includes(postIdAttribute)) {
-          wrapper.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          wrapper.classList.add('hidden');
-        }
-      } else {
-        wrapper.classList.add('hidden');
-      }
-    });
-
-    if (visibleCount === 0) {
-      postsContainer.style.display = 'none';
-      noPostsFilteredMessage.classList.remove('hidden');
-    } else {
-      postsContainer.style.display = 'grid';
-      noPostsFilteredMessage.classList.add('hidden');
-    }
-  };
+  // No longer need DOM manipulation - everything is handled in React
 
   // Extract unique tags for the BlogFilters component
   const uniqueTagsForFilter = React.useMemo(() => {
@@ -180,13 +138,54 @@ export function FilteredPostsList({
   }, []);
 
   return (
-    <BlogFilters
-      allTags={uniqueTagsForFilter}
-      currentSearchQuery={searchQuery}
-      currentTag={selectedTag}
-      texts={texts}
-      onSearchChange={handleSearchChange}
-      onTagChange={handleTagChange}
-    />
+    <div>
+      <BlogFilters
+        allTags={uniqueTagsForFilter}
+        currentSearchQuery={searchQuery}
+        currentTag={selectedTag}
+        texts={texts}
+        onSearchChange={handleSearchChange}
+        onTagChange={handleTagChange}
+      />
+      
+      <SearchResultsInfo
+        totalPosts={allPosts.length}
+        filteredPosts={filteredPosts.length}
+        searchTerm={searchQuery}
+        selectedTag={selectedTag}
+        texts={{
+          showingAll: texts.showingAll,
+          found: texts.found,
+          of: texts.of,
+          posts: texts.posts,
+          matching: texts.matching,
+          noPostsFound: texts.noPostsFound,
+        }}
+      />
+      
+      {/* Enhanced Posts Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+        {filteredPosts.map((post) => (
+          <BlogPostCardWithHighlight
+            key={post.id}
+            post={post}
+            searchTerm={searchQuery}
+            lang={lang}
+            texts={{
+              publishedOn: texts.publishedOn,
+              readingTimeSuffix: texts.readingTimeSuffix,
+              readMore: texts.readMore,
+              matchesIn: texts.matchesIn,
+            }}
+          />
+        ))}
+      </div>
+      
+      {filteredPosts.length === 0 && (searchQuery || selectedTag) && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground text-lg">{texts.noPostsFound}</p>
+        </div>
+      )}
+    </div>
   );
 }
