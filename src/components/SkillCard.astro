@@ -13,6 +13,8 @@ import {
   Database,
   PenTool,
   Network,
+  Brain,
+  BookOpen,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconType } from 'react-icons';
@@ -43,6 +45,28 @@ import {
   SiKubernetes,
   SiGit,
   SiAmazon,
+  SiApachekafka,
+  SiRedis,
+  SiSpring,
+  SiPytorch,
+  SiOpenjdk,
+  SiPrometheus,
+  SiGrafana,
+  SiClickhouse,
+  SiCilium,
+  SiRancher,
+  SiDjango,
+  SiCplusplus,
+  SiKeycloak,
+  SiLinux,
+  SiVuedotjs,
+  SiAndroid,
+  SiOllama,
+  SiWeightsandbiases,
+  SiHuggingface,
+  SiOpencv,
+  SiFluentd,
+  SiNatsdotio,
 } from 'react-icons/si';
 
 // Define the mapping from iconName to Lucide icon component
@@ -53,6 +77,8 @@ const iconComponents: Record<string, LucideIcon> = {
   Database,
   PenTool,
   Network,
+  Brain,
+  BookOpen,
 };
 
 // Mapping for react-icons (specific technologies)
@@ -71,8 +97,21 @@ const techIconComponents: Record<string, IconType> = {
   express: SiExpress,
   nestjs: SiNestjs,
   hono: SiHono,
+  java: SiOpenjdk,
   python: SiPython,
+  cpp: SiCplusplus,
+  spring: SiSpring,
+  django: SiDjango,
+  pytorch: SiPytorch,
+  huggingface: SiHuggingface,
+  ollama: SiOllama,
+  wandb: SiWeightsandbiases,
+  computervision: SiOpencv, // Using OpenCV for computer vision
   postgresql: SiPostgresql,
+  redis: SiRedis,
+  kafka: SiApachekafka,
+  nats: SiNatsdotio,
+  clickhouse: SiClickhouse,
   mysql: SiMysql,
   mongodb: SiMongodb,
   sqlite: SiSqlite,
@@ -81,11 +120,24 @@ const techIconComponents: Record<string, IconType> = {
   figma: SiFigma,
   docker: SiDocker,
   kubernetes: SiKubernetes,
+  prometheus: SiPrometheus,
+  grafana: SiGrafana,
+  fluentd: SiFluentd,
+  cilium: SiCilium,
+  rancher: SiRancher,
+  keycloak: SiKeycloak,
+  linux: SiLinux,
+  vuejs: SiVuedotjs,
+  android: SiAndroid,
   git: SiGit,
   amazonservices: SiAmazon,
 };
 
-import type { Technology } from '@/data/skills'; // Import the Technology type
+// Define Technology type locally if not available from '@/data/skills'
+type Technology = {
+  id: string;
+  name: string;
+};
 
 export type Props = {
   title: string;

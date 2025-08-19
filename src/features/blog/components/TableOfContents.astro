@@ -21,19 +21,20 @@ const componentTitle = t('title');
 
 // Generate TOC HTML from headings
 const tocItems = headings.map((heading) => {
-  const indent = (heading.level - 1) * 12; // 12px per level
+  const indent = (heading.level - 1) * 16; // 16px per level for better hierarchy
   return `
-    <li style="margin-left: ${indent}px">
+    <li style="margin-left: ${indent}px" class="toc-item">
       <a href="#${heading.id}" 
-         class="toc-link block py-1 px-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
+         class="toc-link group relative block py-2 px-3 text-sm text-muted-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-all duration-200 transform hover:translate-x-1 hover:scale-105"
          data-level="${heading.level}">
-        ${heading.text}
+        <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-primary rounded-full transition-all duration-200 group-hover:h-4"></span>
+        <span class="relative z-10 font-medium">${heading.text}</span>
       </a>
     </li>
   `;
 }).join('');
 
-const tocHtml = headings.length > 0 ? `<ul class="space-y-2">${tocItems}</ul>` : '';
+const tocHtml = headings.length > 0 ? `<ul class="space-y-1">${tocItems}</ul>` : '';
 ---
 
 {headings.length > 0 && (
@@ -41,21 +42,29 @@ const tocHtml = headings.length > 0 ? `<ul class="space-y-2">${tocItems}</ul>` :
     <!-- Mobile TOC - appears at top on mobile -->
     <div class="lg:hidden mb-8" id="mobile-toc">
       <details class="group">
-        <summary class="flex items-center justify-between p-4 bg-card border border-border rounded-lg cursor-pointer hover:bg-accent transition-colors">
-          <span class="font-semibold text-foreground">{componentTitle}</span>
-          <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <summary class="flex items-center justify-between p-4 bg-gradient-to-r from-card via-card to-accent/20 border border-border/50 rounded-xl cursor-pointer hover:shadow-md hover:border-primary/30 transition-all duration-300 backdrop-blur-sm">
+          <span class="font-semibold text-foreground flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+            </svg>
+            {componentTitle}
+          </span>
+          <svg class="w-5 h-5 transition-transform duration-300 group-open:rotate-180 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </summary>
-        <nav class="mt-4 p-4 bg-card border border-border rounded-lg" set:html={tocHtml}>
+        <nav class="mt-3 p-4 bg-card/95 border border-border/50 rounded-xl backdrop-blur-sm shadow-lg transition-all duration-300" set:html={tocHtml}>
         </nav>
       </details>
     </div>
 
     <!-- Desktop TOC - fixed sidebar on desktop -->
-    <div class="hidden lg:block fixed top-1/2 right-8 transform -translate-y-1/2 w-64 max-h-[70vh] overflow-y-auto" id="desktop-toc">
-      <nav class="bg-card border border-border rounded-lg p-4 shadow-lg">
-        <h3 class="font-semibold text-foreground mb-4">{componentTitle}</h3>
+    <div class="hidden lg:block fixed top-1/2 right-8 transform -translate-y-1/2 w-72 max-h-[70vh] overflow-y-auto transition-all duration-300" id="desktop-toc">
+      <nav class="bg-gradient-to-br from-card/95 via-card to-accent/10 border border-border/50 rounded-2xl p-5 shadow-xl backdrop-blur-md hover:shadow-2xl transition-all duration-300">
+        <h3 class="font-bold text-foreground mb-4 flex items-center gap-2 text-lg">
+          <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          {componentTitle}
+        </h3>
         <div set:html={tocHtml}>
         </div>
       </nav>
@@ -73,7 +82,7 @@ const tocHtml = headings.length > 0 ? `<ul class="space-y-2">${tocItems}</ul>` :
     
     /* Add right margin to main content to avoid overlap with TOC */
     article {
-      margin-right: 280px;
+      margin-right: 320px;
     }
   }
   
@@ -85,19 +94,64 @@ const tocHtml = headings.length > 0 ? `<ul class="space-y-2">${tocItems}</ul>` :
   /* Custom scrollbar for TOC */
   #desktop-toc nav {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted)) transparent;
+    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
   }
   
   #desktop-toc nav::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
   
   #desktop-toc nav::-webkit-scrollbar-track {
     background: transparent;
+    border-radius: 4px;
   }
   
   #desktop-toc nav::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted));
-    border-radius: 3px;
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.6), hsl(var(--primary) / 0.3));
+    border-radius: 4px;
+    border: 1px solid hsl(var(--border));
+  }
+  
+  #desktop-toc nav::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.8), hsl(var(--primary) / 0.5));
+  }
+  
+  /* Smooth transitions only */
+  .toc-item {
+    opacity: 1;
+    transition: all 0.2s ease-out;
+  }
+  
+  /* Active state styling */
+  .toc-link.bg-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8)) !important;
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
+    transform: translateX(4px) scale(1.02);
+  }
+  
+  /* Enhance the active indicator */
+  .toc-link.bg-primary span:first-child {
+    height: 1rem !important;
+    width: 3px !important;
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.6);
+  }
+  
+  /* Floating animation for the TOC container */
+  #desktop-toc nav {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+  
+  /* Hover effects for the entire container */
+  #desktop-toc nav:hover {
+    animation-play-state: paused;
   }
 </style>

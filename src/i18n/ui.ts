@@ -40,28 +40,27 @@ export const ui = {
       },
     },
     skillsContent: {
-      frontendDevelopment: {
-        title: 'Frontend Development',
-        description:
-          'Building interactive and high-performance user interfaces.',
-      },
       backendDevelopment: {
         title: 'Backend Development',
-        description: 'Constructing robust server logic and APIs.',
+        description: 'I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.',
       },
-      uiUxDesign: {
-        title: 'UI/UX Design',
-        description: 'Designing intuitive and aesthetic user experiences.',
+      machineLearning: {
+        title: 'Machine Learning & AI',
+        description: 'Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.',
       },
       devOps: {
-        title: 'DevOps',
-        description: 'Automating development and deployment processes.',
+        title: 'DevOps & Infrastructure',
+        description: 'Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.',
+      },
+      frontendDevelopment: {
+        title: 'Frontend Development',
+        description: 'I am not expanding this skill tree since it moves too fast, and CSS is hard.',
       },
     },
     site: {
-      title: 'Mahdinur',
+      title: 'Mohammad Mahdinur Rahman',
       description:
-        'A modern and performant Astro template to kickstart your project.',
+        'Sodas Personal Website',
     },
     nav: {
       home: 'Home',
@@ -74,34 +73,34 @@ export const ui = {
       rights: 'All rights reserved.',
     },
     homePage: {
-      pageTitle: 'Home | YOUR_NAME - FullStack Developer',
+      pageTitle: 'Home | Mohammad Mahdinur Rahman - Backend Developer & ML Researcher',
       pageDescription:
-        'Welcome to the portfolio of YOUR_NAME, a FullStack developer passionate about creating innovative web experiences.',
-      heroGreeting: "Hi, I'm YOUR_NAME",
-      heroSubtitlePart1: 'Full Stack Developer',
-      heroSubtitlePart2: 'UI/UX Enthusiast',
-      heroIntroduction: 'Add an introduction here.',
-      heroViewWorkButton: 'View My Work',
-      heroContactButton: 'Get In Touch',
+        'Soda\'s personal website - where documentation and useful stuff go to rest in peace until I need them again.',
+      heroGreeting: "Hi, I'm Soda",
+      heroSubtitlePart1: 'Computer Stuff',
+      heroSubtitlePart2: 'Reading',
+      heroIntroduction: 'My favorite thing is to RTFM. This is where all the useful stuff I find goes to rest in peace until I need it again. But if it helps you, even better!',
+      heroViewWorkButton: 'Browse Stuff',
+      heroContactButton: 'Contact',
       heroImageAlt:
-        'Illustration representing YOUR_NAME or a development concept',
+        'Illustration representing Mohammad Mahdinur Rahman or a development concept',
       featuredProjectsTitle: '3 latest projects',
       featuredProjectsDescription:
         "Here are some of the projects I've recently worked on. Feel free to explore!",
       projectCardViewProject: 'View Project',
       projectCardViewCode: 'View Code',
       imageNotAvailable: 'Image not available for now',
-      mySkillsTitle: 'My Skills',
+      mySkillsTitle: 'Tech Stack',
       mySkillsDescription:
-        'Explore the expertise and abilities that define my work and passion.',
+        'Tools I have used and am comfortable with',
     },
     blogPage: {
       pageTitle: 'My Technical Blog',
       pageDescription:
         'Articles and thoughts on web development, software architecture, and new technologies.',
-      title: 'My Technical Blog',
+      title: 'Documentation & Notes',
       description:
-        'Articles and thoughts on web development, software architecture, and new technologies.',
+        'Random stuff I wrote down so I don\'t forget it.',
       comingSoon: 'Blog posts will appear here soon. Check back later!',
       heroImageAlt: 'Hero image for article: ',
       publishedOn: 'Published on: ',
@@ -134,13 +133,13 @@ export const ui = {
       title: 'Table of Contents',
     },
     contactPage: {
-      pageTitle: 'Contact Me',
+      pageTitle: 'Contact',
       pageDescription:
-        "Let's discuss your project, a potential collaboration, or just chat about tech!",
+        "Need to reach me? Here's how.",
 
-      title: 'Contact Me',
+      title: 'Contact',
       description:
-        "Let's discuss your project, a potential collaboration, or just chat about tech!",
+        "Need to reach me? Here's how.",
       formTitle: 'Send a message',
       firstNameLabel: 'First Name',
       lastNameLabel: 'Last Name',
@@ -178,9 +177,9 @@ export const ui = {
       viewCodeButton: 'View Code',
     },
     projectsPage: {
-      title: 'My Projects',
-      metaTitle: "My Projects | YOUR_NAME's Portfolio",
-      metaDescription: "Discover all of YOUR_NAME's projects.",
+      title: 'Projects',
+      metaTitle: "Projects | Soda's Site",
+      metaDescription: "Stuff I've built.",
       noProjects: 'No projects to display at the moment.',
       noProjectsDescription:
         "It seems that you don't have any projects to display at the moment.",
@@ -194,7 +193,7 @@ export const ui = {
     },
 
     aboutMePage: {
-      metaTitle: 'About Me | YOUR_NAME',
+      metaTitle: 'About Me | Mohammad Mahdinur Rahman',
       metaDescription:
         'Learn more about who I am, my background, skills, and what drives my passion for technology.',
       title: 'About Me',

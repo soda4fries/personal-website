@@ -11,7 +11,17 @@ import { Image } from 'astro:assets';
 import CompactBlogCard from '../components/CompactBlogCard.astro';
 import TagCloud from '../components/TagCloud.astro';
 import type { CollectionEntry } from 'astro:content';
-import type { TranslatedSkill } from '@/features/projects/type';
+type Technology = {
+  id: string;
+  name: string;
+};
+
+type TranslatedSkill = {
+  title: string;
+  description: string;
+  iconName: string;
+  technologies: Technology[];
+};
 
 export type Props = {
   lang: LanguageCode;
@@ -161,3 +171,4 @@ const {
     </div>
   </div>
 </section>
+

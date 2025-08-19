@@ -3,10 +3,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
 import { getCollection } from 'astro:content';
 import BlogHomeScreen from '@/features/blog/screens/BlogHomeScreen.astro';
-import {
-  getTranslatedSkills,
-  type TranslatedSkill,
-} from '@/features/projects';
 
 const lang =
   (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
@@ -26,8 +22,54 @@ const sortedPosts = allPosts.sort(
 
 const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 3);
 
-// Get skills
-const skills: Array<TranslatedSkill> = getTranslatedSkills(lang);
+// Skills data from the original projects service
+const skills = [
+  {
+    title: "Frontend Development",
+    description: "I am not expanding this skill tree since it moves too fast, and CSS is hard.",
+    iconName: "MonitorSmartphone",
+    technologies: [
+      { id: "html5", name: "HTML" },
+      { id: "css3", name: "CSS" },
+      { id: "javascript", name: "JavaScript" },
+      { id: "typescript", name: "TypeScript" }
+    ]
+  },
+  {
+    title: "Backend Development", 
+    description: "I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.",
+    iconName: "ServerCog",
+    technologies: [
+      { id: "nodejs", name: "Node.js" },
+      { id: "python", name: "Python" },
+      { id: "postgresql", name: "PostgreSQL" },
+      { id: "redis", name: "Redis" }
+    ]
+  },
+  {
+    title: "Machine Learning & AI",
+    description: "Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.",
+    iconName: "Brain",
+    technologies: [
+      { id: "pytorch", name: "PyTorch" },
+      { id: "huggingface", name: "Hugging Face" },
+      { id: "python", name: "Python" },
+      { id: "computervision", name: "Computer Vision" }
+    ]
+  },
+  {
+    title: "DevOps & Infrastructure",
+    description: "Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.",
+    iconName: "Network",
+    technologies: [
+      { id: "docker", name: "Docker" },
+      { id: "kubernetes", name: "Kubernetes" },
+      { id: "git", name: "Git" },
+      { id: "linux", name: "Linux" }
+    ]
+  }
+];
+
 
 const layoutProps = {
   lang,

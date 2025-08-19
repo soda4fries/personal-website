@@ -1,0 +1,79 @@
+Mohammad Mahdinur Rahman (Mahdi)
+§soda4fries #rahmanmahdinur@gmail.com H+60177149246
+Summary
+Computer Science undergraduate at Universiti Malaya with interests in Machine Learning and Software Engi-
+neering. I enjoy learning new systems and concepts quickly through hands-on work, self-study, and exchanging
+knowledge with teammates to solve problems. Open to full-time opportunities before and after graduation in
+2026.
+Education
+Bachelor of Computer Science (Software Engineering) 2022 - 2026
+Universiti Malaya, Kuala Lumpur, Malaysia CGPA: 3.92/4.00
+Technical Skills
+•Programming Languages: Java, Python (Machine Learning), C++ (Qt framework), JavaScript.
+•Machine Learning & AI: PyTorch, Diffusers, Hugging Face
+•Backend Frameworks: Spring Ecosystem, Django
+•Data-stores: PostgreSQL, ClickHouse, Redis, Kafka, NATS
+•DevOps & Networking: Kubernetes (RKE2/Rancher, Cilium, MetalLB, OpenEBS), Docker, Keycloak
+(IAM), Prometheus, Loki, Grafana, Slurm, Linux, VPNs, Layer 2/3 Networking.
+•Frontend/Mobile Development (past experience): Android (Java, XML layouts, VPNService API
+with low-level packet handling (Tuns/FDs), WorkManager, services, GoMobile, Jetpack libraries), MVVM
+architecture, Dagger/Hilt, Retrofit, Room, Deep-Linking; HTML, CSS, JavaScript, Vue.js
+Machine Learning & Research Experience
+•Conducting research on machine unlearning in Deep Neural Networks under Prof. Ir. Dr. Chan Chee Seng,
+focusing on diffusion models for top-tier conference submissions.
+•Self-taught in computer vision with emphasis on UNet, encoder-decoder architectures, and modern backbones
+(ResNet, ViT, Swin Transformer) for medical image segmentation/reconstruction, resulting in peer-reviewed
+publications.
+•Studied mechanistic interpretability, LLM residual streams, attention mechanisms, diffusion latent spaces,
+sparse autoencoders, and meta-learning (MAML).
+•Practical experience in HPC environments using Slurm and Weights & Biases for experiment tracking.
+Publications
+1. Cai, H., Rahman, M. M., Dong, M., Li, J., Pu, M., Fang, Z., Peng, Y., Luo, H., & Liu, Y. (2025). “Au-
+toDebias: Automated Framework for Debiasing Text-to-Image Models.” arXiv preprint arXiv:2508.00445.
+(AAAI 2025, submitted)
+2. Cai, H., Rahman, M. M., Wu, J., & Deng, Y. (2024). “CFPFormer: Feature-pyramid like Transformer
+Decoder for Segmentation and Detection.” arXiv preprint arXiv:2404.15451. (IJCNN 2025)
+3. Cai, H., Rahman, M. M., Akhtar, M. S., Li, J., Wu, J., & Fang, Z. (2024). “AgileIR: Memory-Efficient
+Group Shifted Windows Attention for Agile Image Restoration.” arXiv preprint arXiv:2409.06206. (ICME
+2025)
+Work Experience
+Lead Backend Developer – Infinity Data Tech Sdn. Bhd. June 2024 – Present
+•Scaled backend team from 20 interns to 5 full-time backend developers; established coding standards, tech
+stack, documentation, onboarding, and review processes and oversaw development in malaysian branch.
+•Designed Java (Spring) systems handling 4M+ users and 400K+ concurrent sessions; led DevOps and infras-
+tructure strategy.
+•Designed high-availability data layer with PostgreSQL (CloudNativePG) replication, Redis caching, Kafka
+(Strimzi) + ClickHouse analytics, and S3 offsite backups.
+•Managed on-prem Kubernetes (RKE2/Rancher) with OpenEBS storage, Cilium networking.
+•Built observability stack (Prometheus, Grafana, Loki), reverse proxy/caching (NGINX, Caddy), and OAuth/IAM
+via Keycloak.
+•Implemented CI/CD GitOps with FleetCD, containerization, Flyway migrations, disaster recovery snapshots,
+and automated backups.
+•Integrated payments (PayPal, Stripe, Weixin Pay), cloud storage (Cloudflare R2, AWS S3), and automated
+alerting.
+Software Developer – Infinity Data Tech Sdn. Bhd. (Online) March 2023 – June 2024
+•Maintained Java Spring applications, specializing in batch processing; worked extensively with IoC/DI, Web-
+MVC, AOP, Spring Security, JMS, JMX, JPA, Resilience4j, Hibernate ORM, and Quartz scheduling.
+•Applied backend engineering best practices including transaction management, lazy loading, database index-
+ing/partitioning, RESTful API design and containerization.
+•Familiar with optimizing network routes and transits such as CN2 GT, CN2 GIA.
+Teaching Assistant - University of Malaya October 2023 - June 2024
+•Taught Fundamentals of Programming (WIX1002) and Data Structures (WIA1002) to 90+ students over two
+semesters for developing communication and teaching skills.
+Projects
+Custom ML Model Deployment |Django, TorchServe, MLOps 2024
+•Refactored friend’s Master’s thesis Video Understanding model with full-graph computation and JIT compi-
+lation, doubling inference speed. Deployed using TorchServe on SageMaker as MAR file with Django backend
+and async inference over gRPC from Celery queue.
+•Achieved 60% request reduction using Cloudflare CDN Edge Donut caching on webserver as an SSR appli-
+cation, R2 storage for saving generations, and htmx for dynamic content.
+Distributed Key-Value Store |Java 2023
+•Implemented distributed KV store inspired by Amazon’s Dynamo Paper, employing Rendezvous hashing for
+load distribution of keys, minimizing data transfer during cluster resizing. Learned about RAFT consensus
+protocol and implementations such as JRAFT.
+•Built cluster management system with peer-to-peer based coordination and type preservation during serial-
+ization.
+Educational Web Server |Java 2023
+•Built a custom HTTP server in Java without dependencies as a template for programming students to extend.
+Uses raw sockets to parse HTTP requests and handle routing. Features include a custom templating engine
+with loops and variables, plus session management. Helps students understand web server fundamentals

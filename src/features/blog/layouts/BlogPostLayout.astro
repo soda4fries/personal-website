@@ -11,12 +11,12 @@ export type Props = {
 
 const { entry } = Astro.props;
 const post = entry.data;
-const GITHUB_USER = 'YOUR_GITHUB_USERNAME';
-const GITHUB_REPO = 'YOUR_GITHUB_REPO';
-const GITHUB_BRANCH = 'YOUR_GITHUB_BRANCH';
+const GITHUB_USER = 'soda4fries';
+const GITHUB_REPO = 'personal_website';
+const GITHUB_BRANCH = 'main';
 const editUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/src/content/blog/${entry.id}`;
 
-const lang = post.lang;
+const lang = post.lang === 'en' ? 'en' : 'en'; // fallback to 'en' if not 'en'
 const t = useTranslations(lang, 'blogPost');
 
 const { pubDate, updatedDate } = post;

@@ -52,7 +52,7 @@ export function ContactForm({
 
   async function onSubmit(values: ContactFormValues) {
     try {
-      const response = await fetch('https://api.example.com/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
