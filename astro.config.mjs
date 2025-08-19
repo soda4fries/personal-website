@@ -31,6 +31,8 @@ export default defineConfig({
     }),
   ],
 
+  prefetch: { prefetchAll: true },
+
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',

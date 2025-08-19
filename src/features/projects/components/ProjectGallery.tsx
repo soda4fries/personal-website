@@ -13,6 +13,7 @@ interface GalleryImage {
   alt: string;
   id: string;
   caption?: string;
+  srcset: string;
 }
 
 interface ProjectGalleryProps {
@@ -37,10 +38,12 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
                   <AspectRatio ratio={16 / 9} className="h-full w-full">
                     <img
                       src={image.src}
+                      srcset={image.srcset}
                       alt={image.alt}
                       className="h-full w-full rounded-md object-cover"
                       width={600}
                       height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </AspectRatio>
                 </CardContent>

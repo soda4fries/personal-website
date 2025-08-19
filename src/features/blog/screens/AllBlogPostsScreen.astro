@@ -23,10 +23,27 @@ const initialTag = Astro.url.searchParams.get('tag') || '';
 
 const texts = useTranslations(lang, 'blogPage');
 
+import { getImage, type ImageMetadata } from 'astro:assets';
+
 // Helper function to transform BlogEntry to PostDataForFilter
-function transformPostForClientFilter(
+async function transformPostForClientFilter(
   post: AstroCollectionEntry<'blog'>
-): PostDataForFilter {
+): Promise<PostDataForFilter> {
+  let optimizedHeroImage = null;
+  if (post.data.heroImage) {
+    const image = await getImage({ src: post.data.heroImage.url, widths: [400, 800], formats: ['webp', 'jpeg'] });
+    optimizedHeroImage = {
+      ...post.data.heroImage,
+      url: {
+        src: image.src,
+        width: image.attributes.width,
+        height: image.attributes.height,
+        format: 'webp',
+        srcset: image.srcset,
+      }
+    };
+  }
+
   return {
     id: post.id,
     slug: post.id ?? '',
@@ -35,10 +52,12 @@ function transformPostForClientFilter(
     tags: post.data.tags,
     body: post.body ?? '',
     pubDate: post.data.pubDate,
-    heroImage: post.data.heroImage,
+    heroImage: optimizedHeroImage,
     readingTimeMinutes: post.data.readingTimeMinutes,
   };
 }
+
+const allPostsForClient = await Promise.all(posts.map(transformPostForClientFilter));
 const componentTexts = {
   searchPlaceholder: texts('searchPlaceholder'),
   filterByTagButtonLabel: texts('filterByTagButtonLabel'),
@@ -68,7 +87,7 @@ const pageDescription = t('pageDescription');
     <Heading title={t('title')} description={t('description')} />
     <FilteredPostsList
       client:load
-      allPosts={posts.map(transformPostForClientFilter)}
+      allPosts={allPostsForClient}
       texts={componentTexts}
       lang={lang}
       initialSearchQuery={initialSearchQuery}
