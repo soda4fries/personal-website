@@ -35,7 +35,7 @@ const regularContent = content.filter((item) => !item.data.featured);
                 <span class="text-2xl">⭐</span>
                 {t('featuredContent')}
               </h2>
-              <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+              <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {featuredContent.map((item) => (
                   <AboutMeCard content={item} lang={lang} />
                 ))}
@@ -50,7 +50,7 @@ const regularContent = content.filter((item) => !item.data.featured);
             )}
 
             {/* Responsive Grid */}
-            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {regularContent.map((item) => (
                 <AboutMeCard content={item} lang={lang} />
               ))}
