@@ -15,10 +15,7 @@ interface Props {
   formTitle: string;
   formTranslations: ContactFormTranslations;
   orSeparatorText: string;
-  calendarTitle: string;
-  calendarDescription: string;
-  calendarLinkLabel: string;
-  calendarUrl: string;
+  
 }
 
 const {
@@ -27,10 +24,7 @@ const {
   mainHeadingDescription,
   formTitle,
   formTranslations,
-  calendarTitle,
-  calendarDescription,
-  calendarLinkLabel,
-  calendarUrl,
+  
 } = Astro.props;
 ---
 
@@ -43,11 +37,16 @@ const {
     titleClassName="md:text-5xl"
   />
 
-  <div class="grid lg:grid-cols-2 gap-8 mt-12 max-w-6xl mx-auto">
-    {/* Left Column: Contact + Calendar */}
+  <div class="grid lg:grid-cols-1 gap-8 mt-12 max-w-6xl mx-auto">
+    {/* Content */}
     <div class="space-y-6">
+      {/* Contact Form */}
+      <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50 max-w-lg mx-auto">
+        <Heading title={formTitle} className="text-center mb-6" />
+        <ContactForm client:load {lang} {formTranslations} />
+      </div>
       {/* Contact Icons */}
-      <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50">
+      <div class="bg-card p-4 md:p-6 rounded-lg shadow border border-border/50 max-w-lg mx-auto">
         <Heading title="My Accounts" className="text-center mb-6" />
 
         <div class="flex justify-center gap-6">
@@ -56,7 +55,7 @@ const {
              class="relative group flex items-center justify-center p-3 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-110 transition-all">
             <Mail className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
             <span class="absolute -top-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-sm text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
-              rahmanmahdinur@gmail.com
+              rahmanmahdinur@gmail.2com
             </span>
           </a>
 
@@ -79,33 +78,6 @@ const {
           </a>
         </div>
       </div>
-
-      {/* Calendar Section */}
-      <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50">
-        <Heading
-          title={calendarTitle}
-          className="text-center mb-4"
-          description={calendarDescription}
-        />
-        <a
-          href={calendarUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class={cn(
-            'w-full flex justify-center items-center',
-            buttonVariants({ variant: 'default', size: 'lg' })
-          )}
-        >
-          <Calendar className="mr-2 size-4" />
-          {calendarLinkLabel}
-        </a>
-      </div>
-    </div>
-
-    {/* Right Column: Contact Form */}
-    <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50">
-      <Heading title={formTitle} className="text-center mb-6" />
-      <ContactForm client:load {lang} {formTranslations} />
     </div>
   </div>
 </section>

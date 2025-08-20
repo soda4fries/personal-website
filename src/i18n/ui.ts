@@ -133,36 +133,29 @@ export const ui = {
       title: 'Table of Contents',
     },
     contactPage: {
-      pageTitle: 'Contact',
+      pageTitle: 'Anonymous Message',
       pageDescription:
-        "Need to reach me? Here's how.",
+        'Send an anonymous message and get a key to check for replies.',
 
-      title: 'Contact',
+      title: 'Anonymous Message',
       description:
-        "Lets meet",
-      formTitle: 'Send a message',
-      firstNameLabel: 'First Name',
-      lastNameLabel: 'Last Name',
-      emailLabel: 'Email',
-      messageLabel: 'Message',
-      sendButtonLabel: 'Send',
-      firstNamePlaceholder: 'Your first name',
-      lastNamePlaceholder: 'Your last name',
-      emailPlaceholder: 'Your email address',
-      messagePlaceholder: 'Your message here...',
-      calendarTitle: 'Schedule a Meeting',
-      calendarDescription:
-        'Prefer to talk live? Book a slot directly in my calendar.',
-      calendarButtonLabel: 'See my availability',
-      calendarLinkLabel: 'See my calendar',
-      calendarPlaceHolder:
-        'The integration with Google Calendar will be soon...',
-      orSeparatorText: 'OR',
-      toastSuccessMessageSent: 'Message sent successfully!',
-      toastErrorFailedToSend: 'Failed to send message.',
+        'Send an anonymous message and get a key to check for replies.',
+      anonymousMessageLabel: 'Your Message',
+      anonymousMessagePlaceholder: 'Type your anonymous message here...',
+      sendAnonymousButtonLabel: 'Send',
+      yourKeyIs: 'Your message key is:',
+      copyKeyButtonLabel: 'Copy Key',
+      keyCopiedToast: 'Key copied to clipboard!',
+      enterKeyLabel: 'Check for Reply', // New title
+      enterKeyPlaceholder: 'Enter Key', // New placeholder
+      checkReplyButtonLabel: 'Check', // New button text
+      noReplyYet: 'No reply yet. Check back later!',
+      replyReceived: 'Reply received:',
+      invalidKeyToast: 'Invalid key or no message found for this key.',
+      checkingReplyToast: 'Checking for reply...',
       toastErrorUnexpected: 'An unexpected error occurred.',
       toastErrorDetails: 'Error details:',
-      toastErrorValidationFailed: 'Form validation failed.',
+      toastErrorValidationFailed: 'Message validation failed.',
     },
     projectDetailPage: {
       backToProjects: 'Back to Projects',

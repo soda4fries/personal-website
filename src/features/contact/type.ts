@@ -1,49 +1,49 @@
 import { z } from 'zod';
 
 export type ContactFormTranslations = {
-  firstNameLabel: string;
-  lastNameLabel: string;
-  emailLabel: string;
-  messageLabel: string;
-  firstNamePlaceholder: string;
-  lastNamePlaceholder: string;
-  emailPlaceholder: string;
-  messagePlaceholder: string;
-  sendButtonLabel: string;
-  toastSuccessMessageSent: string;
-  toastErrorFailedToSend: string;
+  anonymousMessageLabel: string;
+  anonymousMessagePlaceholder: string;
+  sendAnonymousButtonLabel: string;
+  yourKeyIs: string;
+  copyKeyButtonLabel: string;
+  keyCopiedToast: string;
+  enterKeyLabel: string;
+  enterKeyPlaceholder: string;
+  checkReplyButtonLabel: string;
+  noReplyYet: string;
+  replyReceived: string;
+  invalidKeyToast: string;
+  checkingReplyToast: string;
   toastErrorUnexpected: string;
   toastErrorDetails: string;
   toastErrorValidationFailed: string;
 };
 
-const stringFieldSchema = (minLength = 2, maxLength = 50) =>
-  z
-    .string()
-    .nonempty() // Handles 'required' aspect
-    .min(minLength) // Min length
-    .max(maxLength); // Max length
-
-export const contactFormSchema = z.object({
-  firstName: stringFieldSchema(),
-  lastName: stringFieldSchema(),
-  email: z.string().nonempty().email(),
-  message: stringFieldSchema(10, 500),
+export const anonymousMessageSchema = z.object({
+  message: z.string().min(10).max(500),
 });
 
-export type ContactFormValues = z.infer<typeof contactFormSchema>;
+export type AnonymousMessageValues = z.infer<typeof anonymousMessageSchema>;
 
-export type ContactFormApiResponse =
+export type SendMessageApiResponse =
   | {
       status: 'success';
       message: string;
-      data?: unknown; // Resend data on success
+      key: string;
     }
   | {
       status: 'error';
       message: string;
-      // For Zod validation errors
       errors?: Record<string, Array<string> | undefined>;
-      // For other errors (Resend, unexpected)
       error?: string;
+    };
+
+export type CheckReplyApiResponse =
+  | {
+      status: 'success';
+      reply: string;
+    }
+  | {
+      status: 'error';
+      message: string;
     };

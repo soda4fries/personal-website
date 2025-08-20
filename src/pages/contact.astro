@@ -12,17 +12,19 @@ const pageMeta = {
 };
 
 const formTranslations = {
-  firstNameLabel: t('firstNameLabel'),
-  lastNameLabel: t('lastNameLabel'),
-  emailLabel: t('emailLabel'),
-  messageLabel: t('messageLabel'),
-  firstNamePlaceholder: t('firstNamePlaceholder'),
-  lastNamePlaceholder: t('lastNamePlaceholder'),
-  emailPlaceholder: t('emailPlaceholder'),
-  messagePlaceholder: t('messagePlaceholder'),
-  sendButtonLabel: t('sendButtonLabel'),
-  toastSuccessMessageSent: t('toastSuccessMessageSent'),
-  toastErrorFailedToSend: t('toastErrorFailedToSend'),
+  anonymousMessageLabel: t('anonymousMessageLabel'),
+  anonymousMessagePlaceholder: t('anonymousMessagePlaceholder'),
+  sendAnonymousButtonLabel: t('sendAnonymousButtonLabel'),
+  yourKeyIs: t('yourKeyIs'),
+  copyKeyButtonLabel: t('copyKeyButtonLabel'),
+  keyCopiedToast: t('keyCopiedToast'),
+  enterKeyLabel: t('enterKeyLabel'),
+  enterKeyPlaceholder: t('enterKeyPlaceholder'),
+  checkReplyButtonLabel: t('checkReplyButtonLabel'),
+  noReplyYet: t('noReplyYet'),
+  replyReceived: t('replyReceived'),
+  invalidKeyToast: t('invalidKeyToast'),
+  checkingReplyToast: t('checkingReplyToast'),
   toastErrorUnexpected: t('toastErrorUnexpected'),
   toastErrorDetails: t('toastErrorDetails'),
   toastErrorValidationFailed: t('toastErrorValidationFailed'),
@@ -30,15 +32,10 @@ const formTranslations = {
 
 const layoutProps = {
   lang,
-  mainHeadingTitle: pageMeta.title,
-  mainHeadingDescription: t('description'),
-  formTitle: t('formTitle'),
+  mainHeadingTitle: t('title'), // Use the new title from i18n
+  mainHeadingDescription: t('description'), // Use the new description from i18n
   formTranslations,
-  orSeparatorText: t('orSeparatorText'),
-  calendarTitle: t('calendarTitle'),
-  calendarDescription: t('calendarDescription'),
-  calendarLinkLabel: t('calendarLinkLabel'),
-  calendarUrl: import.meta.env.PUBLIC_GOOGLE_CALENDAR_URL as string,
+  orSeparatorText: t('orSeparatorText'), // Keep if still used elsewhere, otherwise remove
 };
 ---
 
