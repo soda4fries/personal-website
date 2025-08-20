@@ -93,41 +93,43 @@ export function PublicMessagesDisplay({
       const leftZoneEnd = (viewportWidth - formCenterWidth) / 2 - margin;
       const rightZoneStart = (viewportWidth + formCenterWidth) / 2 + margin;
       
-      // Check if this is a small landscape screen (low height)
-      const isSmallLandscape = viewportHeight < 600; // Consider screens under 600px height as small landscape
+      // Check if this is a small landscape screen (low height) or cramped layout
+      const isSmallLandscape = viewportHeight < 600;
+      const hasEnoughSideSpace = leftZoneEnd > cardWidth + margin || (rightZoneStart + cardWidth < viewportWidth - margin);
+      const hasEnoughVerticalSpace = viewportHeight > cardHeight + 200; // Need at least 200px buffer for header/footer
       
-      if (isSmallLandscape) {
-        // For small landscape screens, use edge positions similar to mobile
-        // but with more refined placement to avoid form overlap
-        const safeZones = [
-          // Far left edge
+      // If conditions are too cramped, fall back to mobile-style positioning
+      if (isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace) {
+        // Use mobile-style corner positioning for cramped desktop screens
+        const cornerPositions = [
+          // Top corners with more margin
           { x: margin, y: margin },
-          { x: margin, y: Math.max(margin, viewportHeight - cardHeight - margin) },
-          // Far right edge  
           { x: Math.max(margin, viewportWidth - cardWidth - margin), y: margin },
+          // Bottom corners
+          { x: margin, y: Math.max(margin, viewportHeight - cardHeight - margin) },
           { x: Math.max(margin, viewportWidth - cardWidth - margin), y: Math.max(margin, viewportHeight - cardHeight - margin) }
         ];
         
-        // Filter valid positions that don't overlap with form area
-        const validZones = safeZones.filter(zone => 
-          zone.x >= margin && 
-          zone.x + cardWidth <= viewportWidth - margin &&
-          zone.y >= margin && 
-          zone.y + cardHeight <= viewportHeight - margin &&
-          (zone.x + cardWidth < leftZoneEnd || zone.x > rightZoneStart) // Don't overlap form center
+        // Filter valid positions that don't overlap with form center
+        const validCorners = cornerPositions.filter(pos => 
+          pos.x >= margin && 
+          pos.x + cardWidth <= viewportWidth - margin &&
+          pos.y >= margin && 
+          pos.y + cardHeight <= viewportHeight - margin &&
+          (pos.x + cardWidth < leftZoneEnd || pos.x > rightZoneStart) // Don't overlap form center
         );
         
-        if (validZones.length > 0) {
-          const selectedZone = validZones[Math.floor(Math.random() * validZones.length)];
-          x = selectedZone.x;
-          y = selectedZone.y;
+        if (validCorners.length > 0) {
+          const selectedCorner = validCorners[Math.floor(Math.random() * validCorners.length)];
+          x = selectedCorner.x;
+          y = selectedCorner.y;
         } else {
-          // Emergency fallback - use far corners
-          x = Math.random() > 0.5 ? margin : Math.max(margin, viewportWidth - cardWidth - margin);
-          y = margin;
+          // Ultra fallback - disable animations by placing off-screen
+          x = -cardWidth;
+          y = -cardHeight;
         }
       } else {
-        // Normal desktop logic for larger screens
+        // Normal desktop logic for spacious screens
         // Choose left or right zone
         if (leftZoneEnd > cardWidth + margin && Math.random() > 0.5) {
           // Left zone
@@ -215,7 +217,13 @@ export function PublicMessagesDisplay({
 
     const interval = setInterval(() => {
       setVisibleMessages(currentVisible => {
-        if (currentVisible.length < maxVisibleCards) {
+        // Dynamically adjust max cards based on screen constraints
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const isConstrainedSpace = (viewportWidth >= 768 && viewportHeight < 600) || viewportWidth < 1200;
+        const dynamicMaxCards = isConstrainedSpace ? Math.min(1, maxVisibleCards) : maxVisibleCards;
+        
+        if (currentVisible.length < dynamicMaxCards) {
           addRandomMessage();
         }
         return currentVisible;
@@ -236,6 +244,24 @@ export function PublicMessagesDisplay({
   useEffect(() => {
     fetchPublicMessages();
   }, [baseUrl]);
+
+  // Handle resize to clear animations if space becomes too constrained
+  useEffect(() => {
+    const handleResize = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const isVeryConstrained = (viewportWidth >= 768 && viewportHeight < 500) || 
+                               (viewportWidth >= 768 && viewportWidth < 1000);
+      
+      // Clear all animations if space becomes too cramped
+      if (isVeryConstrained && visibleMessages.length > 0) {
+        setVisibleMessages([]);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [visibleMessages.length]);
 
   // Animation CSS classes
   const getAnimationClass = (animationType: VisibleMessage['animationType'], isExiting: boolean) => {
