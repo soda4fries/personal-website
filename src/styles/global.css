@@ -220,7 +220,7 @@
 
 .line {
   position: absolute;
-  width: 2px;
+  width: 1px;
   height: 200%;
   background: linear-gradient(0deg, 
     transparent 0%,
@@ -231,8 +231,8 @@
     oklch(0.705 0.213 47.604 / 0.2) 85%,
     transparent 100%
   );
-  filter: drop-shadow(0 0 3px oklch(0.75 0.183 55.934 / 0.3));
-  animation: flowDiagonalCorrect 15s linear infinite;
+  filter: drop-shadow(0 0 2px oklch(0.75 0.183 55.934 / 0.3));
+  animation: lineFade 30s infinite ease-in-out;
 }
 
 .dark .line {
@@ -251,7 +251,7 @@
 .line::after {
   content: '';
   position: absolute;
-  top: 45%;
+  top: -10%;
   left: -1px;
   width: 4px;
   height: 10%;
@@ -259,6 +259,7 @@
   border-radius: 2px;
   filter: blur(0.5px);
   box-shadow: 0 0 8px oklch(0.837 0.128 66.29 / 0.5);
+  animation: shootingStar 15s linear infinite;
 }
 
 .dark .line::after {
@@ -267,51 +268,45 @@
 }
 
 .line-1 {
-  top: -100%;
+  top: -50%;
   left: -5%;
   transform: rotate(25deg);
   animation-delay: 0s;
-  animation-duration: 18s;
 }
 
 .line-2 {
-  top: -100%;
+  top: -50%;
   left: 15%;
   transform: rotate(28deg);
-  animation-delay: -4s;
-  animation-duration: 16s;
+  animation-delay: -10s;
 }
 
 .line-3 {
-  top: -100%;
+  top: -50%;
   left: 35%;
   transform: rotate(22deg);
-  animation-delay: -8s;
-  animation-duration: 20s;
+  animation-delay: -20s;
 }
 
 .line-4 {
-  top: -100%;
+  top: -50%;
   left: 55%;
   transform: rotate(30deg);
-  animation-delay: -12s;
-  animation-duration: 17s;
+  animation-delay: -5s;
 }
 
 .line-5 {
-  top: -100%;
+  top: -50%;
   left: 75%;
   transform: rotate(26deg);
-  animation-delay: -2s;
-  animation-duration: 19s;
+  animation-delay: -15s;
 }
 
 .line-6 {
-  top: -100%;
+  top: -50%;
   left: 95%;
   transform: rotate(24deg);
-  animation-delay: -6s;
-  animation-duration: 21s;
+  animation-delay: -25s;
 }
 
 .data-nodes {
@@ -452,6 +447,35 @@
   }
   100% {
     transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shootingStar {
+  0% {
+    top: -10%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+
+@keyframes lineFade {
+  0%, 30% {
+    opacity: 0;
+  }
+  35%, 65% {
+    opacity: 1;
+  }
+  70%, 100% {
     opacity: 0;
   }
 }
