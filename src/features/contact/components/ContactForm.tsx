@@ -28,14 +28,17 @@ import { toast } from 'sonner';
 interface ContactFormProps {
   lang: LanguageCode;
   formTranslations: ContactFormTranslations;
+  baseUrl?: string;
 }
 
 export function ContactForm({
   lang,
   formTranslations,
+  baseUrl = '',
 }: ContactFormProps) {
   const [messageKey, setMessageKey] = useState<string | null>(null);
   const [replyMessage, setReplyMessage] = useState<string | null>(null);
+  const [replyStatus, setReplyStatus] = useState<'success' | 'error' | null>(null);
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [isCheckingReply, setIsCheckingReply] = useState<boolean>(false);
   const [keyToCheck, setKeyToCheck] = useState<string>('');
@@ -61,25 +64,25 @@ export function ContactForm({
     setReplyMessage(null); // Clear any previous reply
     setMessageKey(null); // Clear any previous key
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
-
     try {
-      // In a real application, you would send `values.message` to your backend
-      // and receive a unique key.
-      const simulatedKey = generateRandomKey();
-      const result: SendMessageApiResponse = {
-        status: 'success',
-        message: formTranslations.sendAnonymousButtonLabel, // Reusing for toast
-        key: simulatedKey,
-      };
+      const response = await fetch(`${baseUrl}/api/contact/send-message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: values.message,
+        }),
+      });
+
+      const result: SendMessageApiResponse = await response.json();
 
       if (result.status === 'success') {
         setMessageKey(result.key);
-        toast.success(formTranslations.sendAnonymousButtonLabel);
+        toast.success('Message sent successfully!');
         form.reset();
       } else {
-        // Handle simulated error
+        // Handle API error
         let errorMessage = result.message || formTranslations.toastErrorUnexpected;
         if (result.errors) {
           const errorMessages = Object.values(result.errors).flat().join('\n');
@@ -103,29 +106,29 @@ export function ContactForm({
 
     setIsCheckingReply(true);
     setReplyMessage(null); // Clear previous reply
-
-    // Simulate API call to check for reply
-    await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+    setReplyStatus(null); // Clear previous status
 
     try {
-      // In a real application, you would send `keyToCheck` to your backend
-      // and receive a reply or a "no reply" status.
-      let simulatedReply: CheckReplyApiResponse;
-      if (keyToCheck === 'testkey123') { // Example: a hardcoded key for testing replies
-        simulatedReply = { status: 'success', reply: 'This is a test reply for your message!' };
-      } else if (keyToCheck === 'anotherreply') {
-        simulatedReply = { status: 'success', reply: 'Here is another reply for you.' };
-      }
-      else {
-        simulatedReply = { status: 'error', message: formTranslations.noReplyYet };
-      }
+      const response = await fetch(`${baseUrl}/api/contact/check-reply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: keyToCheck,
+        }),
+      });
 
-      if (simulatedReply.status === 'success') {
-        setReplyMessage(simulatedReply.reply);
+      const result: CheckReplyApiResponse = await response.json();
+
+      if (result.status === 'success') {
+        setReplyMessage(result.reply);
+        setReplyStatus('success');
         toast.success(formTranslations.replyReceived);
       } else {
-        setReplyMessage(simulatedReply.message); // Display "No reply yet" or error message
-        toast.info(simulatedReply.message);
+        setReplyMessage(result.message); // Display "No reply yet" or error message
+        setReplyStatus('error');
+        toast.info(result.message);
       }
     } catch (error) {
       console.error('An unexpected error occurred while checking reply:', error);
@@ -244,8 +247,12 @@ export function ContactForm({
         </div>
 
         {replyMessage && (
-          <div className="p-4 bg-secondary rounded-md animate-in fade-in duration-500">
-            <p className="font-semibold">{formTranslations.replyReceived}</p>
+          <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
+            replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
+          }`}>
+            <p className="font-semibold">
+              {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
+            </p>
             <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
           </div>
         )}

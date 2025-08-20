@@ -6,6 +6,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const lang = defaultLanguage as LanguageCode;
 const t = useTranslations(lang, 'contactPage');
 
+// Configure the base URL for the contact server
+// Change this to point to your contact server (e.g., 'https://api.yourdomain.com' or 'http://localhost:3001')
+const contactServerBaseUrl = 'http://localhost:8000';
+
 const pageMeta = {
   title: t('pageTitle'),
   description: t('pageDescription'),
@@ -35,7 +39,8 @@ const layoutProps = {
   mainHeadingTitle: t('title'), // Use the new title from i18n
   mainHeadingDescription: t('description'), // Use the new description from i18n
   formTranslations,
-  orSeparatorText: t('orSeparatorText'), // Keep if still used elsewhere, otherwise remove
+  orSeparatorText: 'test', // Added back as required by Props
+  baseUrl: contactServerBaseUrl,
 };
 ---
 
