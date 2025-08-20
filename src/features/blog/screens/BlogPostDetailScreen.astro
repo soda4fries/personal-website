@@ -187,6 +187,28 @@ const pageDescription = post.description;
                 if (href === `#${newActiveId}`) {
                   link.classList.remove('text-muted-foreground');
                   link.classList.add('bg-primary', 'text-primary-foreground');
+                  
+                  // Auto-scroll TOC to keep active item visible
+                  const desktopToc = document.getElementById('desktop-toc');
+                  if (desktopToc) {
+                    const tocNav = desktopToc.querySelector('nav');
+                    if (tocNav) {
+                      setTimeout(() => {
+                        // Find the highlighted link and center it
+                        const activeLink = tocNav.querySelector('.toc-link.bg-primary') as HTMLElement;
+                        if (activeLink) {
+                          const linkTop = activeLink.offsetTop;
+                          const navHeight = tocNav.clientHeight;
+                          const targetScroll = linkTop - (navHeight / 2);
+                          
+                          tocNav.scrollTo({
+                            top: Math.max(0, targetScroll),
+                            behavior: 'smooth'
+                          });
+                        }
+                      }, 150);
+                    }
+                  }
                 }
               });
             }

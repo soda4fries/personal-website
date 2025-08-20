@@ -59,8 +59,8 @@ const tocHtml = headings.length > 0 ? `<ul class="space-y-1">${tocItems}</ul>` :
     </div>
 
     <!-- Desktop TOC - fixed sidebar on desktop -->
-    <div class="hidden lg:block fixed top-1/2 right-8 transform -translate-y-1/2 w-72 max-h-[70vh] overflow-y-auto transition-all duration-300" id="desktop-toc">
-      <nav class="bg-gradient-to-br from-card/95 via-card to-accent/10 border border-border/50 rounded-2xl p-5 shadow-xl backdrop-blur-md hover:shadow-2xl transition-all duration-300">
+    <div class="hidden lg:block fixed top-1/2 right-8 transform -translate-y-1/2 w-72 transition-all duration-300" id="desktop-toc">
+      <nav class="bg-gradient-to-br from-card/95 via-card to-accent/10 border border-border/50 rounded-2xl p-5 shadow-xl backdrop-blur-md hover:shadow-2xl transition-all duration-300 max-h-[70vh] overflow-y-auto">
         <h3 class="font-bold text-foreground mb-4 flex items-center gap-2 text-lg">
           <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
           {componentTitle}
@@ -91,29 +91,14 @@ const tocHtml = headings.length > 0 ? `<ul class="space-y-1">${tocItems}</ul>` :
     scroll-behavior: smooth;
   }
   
-  /* Custom scrollbar for TOC */
+  /* Hide scrollbar for TOC */
   #desktop-toc nav {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
   
   #desktop-toc nav::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  #desktop-toc nav::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 4px;
-  }
-  
-  #desktop-toc nav::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(var(--primary) / 0.6), hsl(var(--primary) / 0.3));
-    border-radius: 4px;
-    border: 1px solid hsl(var(--border));
-  }
-  
-  #desktop-toc nav::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(var(--primary) / 0.8), hsl(var(--primary) / 0.5));
+    display: none; /* WebKit */
   }
   
   /* Smooth transitions only */
