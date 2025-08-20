@@ -1,6 +1,6 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 @import 'tw-animate-css';
-/* Typography plugin should be added in tailwind.config.js, not here */
 
 /* Removed unsupported @custom-variant dark */
 
@@ -176,6 +176,123 @@
     overscroll-behavior: none;
   }
 }
+
+/* Custom Scrollbar Styles */
+* {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--muted-foreground) / 0.2) transparent;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: oklch(var(--muted-foreground) / 0.15);
+  border-radius: 3px;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--muted-foreground) / 0.25);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: oklch(var(--muted-foreground) / 0.35);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode scrollbar adjustments - much more subtle */
+.dark * {
+  scrollbar-color: oklch(var(--muted-foreground) / 0.15) transparent;
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background: oklch(var(--muted-foreground) / 0.12);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--muted-foreground) / 0.2);
+}
+
+.dark *::-webkit-scrollbar-thumb:active {
+  background: oklch(var(--muted-foreground) / 0.3);
+}
+
+/* Minimal scrollbar for cards that still need visible scrollbars */
+.card::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background: oklch(var(--muted-foreground) / 0.15);
+  border-radius: 2px;
+}
+
+.card::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--muted-foreground) / 0.25);
+}
+
+/* Hide scrollbar completely for specific elements */
+.scrollbar-hidden,
+#desktop-toc nav,
+.toc-container,
+pre,
+.prose pre,
+code,
+.prose code,
+.overflow-x-auto,
+.overflow-auto,
+.overflow-x-scroll,
+.overflow-y-auto,
+.overflow-scroll,
+table,
+.prose table,
+.shiki,
+.astro-code,
+iframe {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hidden::-webkit-scrollbar,
+#desktop-toc nav::-webkit-scrollbar,
+.toc-container::-webkit-scrollbar,
+pre::-webkit-scrollbar,
+.prose pre::-webkit-scrollbar,
+code::-webkit-scrollbar,
+.prose code::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.overflow-x-scroll::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-scroll::-webkit-scrollbar,
+table::-webkit-scrollbar,
+.prose table::-webkit-scrollbar,
+.shiki::-webkit-scrollbar,
+.astro-code::-webkit-scrollbar,
+iframe::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
 
 .animated-background {
   position: fixed;
@@ -610,36 +727,6 @@
 }
 
 /* Content styling - background is now blurred instead of overlaid */
-
-/* Proper code block styling for MDX content */
-.prose pre {
-  background-color: var(--color-muted);
-  color: var(--color-foreground);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  overflow-x: auto;
-}
-
-.prose code {
-  background-color: var(--color-muted);
-  color: var(--color-foreground);
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
-  font-size: 0.875em;
-}
-
-.prose pre code {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-}
-
-/* Ensure Shiki syntax highlighting works properly */
-.prose .shiki,
-.shiki {
-  background-color: var(--color-muted) !important;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .animated-background .tech-grid,
