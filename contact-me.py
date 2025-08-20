@@ -62,6 +62,7 @@ security = HTTPBearer(auto_error=False)
 # Data Models for API
 class SendMessageRequest(BaseModel):
     message: str = Field(..., min_length=10, max_length=500)
+    public: bool = Field(default=False)
     
     @field_validator('message')
     @classmethod
@@ -100,9 +101,16 @@ class ContactDB:
                     message TEXT NOT NULL,
                     timestamp TEXT NOT NULL,
                     replied BOOLEAN DEFAULT FALSE,
+                    public BOOLEAN DEFAULT FALSE,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            
+            # Add public column if it doesn't exist (for existing databases)
+            try:
+                conn.execute("ALTER TABLE messages ADD COLUMN public BOOLEAN DEFAULT FALSE")
+            except sqlite3.OperationalError:
+                pass  # Column already exists
             
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS replies (
@@ -130,25 +138,25 @@ class ContactDB:
             cursor = conn.execute("SELECT 1 FROM messages WHERE key = ?", (key,))
             return cursor.fetchone() is not None
     
-    def store_message(self, message: str) -> str:
+    def store_message(self, message: str, public: bool = False) -> str:
         """Store a new message and return the generated key."""
         key = self.generate_key()
         timestamp = datetime.now().isoformat()
         
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
-                "INSERT INTO messages (key, message, timestamp) VALUES (?, ?, ?)",
-                (key, message, timestamp)
+                "INSERT INTO messages (key, message, timestamp, public) VALUES (?, ?, ?, ?)",
+                (key, message, timestamp, public)
             )
             conn.commit()
         
         return key
     
-    def get_message(self, key: str) -> Optional[Tuple[str, str, bool]]:
-        """Get message details by key. Returns (message, timestamp, replied)."""
+    def get_message(self, key: str) -> Optional[Tuple[str, str, bool, bool]]:
+        """Get message details by key. Returns (message, timestamp, replied, public)."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute(
-                "SELECT message, timestamp, replied FROM messages WHERE key = ?",
+                "SELECT message, timestamp, replied, public FROM messages WHERE key = ?",
                 (key,)
             )
             result = cursor.fetchone()
@@ -193,7 +201,7 @@ class ContactDB:
         """List all messages with their details."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT m.key, m.message, m.timestamp, m.replied, r.reply
+                SELECT m.key, m.message, m.timestamp, m.replied, m.public, r.reply
                 FROM messages m
                 LEFT JOIN replies r ON m.key = r.message_key
                 ORDER BY m.created_at DESC
@@ -206,10 +214,50 @@ class ContactDB:
                     'message': row[1],
                     'timestamp': row[2],
                     'replied': bool(row[3]),
-                    'reply': row[4]
+                    'public': bool(row[4]),
+                    'reply': row[5]
                 })
             
             return results
+    
+    def list_public_messages(self) -> List[Dict]:
+        """List all public messages (with or without replies)."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("""
+                SELECT m.message, m.timestamp, r.reply, r.timestamp as reply_timestamp, m.replied
+                FROM messages m
+                LEFT JOIN replies r ON m.key = r.message_key
+                WHERE m.public = TRUE
+                ORDER BY m.created_at DESC
+            """)
+            
+            results = []
+            for row in cursor.fetchall():
+                results.append({
+                    'message': row[0],
+                    'timestamp': row[1],
+                    'reply': row[2],
+                    'reply_timestamp': row[3],
+                    'replied': bool(row[4])
+                })
+            
+            return results
+    
+    def toggle_message_public(self, key: str) -> bool:
+        """Toggle the public status of a message."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("SELECT public FROM messages WHERE key = ?", (key,))
+            result = cursor.fetchone()
+            if not result:
+                return False
+            
+            new_public_status = not bool(result[0])
+            conn.execute(
+                "UPDATE messages SET public = ? WHERE key = ?",
+                (new_public_status, key)
+            )
+            conn.commit()
+            return True
     
     def get_stats(self) -> Dict:
         """Get database statistics."""
@@ -292,7 +340,7 @@ app.add_middleware(
 async def send_message(request: SendMessageRequest):
     """Send an anonymous message."""
     try:
-        message_key = db.store_message(request.message)
+        message_key = db.store_message(request.message, request.public)
         
         return SendMessageResponse(
             status="success",
@@ -344,6 +392,21 @@ async def check_reply(request: CheckReplyRequest):
             message="An unexpected error occurred while checking for replies."
         )
 
+@app.get("/api/contact/public-messages")
+async def get_public_messages():
+    """Get all public messages with replies."""
+    try:
+        messages = db.list_public_messages()
+        return {
+            "status": "success",
+            "messages": messages
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": "Failed to fetch public messages"
+        }
+
 @app.get("/")
 async def root():
     """Health check endpoint."""
@@ -355,6 +418,7 @@ async def root():
         "endpoints": {
             "send_message": "/api/contact/send-message",
             "check_reply": "/api/contact/check-reply",
+            "public_messages": "/api/contact/public-messages",
             "admin_messages": "/api/contact/admin/messages (requires auth)",
             "admin_reply": "/api/contact/admin/reply/{key} (requires auth)"
         }
@@ -479,14 +543,15 @@ def display_message_browser(messages: List[Dict], selected: int, page: int = 0, 
         except:
             formatted_time = msg['timestamp'][:16]
         
-        # Status indicator
-        status = "✅" if msg['replied'] else "⏳"
+        # Status indicators
+        reply_status = "✅" if msg['replied'] else "⏳"
+        public_status = "🌐" if msg.get('public', False) else "🔒"
         
         if is_selected:
-            console.print(f"► {status} [bold green]{msg['key'][:8]}...[/bold green] {formatted_time}")
+            console.print(f"► {reply_status}{public_status} [bold green]{msg['key'][:8]}...[/bold green] {formatted_time}")
             console.print(f"   [bold green]{message_preview}[/bold green]")
         else:
-            console.print(f"  {status} [cyan]{msg['key'][:8]}...[/cyan] {formatted_time}")
+            console.print(f"  {reply_status}{public_status} [cyan]{msg['key'][:8]}...[/cyan] {formatted_time}")
             console.print(f"   {message_preview}")
     
     # Pagination info
@@ -499,10 +564,13 @@ def show_message_detail(message: Dict, key: str) -> None:
     clear_screen()
     reply = db.get_reply(key)
     
+    public_status = "Public 🌐" if message.get('public', False) else "Private 🔒"
+    
     panel_content = (
         f"[bold]Message:[/bold]\n{message['message']}\n\n"
         f"[bold]Sent:[/bold] {message['timestamp']}\n"
-        f"[bold]Status:[/bold] {'Replied' if message['replied'] else 'Pending'}"
+        f"[bold]Status:[/bold] {'Replied' if message['replied'] else 'Pending'}\n"
+        f"[bold]Visibility:[/bold] {public_status}"
     )
     
     if reply:
@@ -515,9 +583,9 @@ def show_message_detail(message: Dict, key: str) -> None:
     ))
     
     if not message['replied']:
-        console.print("\n[bold]Options:[/bold] R=Reply, B=Back")
+        console.print("\n[bold]Options:[/bold] R=Reply, P=Toggle Public, B=Back")
     else:
-        console.print("\n[bold]Options:[/bold] R=Reply, E=Edit Reply, B=Back")
+        console.print("\n[bold]Options:[/bold] R=Reply, E=Edit Reply, P=Toggle Public, B=Back")
 
 def get_multiline_input(prompt: str) -> str:
     """Get multiline text input from user."""
@@ -672,6 +740,15 @@ def view_and_reply_message(message: Dict):
                 else:
                     console.print("[red]❌ Failed to update reply. Press any key to continue.[/red]")
                 readchar.readkey()
+        elif nav_key.lower() == 'p':
+            # Toggle public status
+            if db.toggle_message_public(key):
+                message['public'] = not message.get('public', False)
+                new_status = "Public" if message['public'] else "Private"
+                console.print(f"[green]✅ Message visibility changed to {new_status}! Press any key to continue.[/green]")
+            else:
+                console.print("[red]❌ Failed to update message visibility. Press any key to continue.[/red]")
+            readchar.readkey()
 
 def show_stats():
     """Show statistics screen."""

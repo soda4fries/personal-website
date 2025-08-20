@@ -10,9 +10,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import {
   type ContactFormTranslations,
 anonymousMessageSchema,
@@ -22,8 +30,9 @@ anonymousMessageSchema,
 } from '../type';
 import { setGlobalZodErrorMap } from '@/i18n/zodErrorMap';
 import type { LanguageCode } from '@/i18n/ui';
-import { Loader2, Send, ClipboardCopy, Search } from 'lucide-react';
+import { Loader2, Send, ClipboardCopy, Search, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
+import { PublicMessagesDisplay } from './PublicMessagesDisplay';
 
 interface ContactFormProps {
   lang: LanguageCode;
@@ -51,6 +60,7 @@ export function ContactForm({
     resolver: zodResolver(anonymousMessageSchema),
     defaultValues: {
       message: '',
+      public: false,
     },
     mode: 'onBlur',
   });
@@ -72,6 +82,7 @@ export function ContactForm({
         },
         body: JSON.stringify({
           message: values.message,
+          public: values.public,
         }),
       });
 
@@ -188,7 +199,24 @@ export function ContactForm({
               </FormItem>
             )}
           />
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center">
+            <FormField
+              control={form.control}
+              name="public"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm font-normal">
+                    {formTranslations.publicMessageLabel}
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
             <Button
               type="submit"
               size="lg"
@@ -223,40 +251,58 @@ export function ContactForm({
         </div>
       )}
 
-      {/* Check Reply Section */}
-      <div className="mt-8 pt-8 border-t border-border/50 space-y-4">
-        <h3 className="text-xl font-semibold text-center">{formTranslations.enterKeyLabel}</h3>
-        <div className="flex space-x-2">
-          <Input
-            placeholder={formTranslations.enterKeyPlaceholder}
-            value={keyToCheck}
-            onChange={(e) => setKeyToCheck(e.target.value)}
-            disabled={isCheckingReply}
-            className="h-10"
-          />
-          <Button onClick={onCheckReply} disabled={isCheckingReply} size="lg" className="w-24">
-            {isCheckingReply ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <>
-                <Search className="size-4" />
-                {formTranslations.checkReplyButtonLabel}
-              </>
-            )}
-          </Button>
-        </div>
+      {/* Accordion for Check Reply and Public Messages */}
+      <Accordion type="single" collapsible className="mt-8">
+        <AccordionItem value="check-reply">
+          <AccordionTrigger className="text-base">
+            <div className="flex items-center gap-2">
+              <Search className="size-4" />
+              Check for replies or see public messages
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="space-y-6">
+            {/* Check Reply Section */}
+            <div className="space-y-4">
+              <h4 className="font-medium">{formTranslations.enterKeyLabel}</h4>
+              <div className="flex space-x-2">
+                <Input
+                  placeholder={formTranslations.enterKeyPlaceholder}
+                  value={keyToCheck}
+                  onChange={(e) => setKeyToCheck(e.target.value)}
+                  disabled={isCheckingReply}
+                  className="h-10"
+                />
+                <Button onClick={onCheckReply} disabled={isCheckingReply} size="lg" className="w-24">
+                  {isCheckingReply ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Search className="size-4" />
+                      {formTranslations.checkReplyButtonLabel}
+                    </>
+                  )}
+                </Button>
+              </div>
 
-        {replyMessage && (
-          <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
-            replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
-          }`}>
-            <p className="font-semibold">
-              {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
-            </p>
-            <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
-          </div>
-        )}
-      </div>
+              {replyMessage && (
+                <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
+                  replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
+                }`}>
+                  <p className="font-semibold">
+                    {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
+                  </p>
+                  <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Public Messages Section */}
+            <div className="border-t border-border/50 pt-6">
+              <PublicMessagesDisplay baseUrl={baseUrl} showHeader={true} />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
