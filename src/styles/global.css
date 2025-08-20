@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@plugin "@tailwindcss/typography";
+/* Typography plugin should be added in tailwind.config.js, not here */
 
-@custom-variant dark (&:is(.dark *));
+/* Removed unsupported @custom-variant dark */
 
 @theme inline {
   --color-background: var(--background);
