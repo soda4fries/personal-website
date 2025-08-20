@@ -1,28 +1,33 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, MessageSquare, Reply, Clock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { MessageSquare, Reply, Clock } from 'lucide-react';
 import type { PublicMessage, PublicMessagesApiResponse } from '../type';
 
 interface PublicMessagesDisplayProps {
   baseUrl?: string;
-  autoRotateInterval?: number; // in milliseconds, default 6000 (6 seconds)
-  showNavigation?: boolean; // whether to show prev/next buttons
-  showHeader?: boolean; // whether to show the header with title
+  popupInterval?: number; // in milliseconds, default 4000 (4 seconds)
+  maxVisibleCards?: number; // maximum cards visible at once, default 3
+  containerHeight?: string; // height of the container, default "400px"
+}
+
+interface VisibleMessage extends PublicMessage {
+  id: string;
+  x: number;
+  y: number;
+  animationType: 'slideUp' | 'fadeIn' | 'bounceIn' | 'slideLeft' | 'slideRight' | 'zoomIn';
+  isExiting: boolean;
 }
 
 export function PublicMessagesDisplay({
   baseUrl = '',
-  autoRotateInterval = 6000,
-  showNavigation = true,
-  showHeader = true
+  popupInterval = 4000,
+  maxVisibleCards = 3,
+  containerHeight = '400px'
 }: PublicMessagesDisplayProps) {
   const [messages, setMessages] = useState<PublicMessage[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleMessages, setVisibleMessages] = useState<VisibleMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Fetch public messages
   const fetchPublicMessages = async () => {
@@ -32,11 +37,8 @@ export function PublicMessagesDisplay({
       const result: PublicMessagesApiResponse = await response.json();
 
       if (result.status === 'success') {
-        setMessages(result.messages);
+        setMessages(result.messages || []);
         setError(null);
-        if (result.messages.length > 0) {
-          setCurrentIndex(0);
-        }
       } else {
         setError(result.message);
       }
@@ -62,195 +64,269 @@ export function PublicMessagesDisplay({
     }
   };
 
-  // Navigation functions
-  const goToNext = () => {
-    if (messages.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % messages.length);
+  // Animation types array
+  const animationTypes: VisibleMessage['animationType'][] = ['slideUp', 'fadeIn', 'bounceIn', 'slideLeft', 'slideRight', 'zoomIn'];
+
+
+  // Add a new random message
+  const addRandomMessage = () => {
+    if (messages.length === 0) return;
+
+    // Pick a random message
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    const message = messages[randomIndex];
+    
+    // Generate smart position based on screen size
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = containerHeight === '100vh' ? window.innerHeight : parseInt(containerHeight);
+    const cardWidth = 300;
+    const cardHeight = 180;
+    const margin = 20;
+    
+    let x, y;
+    
+    // Desktop: avoid center form area, use side zones
+    if (viewportWidth >= 768) {
+      const formCenterWidth = 600; // approximate form width
+      const leftZoneEnd = (viewportWidth - formCenterWidth) / 2 - margin;
+      const rightZoneStart = (viewportWidth + formCenterWidth) / 2 + margin;
+      
+      // Choose left or right zone
+      if (leftZoneEnd > cardWidth + margin && Math.random() > 0.5) {
+        // Left zone
+        x = Math.random() * (leftZoneEnd - cardWidth) + margin;
+      } else if (rightZoneStart + cardWidth < viewportWidth - margin) {
+        // Right zone  
+        x = Math.random() * (viewportWidth - rightZoneStart - cardWidth - margin) + rightZoneStart;
+      } else {
+        // Fallback to top/bottom areas if sides too narrow
+        x = Math.random() * Math.max(0, viewportWidth - cardWidth - margin * 2) + margin;
+      }
+      
+      // Avoid header and footer areas
+      const headerHeight = 100;
+      const footerHeight = 100;
+      const availableHeight = viewportHeight - headerHeight - footerHeight - cardHeight;
+      y = Math.random() * Math.max(cardHeight, availableHeight) + headerHeight;
+    } else {
+      // Mobile: use corners and edges, smaller cards
+      const positions = [
+        // Top corners
+        { x: margin, y: margin },
+        { x: viewportWidth - cardWidth - margin, y: margin },
+        // Bottom corners  
+        { x: margin, y: viewportHeight - cardHeight - margin },
+        { x: viewportWidth - cardWidth - margin, y: viewportHeight - cardHeight - margin },
+        // Side centers
+        { x: margin, y: (viewportHeight - cardHeight) / 2 },
+        { x: viewportWidth - cardWidth - margin, y: (viewportHeight - cardHeight) / 2 }
+      ];
+      
+      const validPositions = positions.filter(pos => 
+        pos.x >= margin && 
+        pos.x + cardWidth <= viewportWidth - margin &&
+        pos.y >= margin && 
+        pos.y + cardHeight <= viewportHeight - margin
+      );
+      
+      if (validPositions.length > 0) {
+        const pos = validPositions[Math.floor(Math.random() * validPositions.length)];
+        x = pos.x;
+        y = pos.y;
+      } else {
+        // Fallback
+        x = margin;
+        y = margin;
+      }
     }
+    
+    const animationType = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+
+    const newVisibleMessage: VisibleMessage = {
+      ...message,
+      id: `${randomIndex}-${Date.now()}-${Math.random()}`,
+      x,
+      y,
+      animationType,
+      isExiting: false
+    };
+
+    setVisibleMessages(prev => [...prev, newVisibleMessage]);
+
+    // Auto-remove the message after a delay
+    setTimeout(() => {
+      setVisibleMessages(prev => 
+        prev.map(msg => 
+          msg.id === newVisibleMessage.id 
+            ? { ...msg, isExiting: true }
+            : msg
+        )
+      );
+
+      // Remove from DOM after exit animation
+      setTimeout(() => {
+        setVisibleMessages(prev => prev.filter(msg => msg.id !== newVisibleMessage.id));
+      }, 500);
+    }, 5000 + Math.random() * 3000);
   };
 
-  const goToPrevious = () => {
-    if (messages.length > 0) {
-      setCurrentIndex((prev) => (prev - 1 + messages.length) % messages.length);
-    }
-  };
 
-  // Auto-rotation effect
+  // Random popup effect
   useEffect(() => {
-    if (!isAutoPlaying || messages.length <= 1) return;
+    if (messages.length === 0 || isLoading) return;
 
-    const interval = setInterval(goToNext, autoRotateInterval);
+    const interval = setInterval(() => {
+      setVisibleMessages(currentVisible => {
+        if (currentVisible.length < maxVisibleCards) {
+          addRandomMessage();
+        }
+        return currentVisible;
+      });
+    }, popupInterval + Math.random() * 2000);
+
     return () => clearInterval(interval);
-  }, [isAutoPlaying, messages.length, autoRotateInterval, currentIndex]);
+  }, [messages.length, isLoading, popupInterval, maxVisibleCards]);
+
+  // Add initial message when messages are loaded
+  useEffect(() => {
+    if (messages.length > 0 && !isLoading) {
+      setTimeout(() => addRandomMessage(), 1000);
+    }
+  }, [messages.length, isLoading]);
 
   // Fetch messages on component mount
   useEffect(() => {
     fetchPublicMessages();
   }, [baseUrl]);
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <Card className="w-full max-w-2xl mx-auto animate-pulse">
-        <CardHeader>
-          <div className="h-6 bg-muted rounded w-1/2"></div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="h-4 bg-muted rounded w-full"></div>
-            <div className="h-4 bg-muted rounded w-3/4"></div>
-            <div className="h-4 bg-muted rounded w-1/2"></div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Animation CSS classes
+  const getAnimationClass = (animationType: VisibleMessage['animationType'], isExiting: boolean) => {
+    if (isExiting) {
+      return 'animate-out fade-out zoom-out-95 duration-500';
+    }
+    
+    switch (animationType) {
+      case 'slideUp':
+        return 'animate-in slide-in-from-bottom-8 duration-700 ease-out';
+      case 'fadeIn':
+        return 'animate-in fade-in duration-1000 ease-out';
+      case 'bounceIn':
+        return 'animate-in zoom-in-50 duration-700 ease-out bounce';
+      case 'slideLeft':
+        return 'animate-in slide-in-from-right-8 duration-700 ease-out';
+      case 'slideRight':
+        return 'animate-in slide-in-from-left-8 duration-700 ease-out';
+      case 'zoomIn':
+        return 'animate-in zoom-in-95 duration-500 ease-out';
+      default:
+        return 'animate-in fade-in duration-700 ease-out';
+    }
+  };
 
-  // Error state
+  // Error state - don't show error visually, just return empty container
   if (error) {
+    console.warn('Public messages failed to load:', error);
     return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardContent className="pt-6 text-center">
-          <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">{error}</p>
-        </CardContent>
-      </Card>
+      <div 
+        className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-primary/5 rounded-lg overflow-hidden pointer-events-none"
+        style={{ height: containerHeight }}
+      />
     );
   }
-
-  // Empty state
-  if (messages.length === 0) {
-    return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardContent className="pt-6 text-center">
-          <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No Public Messages Yet</h3>
-          <p className="text-muted-foreground">
-            Be the first to send a public message and share your feedback!
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const currentMessage = messages[currentIndex];
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-4">
-      {/* Header */}
-      {showHeader && (
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5" />
-            <h3 className="text-lg font-semibold">Public Messages</h3>
-            <Badge variant="secondary" className="ml-2">
-              {currentIndex + 1} of {messages.length}
-            </Badge>
-          </div>
-          
-          {messages.length > 1 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              {isAutoPlaying ? (
-                <>
-                  <Clock className="w-4 h-4 mr-1" />
-                  Auto
-                </>
-              ) : (
-                <>
-                  <Clock className="w-4 h-4 mr-1" />
-                  Manual
-                </>
-              )}
-            </Button>
-          )}
+    <div 
+      className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-primary/5 rounded-lg overflow-hidden pointer-events-none"
+      style={{ height: containerHeight }}
+    >
+      {/* Small loading indicator in corner - hide on mobile */}
+      {isLoading && (
+        <div className="absolute top-4 right-4 z-0 hidden md:flex items-center gap-2 bg-background/60 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
+          <div className="w-3 h-3 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
+          <span className="text-xs text-muted-foreground/60">Loading messages...</span>
         </div>
       )}
 
-      {/* Message Card */}
-      <Card className="transition-all duration-300 hover:shadow-md">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-start gap-3 text-base">
-            <MessageSquare className="w-5 h-5 mt-0.5 text-blue-500 flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words">
-                {currentMessage.message}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                Received {formatDate(currentMessage.timestamp)}
-              </p>
-            </div>
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent className="pt-0">
-          {currentMessage.replied && currentMessage.reply ? (
-            <div className="flex items-start gap-3 bg-muted/50 rounded-lg p-4">
-              <Reply className="w-5 h-5 mt-0.5 text-green-500 flex-shrink-0" />
+      {/* Header - only show when there are visible messages */}
+      {visibleMessages.length > 0 && (
+        <div className="absolute top-4 left-4 z-0 flex items-center gap-2 bg-background/40 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
+          <MessageSquare className="w-4 h-4 text-muted-foreground/60" />
+          <span className="text-sm font-medium text-muted-foreground/80">Public Messages</span>
+          <span className="text-xs text-muted-foreground/60 bg-muted/30 px-2 py-0.5 rounded-full">
+            {visibleMessages.length}
+          </span>
+        </div>
+      )}
+
+      {/* Random Message Cards */}
+      {visibleMessages.map((message) => (
+        <Card
+          key={message.id}
+          className={`absolute shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-none opacity-85 hover:opacity-95 md:w-72 w-64 ${getAnimationClass(message.animationType, message.isExiting)}`}
+          style={{
+            left: `${message.x}px`,
+            top: `${message.y}px`,
+            zIndex: -1,
+          }}
+        >
+
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-start gap-3 text-sm">
+              <MessageSquare className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
               <div className="min-w-0 flex-1">
-                <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words">
-                  {currentMessage.reply}
+                <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
+                  {message.message.length > (window.innerWidth < 768 ? 80 : 120) ? 
+                    `${message.message.slice(0, window.innerWidth < 768 ? 80 : 120)}...` : 
+                    message.message}
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Replied {formatDate(currentMessage.reply_timestamp!)}
+                  {formatDate(message.timestamp)}
                 </p>
               </div>
-            </div>
-          ) : (
-            <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-              <Clock className="w-5 h-5 mt-0.5 text-blue-600 flex-shrink-0" />
-              <div className="min-w-0 flex-1">
-                <p className="text-blue-800 dark:text-blue-200 font-medium">
-                  Haven't gotten to reply yet...
-                </p>
-                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                  Check back soon!
-                </p>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Navigation */}
-      {showNavigation && messages.length > 1 && (
-        <div className="flex justify-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToPrevious}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
+            </CardTitle>
+          </CardHeader>
           
-          {/* Dots indicator */}
-          <div className="flex items-center gap-1 px-3">
-            {messages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex 
-                    ? 'bg-primary' 
-                    : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                }`}
-              />
-            ))}
-          </div>
+          <CardContent className="pt-0">
+            {message.replied && message.reply ? (
+              <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3">
+                <Reply className="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
+                    {message.reply.length > (window.innerWidth < 768 ? 60 : 100) ? 
+                      `${message.reply.slice(0, window.innerWidth < 768 ? 60 : 100)}...` : 
+                      message.reply}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {formatDate(message.reply_timestamp!)}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start gap-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+                <Clock className="w-4 h-4 mt-0.5 text-blue-600 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-blue-800 dark:text-blue-200 font-medium text-sm">
+                    Pending reply...
+                  </p>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                    Check back soon!
+                  </p>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToNext}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+      {/* Floating info message when no cards are visible */}
+      {visibleMessages.length === 0 && messages.length > 0 && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+          <div className="text-center animate-pulse">
+            <MessageSquare className="w-6 h-6 mx-auto text-muted-foreground/60 mb-2" />
+            <p className="text-muted-foreground/60 text-xs">
+              Messages will appear randomly...
+            </p>
+          </div>
         </div>
       )}
     </div>

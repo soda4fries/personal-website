@@ -10,17 +10,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import {
   type ContactFormTranslations,
 anonymousMessageSchema,
@@ -30,7 +23,7 @@ anonymousMessageSchema,
 } from '../type';
 import { setGlobalZodErrorMap } from '@/i18n/zodErrorMap';
 import type { LanguageCode } from '@/i18n/ui';
-import { Loader2, Send, ClipboardCopy, Search, MessageSquare } from 'lucide-react';
+import { Loader2, Send, ClipboardCopy, Search, MessageSquare, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { PublicMessagesDisplay } from './PublicMessagesDisplay';
 
@@ -52,6 +45,7 @@ export function ContactForm({
   const [isCheckingReply, setIsCheckingReply] = useState<boolean>(false);
   const [keyToCheck, setKeyToCheck] = useState<string>('');
   const [publicMessagesKey, setPublicMessagesKey] = useState<number>(0);
+  const [showMessagesOnly, setShowMessagesOnly] = useState<boolean>(false);
 
   useEffect(() => {
     setGlobalZodErrorMap(lang);
@@ -66,9 +60,6 @@ export function ContactForm({
     mode: 'onBlur',
   });
 
-  const generateRandomKey = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  };
 
   const onSendMessage = async (values: AnonymousMessageValues) => {
     setIsSendingMessage(true);
@@ -184,130 +175,168 @@ export function ContactForm({
 
   return (
     <div className="space-y-8">
-      {/* Send Anonymous Message Section */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSendMessage)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{formTranslations.anonymousMessageLabel}</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder={formTranslations.anonymousMessagePlaceholder}
-                    rows={10}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+      {/* Random Public Messages Background - only show on desktop when not in messages-only mode */}
+      {!showMessagesOnly && (
+        <div className="fixed inset-0 pointer-events-none hidden md:block" style={{ zIndex: -10 }}>
+          <PublicMessagesDisplay 
+            key={publicMessagesKey} 
+            baseUrl={baseUrl} 
+            popupInterval={5000}
+            maxVisibleCards={2}
+            containerHeight="100vh"
           />
-          <div className="flex justify-between items-center">
-            <FormField
-              control={form.control}
-              name="public"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormLabel className="text-sm font-normal">
-                    {formTranslations.publicMessageLabel}
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              size="lg"
-              className="w-24"
-              disabled={isSendingMessage}
-            >
-            {isSendingMessage ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <>
-                <Send className="size-4" />
-                {formTranslations.sendAnonymousButtonLabel}
-              </>
-            )}
-          </Button>
-          </div>
-        </form>
-      </Form>
-
-      {messageKey && (
-        <div className="mt-8 p-4 bg-muted rounded-md flex flex-col items-center text-center animate-in fade-in duration-500 max-w-full overflow-hidden">
-          <p className="text-lg font-semibold mb-2">{formTranslations.yourKeyIs}</p>
-          <div className="flex items-center space-x-2 max-w-full">
-            <span className="font-mono text-primary text-xl select-all break-all min-w-0 flex-1">{messageKey}</span>
-            <Button variant="ghost" size="icon" onClick={copyKeyToClipboard} aria-label={formTranslations.copyKeyButtonLabel} className="flex-shrink-0">
-              <ClipboardCopy className="size-5" />
-            </Button>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
-            {formTranslations.keyCopiedToast}
-          </p>
         </div>
       )}
 
-      {/* Accordion for Check Reply and Public Messages */}
-      <Accordion type="single" collapsible className="mt-8">
-        <AccordionItem value="check-reply">
-          <AccordionTrigger className="text-base">
-            <div className="flex items-center gap-2">
-              <Search className="size-4" />
-              Check for replies or see public messages
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="space-y-6">
-            {/* Check Reply Section */}
-            <div className="space-y-4">
-              <h4 className="font-medium">{formTranslations.enterKeyLabel}</h4>
-              <div className="flex space-x-2">
-                <Input
-                  placeholder={formTranslations.enterKeyPlaceholder}
-                  value={keyToCheck}
-                  onChange={(e) => setKeyToCheck(e.target.value)}
-                  disabled={isCheckingReply}
-                  className="h-10"
+      {/* Toggle Button - Mobile Only */}
+      <div className="fixed top-4 right-4 z-30 md:hidden">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowMessagesOnly(!showMessagesOnly)}
+          className="bg-background/90 backdrop-blur-sm shadow-lg"
+        >
+          {showMessagesOnly ? (
+            <>
+              <EyeOff className="w-4 h-4 mr-2" />
+              Back to Form
+            </>
+          ) : (
+            <>
+              <Eye className="w-4 h-4 mr-2" />
+              View Messages
+            </>
+          )}
+        </Button>
+      </div>
+
+      {/* Messages-only view */}
+      {showMessagesOnly && (
+        <div className="relative z-10">
+          <PublicMessagesDisplay 
+            key={publicMessagesKey} 
+            baseUrl={baseUrl} 
+            popupInterval={3000}
+            maxVisibleCards={6}
+            containerHeight="80vh"
+          />
+        </div>
+      )}
+
+      {/* Combined Contact Form - hide when showing messages only */}
+      {!showMessagesOnly && (
+        <div className="relative z-20 bg-background/95 backdrop-blur-sm rounded-lg border p-6 shadow-lg">
+          {/* Send Message Section */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSendMessage)} className="space-y-4 mb-6">
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{formTranslations.anonymousMessageLabel}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={formTranslations.anonymousMessagePlaceholder}
+                        rows={8}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-between items-center">
+                <FormField
+                  control={form.control}
+                  name="public"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-normal">
+                        {formTranslations.publicMessageLabel}
+                      </FormLabel>
+                    </FormItem>
+                  )}
                 />
-                <Button onClick={onCheckReply} disabled={isCheckingReply} size="lg" className="w-24">
-                  {isCheckingReply ? (
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-24"
+                  disabled={isSendingMessage}
+                >
+                  {isSendingMessage ? (
                     <Loader2 className="size-4 animate-spin" />
                   ) : (
                     <>
-                      <Search className="size-4" />
-                      {formTranslations.checkReplyButtonLabel}
+                      <Send className="size-4" />
+                      {formTranslations.sendAnonymousButtonLabel}
                     </>
                   )}
                 </Button>
               </div>
+            </form>
+          </Form>
 
-              {replyMessage && (
-                <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
-                  replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
-                }`}>
-                  <p className="font-semibold">
-                    {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
-                  </p>
-                  <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
-                </div>
-              )}
+          {messageKey && (
+            <div className="mb-6 p-4 bg-muted rounded-md flex flex-col items-center text-center animate-in fade-in duration-500 max-w-full overflow-hidden">
+              <p className="text-lg font-semibold mb-2">{formTranslations.yourKeyIs}</p>
+              <div className="flex items-center space-x-2 max-w-full">
+                <span className="font-mono text-primary text-xl select-all break-all min-w-0 flex-1">{messageKey}</span>
+                <Button variant="ghost" size="icon" onClick={copyKeyToClipboard} aria-label={formTranslations.copyKeyButtonLabel} className="flex-shrink-0">
+                  <ClipboardCopy className="size-5" />
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                {formTranslations.keyCopiedToast}
+              </p>
+            </div>
+          )}
+
+          {/* Check Reply Section */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Search className="size-5" />
+              Check for replies
+            </h3>
+            <div className="flex space-x-2 mb-4">
+              <Input
+                placeholder={formTranslations.enterKeyPlaceholder}
+                value={keyToCheck}
+                onChange={(e) => setKeyToCheck(e.target.value)}
+                disabled={isCheckingReply}
+                className="h-10"
+              />
+              <Button onClick={onCheckReply} disabled={isCheckingReply} size="lg" className="w-24">
+                {isCheckingReply ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <>
+                    <Search className="size-4" />
+                    {formTranslations.checkReplyButtonLabel}
+                  </>
+                )}
+              </Button>
             </div>
 
-            {/* Public Messages Section */}
-            <div className="border-t border-border/50 pt-6">
-              <PublicMessagesDisplay key={publicMessagesKey} baseUrl={baseUrl} showHeader={true} />
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+            {replyMessage && (
+              <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
+                replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
+              }`}>
+                <p className="font-semibold">
+                  {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
+                </p>
+                <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
