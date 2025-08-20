@@ -206,11 +206,11 @@ export function ContactForm({
       </Form>
 
       {messageKey && (
-        <div className="mt-8 p-4 bg-muted rounded-md flex flex-col items-center text-center animate-in fade-in duration-500">
+        <div className="mt-8 p-4 bg-muted rounded-md flex flex-col items-center text-center animate-in fade-in duration-500 max-w-full overflow-hidden">
           <p className="text-lg font-semibold mb-2">{formTranslations.yourKeyIs}</p>
-          <div className="flex items-center space-x-2">
-            <span className="font-mono text-primary text-xl select-all">{messageKey}</span>
-            <Button variant="ghost" size="icon" onClick={copyKeyToClipboard} aria-label={formTranslations.copyKeyButtonLabel}>
+          <div className="flex items-center space-x-2 max-w-full">
+            <span className="font-mono text-primary text-xl select-all break-all min-w-0 flex-1">{messageKey}</span>
+            <Button variant="ghost" size="icon" onClick={copyKeyToClipboard} aria-label={formTranslations.copyKeyButtonLabel} className="flex-shrink-0">
               <ClipboardCopy className="size-5" />
             </Button>
           </div>

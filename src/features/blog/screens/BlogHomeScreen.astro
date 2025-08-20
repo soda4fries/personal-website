@@ -98,8 +98,9 @@ const {
     {/* Hero Image */}
     <div class="md:text-center">
       <div
-        class="md:w-[600px] w-full h-92 bg-muted rounded-lg shadow-xl overflow-hidden"
+        class="md:w-[600px] w-full h-92 bg-muted/40 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden relative"
       >
+        <div class="absolute inset-0 bg-muted/30 backdrop-blur-md"></div>
         <Image
           src={heroImage}
           alt={'User profile image'}
@@ -107,7 +108,7 @@ const {
           height={368}
           densities={[1, 1.5, 2]}
           quality="high"
-          class="h-full w-full object-cover"
+          class="h-full w-full object-cover relative z-10"
           style="object-position: center 28%;"
         />
       </div>
