@@ -247,9 +247,9 @@ export function PublicMessagesDisplay({
         </div>
       )}
 
-      {/* Header - only show when there are visible messages */}
+      {/* Header - only show when there are visible messages on desktop */}
       {visibleMessages.length > 0 && (
-        <div className="absolute top-4 left-4 z-0 flex items-center gap-2 bg-background/40 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
+        <div className="absolute top-4 left-4 z-0 hidden md:flex items-center gap-2 bg-background/40 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
           <MessageSquare className="w-4 h-4 text-muted-foreground/60" />
           <span className="text-sm font-medium text-muted-foreground/80">Public Messages</span>
           <span className="text-xs text-muted-foreground/60 bg-muted/30 px-2 py-0.5 rounded-full">

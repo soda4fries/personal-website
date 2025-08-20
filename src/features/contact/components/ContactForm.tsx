@@ -188,44 +188,47 @@ export function ContactForm({
         </div>
       )}
 
-      {/* Toggle Button - Mobile Only */}
-      <div className="fixed top-4 right-4 z-30 md:hidden">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowMessagesOnly(!showMessagesOnly)}
-          className="bg-background/90 backdrop-blur-sm shadow-lg"
-        >
-          {showMessagesOnly ? (
-            <>
-              <EyeOff className="w-4 h-4 mr-2" />
-              Back to Form
-            </>
-          ) : (
-            <>
-              <Eye className="w-4 h-4 mr-2" />
-              View Messages
-            </>
-          )}
-        </Button>
-      </div>
 
       {/* Messages-only view */}
       {showMessagesOnly && (
-        <div className="relative z-10">
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center justify-between md:hidden">
+            <h2 className="text-lg font-semibold">Messages</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowMessagesOnly(false)}
+            >
+              <EyeOff className="w-4 h-4 mr-1" />
+              Send
+            </Button>
+          </div>
           <PublicMessagesDisplay 
             key={publicMessagesKey} 
             baseUrl={baseUrl} 
             popupInterval={3000}
-            maxVisibleCards={6}
-            containerHeight="80vh"
+            maxVisibleCards={1}
+            containerHeight="50vh"
           />
         </div>
       )}
 
       {/* Combined Contact Form - hide when showing messages only */}
       {!showMessagesOnly && (
-        <div className="relative z-20 bg-background/95 backdrop-blur-sm rounded-lg border p-6 shadow-lg">
+        <div className="space-y-6">
+          {/* Header with Toggle Button - Mobile Only */}
+          <div className="flex items-center justify-between md:hidden">
+            <h2 className="text-lg font-semibold">Send</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowMessagesOnly(true)}
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              Messages
+            </Button>
+          </div>
+
           {/* Send Message Section */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSendMessage)} className="space-y-4 mb-6">
@@ -335,6 +338,7 @@ export function ContactForm({
               </div>
             )}
           </div>
+
         </div>
       )}
     </div>
