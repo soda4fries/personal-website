@@ -46,10 +46,34 @@ export function ContactForm({
   const [keyToCheck, setKeyToCheck] = useState<string>('');
   const [publicMessagesKey, setPublicMessagesKey] = useState<number>(0);
   const [showMessagesOnly, setShowMessagesOnly] = useState<boolean>(false);
+  const [isConstrainedLayout, setIsConstrainedLayout] = useState<boolean>(false);
 
   useEffect(() => {
     setGlobalZodErrorMap(lang);
   }, [lang]);
+
+  // Check for constrained layout and enable mobile-style toggles when needed
+  useEffect(() => {
+    const checkLayoutConstraints = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Same logic as PublicMessagesDisplay for detecting constrained space
+      const isSmallLandscape = viewportWidth >= 768 && viewportHeight < 600;
+      const hasEnoughSideSpace = viewportWidth >= 1200; // Need wider screen for side animations
+      const hasEnoughVerticalSpace = viewportHeight > 500;
+      
+      const shouldUseConstrainedLayout = isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace;
+      setIsConstrainedLayout(shouldUseConstrainedLayout);
+    };
+
+    // Check on mount
+    checkLayoutConstraints();
+
+    // Check on resize
+    window.addEventListener('resize', checkLayoutConstraints);
+    return () => window.removeEventListener('resize', checkLayoutConstraints);
+  }, []);
 
   const form = useForm<AnonymousMessageValues>({
     resolver: zodResolver(anonymousMessageSchema),
@@ -175,8 +199,8 @@ export function ContactForm({
 
   return (
     <div className="space-y-8">
-      {/* Random Public Messages Background - only show on desktop when not in messages-only mode */}
-      {!showMessagesOnly && (
+      {/* Random Public Messages Background - only show on desktop when not in messages-only mode and layout is not constrained */}
+      {!showMessagesOnly && !isConstrainedLayout && (
         <div className="fixed inset-0 pointer-events-none hidden md:block" style={{ zIndex: -10 }}>
           <PublicMessagesDisplay 
             key={publicMessagesKey} 
@@ -192,7 +216,7 @@ export function ContactForm({
       {/* Messages-only view */}
       {showMessagesOnly && (
         <div className="relative z-10 space-y-6">
-          <div className="flex items-center justify-between md:hidden">
+          <div className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}>
             <h2 className="text-lg font-semibold">Messages</h2>
             <Button
               variant="outline"
@@ -216,8 +240,8 @@ export function ContactForm({
       {/* Combined Contact Form - hide when showing messages only */}
       {!showMessagesOnly && (
         <div className="space-y-6">
-          {/* Header with Toggle Button - Mobile Only */}
-          <div className="flex items-center justify-between md:hidden">
+          {/* Header with Toggle Button - Mobile and Constrained Desktop */}
+          <div className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}>
             <h2 className="text-lg font-semibold">Send</h2>
             <Button
               variant="outline"

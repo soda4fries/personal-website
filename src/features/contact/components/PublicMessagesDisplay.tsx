@@ -326,7 +326,7 @@ export function PublicMessagesDisplay({
       {visibleMessages.map((message) => (
         <Card
           key={message.id}
-          className={`absolute shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-none opacity-85 hover:opacity-95 ${window.innerWidth >= 768 && window.innerHeight < 600 ? 'w-60' : 'md:w-72 w-64'} ${getAnimationClass(message.animationType, message.isExiting)}`}
+          className={`absolute shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-none opacity-100 ${window.innerWidth >= 768 && window.innerHeight < 600 ? 'w-60' : 'md:w-72 w-64'} ${getAnimationClass(message.animationType, message.isExiting)}`}
           style={{
             left: `${message.x}px`,
             top: `${message.y}px`,

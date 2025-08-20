@@ -221,14 +221,15 @@ class ContactDB:
             return results
     
     def list_public_messages(self) -> List[Dict]:
-        """List all public messages (with or without replies)."""
+        """List up to 30 random public messages (with or without replies)."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
                 SELECT m.message, m.timestamp, r.reply, r.timestamp as reply_timestamp, m.replied
                 FROM messages m
                 LEFT JOIN replies r ON m.key = r.message_key
                 WHERE m.public = TRUE
-                ORDER BY m.created_at DESC
+                ORDER BY RANDOM()
+                LIMIT 30
             """)
             
             results = []
