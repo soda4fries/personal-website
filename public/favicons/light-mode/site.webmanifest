@@ -1,18 +1,16 @@
 {
-  "name": "Astro Theme Starter",
-  "short_name": "AstroTheme",
+  "name": "Personal Website",
+  "short_name": "Website",
   "icons": [
     {
       "src": "/favicons/light-mode/web-app-manifest-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     },
     {
       "src": "/favicons/light-mode/web-app-manifest-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ],
   "theme_color": "#ffffff",
