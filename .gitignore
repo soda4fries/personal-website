@@ -14,6 +14,8 @@ pnpm-debug.log*
 
 .vercel/
 
+./contact-venv
+
 
 # environment variables
 .env
