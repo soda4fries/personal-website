@@ -79,8 +79,10 @@ export function PublicMessagesDisplay({
     // Generate smart position based on screen size
     const viewportWidth = window.innerWidth;
     const viewportHeight = containerHeight === '100vh' ? window.innerHeight : parseInt(containerHeight);
-    const cardWidth = 300;
-    const cardHeight = 180;
+    const isSmallLandscape = viewportWidth >= 768 && viewportHeight < 600;
+    // Use smaller cards for small landscape screens to be less intrusive
+    const cardWidth = isSmallLandscape ? 240 : 300;
+    const cardHeight = isSmallLandscape ? 140 : 180;
     const margin = 20;
     
     let x, y;
@@ -91,23 +93,59 @@ export function PublicMessagesDisplay({
       const leftZoneEnd = (viewportWidth - formCenterWidth) / 2 - margin;
       const rightZoneStart = (viewportWidth + formCenterWidth) / 2 + margin;
       
-      // Choose left or right zone
-      if (leftZoneEnd > cardWidth + margin && Math.random() > 0.5) {
-        // Left zone
-        x = Math.random() * (leftZoneEnd - cardWidth) + margin;
-      } else if (rightZoneStart + cardWidth < viewportWidth - margin) {
-        // Right zone  
-        x = Math.random() * (viewportWidth - rightZoneStart - cardWidth - margin) + rightZoneStart;
-      } else {
-        // Fallback to top/bottom areas if sides too narrow
-        x = Math.random() * Math.max(0, viewportWidth - cardWidth - margin * 2) + margin;
-      }
+      // Check if this is a small landscape screen (low height)
+      const isSmallLandscape = viewportHeight < 600; // Consider screens under 600px height as small landscape
       
-      // Avoid header and footer areas
-      const headerHeight = 100;
-      const footerHeight = 100;
-      const availableHeight = viewportHeight - headerHeight - footerHeight - cardHeight;
-      y = Math.random() * Math.max(cardHeight, availableHeight) + headerHeight;
+      if (isSmallLandscape) {
+        // For small landscape screens, use edge positions similar to mobile
+        // but with more refined placement to avoid form overlap
+        const safeZones = [
+          // Far left edge
+          { x: margin, y: margin },
+          { x: margin, y: Math.max(margin, viewportHeight - cardHeight - margin) },
+          // Far right edge  
+          { x: Math.max(margin, viewportWidth - cardWidth - margin), y: margin },
+          { x: Math.max(margin, viewportWidth - cardWidth - margin), y: Math.max(margin, viewportHeight - cardHeight - margin) }
+        ];
+        
+        // Filter valid positions that don't overlap with form area
+        const validZones = safeZones.filter(zone => 
+          zone.x >= margin && 
+          zone.x + cardWidth <= viewportWidth - margin &&
+          zone.y >= margin && 
+          zone.y + cardHeight <= viewportHeight - margin &&
+          (zone.x + cardWidth < leftZoneEnd || zone.x > rightZoneStart) // Don't overlap form center
+        );
+        
+        if (validZones.length > 0) {
+          const selectedZone = validZones[Math.floor(Math.random() * validZones.length)];
+          x = selectedZone.x;
+          y = selectedZone.y;
+        } else {
+          // Emergency fallback - use far corners
+          x = Math.random() > 0.5 ? margin : Math.max(margin, viewportWidth - cardWidth - margin);
+          y = margin;
+        }
+      } else {
+        // Normal desktop logic for larger screens
+        // Choose left or right zone
+        if (leftZoneEnd > cardWidth + margin && Math.random() > 0.5) {
+          // Left zone
+          x = Math.random() * (leftZoneEnd - cardWidth) + margin;
+        } else if (rightZoneStart + cardWidth < viewportWidth - margin) {
+          // Right zone  
+          x = Math.random() * (viewportWidth - rightZoneStart - cardWidth - margin) + rightZoneStart;
+        } else {
+          // Fallback to top/bottom areas if sides too narrow
+          x = Math.random() * Math.max(0, viewportWidth - cardWidth - margin * 2) + margin;
+        }
+        
+        // Avoid header and footer areas
+        const headerHeight = 100;
+        const footerHeight = 100;
+        const availableHeight = viewportHeight - headerHeight - footerHeight - cardHeight;
+        y = Math.random() * Math.max(cardHeight, availableHeight) + headerHeight;
+      }
     } else {
       // Mobile: use corners and edges, smaller cards
       const positions = [
@@ -228,7 +266,7 @@ export function PublicMessagesDisplay({
     console.warn('Public messages failed to load:', error);
     return (
       <div 
-        className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-primary/5 rounded-lg overflow-hidden pointer-events-none"
+        className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden pointer-events-none"
         style={{ height: containerHeight }}
       />
     );
@@ -236,7 +274,7 @@ export function PublicMessagesDisplay({
 
   return (
     <div 
-      className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-primary/5 rounded-lg overflow-hidden pointer-events-none"
+      className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden pointer-events-none"
       style={{ height: containerHeight }}
     >
       {/* Small loading indicator in corner - hide on mobile */}
@@ -262,7 +300,7 @@ export function PublicMessagesDisplay({
       {visibleMessages.map((message) => (
         <Card
           key={message.id}
-          className={`absolute shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-none opacity-85 hover:opacity-95 md:w-72 w-64 ${getAnimationClass(message.animationType, message.isExiting)}`}
+          className={`absolute shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-none opacity-85 hover:opacity-95 ${window.innerWidth >= 768 && window.innerHeight < 600 ? 'w-60' : 'md:w-72 w-64'} ${getAnimationClass(message.animationType, message.isExiting)}`}
           style={{
             left: `${message.x}px`,
             top: `${message.y}px`,
