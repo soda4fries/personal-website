@@ -277,42 +277,42 @@
   box-shadow: 0 0 8px oklch(0.75 0.183 55.934 / 0.4);
 }
 
-.line-1 {
+.animated-background .line-1 {
   top: -50%;
   left: -5%;
   transform: rotate(25deg);
   animation-delay: 0s;
 }
 
-.line-2 {
+.animated-background .line-2 {
   top: -50%;
   left: 15%;
   transform: rotate(28deg);
   animation-delay: -10s;
 }
 
-.line-3 {
+.animated-background .line-3 {
   top: -50%;
   left: 35%;
   transform: rotate(22deg);
   animation-delay: -20s;
 }
 
-.line-4 {
+.animated-background .line-4 {
   top: -50%;
   left: 55%;
   transform: rotate(30deg);
   animation-delay: -5s;
 }
 
-.line-5 {
+.animated-background .line-5 {
   top: -50%;
   left: 75%;
   transform: rotate(26deg);
   animation-delay: -15s;
 }
 
-.line-6 {
+.animated-background .line-6 {
   top: -50%;
   left: 95%;
   transform: rotate(24deg);
@@ -383,25 +383,25 @@
   border-color: oklch(0.837 0.128 66.29 / 0.08);
 }
 
-.node-1 {
+.animated-background .node-1 {
   top: 15%;
   left: 20%;
   animation-delay: 0s;
 }
 
-.node-2 {
+.animated-background .node-2 {
   top: 40%;
   left: 75%;
   animation-delay: -1s;
 }
 
-.node-3 {
+.animated-background .node-3 {
   top: 70%;
   left: 30%;
   animation-delay: -2s;
 }
 
-.node-4 {
+.animated-background .node-4 {
   top: 25%;
   left: 85%;
   animation-delay: -3s;
@@ -517,61 +517,61 @@
     0 0 8px oklch(0.75 0.183 55.934 / 0.3);
 }
 
-.star-1 {
+.animated-background .star-1 {
   top: 8%;
   left: 12%;
   animation-delay: 0s;
 }
 
-.star-2 {
+.animated-background .star-2 {
   top: 25%;
   left: 88%;
   animation-delay: -1s;
 }
 
-.star-3 {
+.animated-background .star-3 {
   top: 45%;
   left: 15%;
   animation-delay: -3s;
 }
 
-.star-4 {
+.animated-background .star-4 {
   top: 12%;
   left: 78%;
   animation-delay: -2s;
 }
 
-.star-5 {
+.animated-background .star-5 {
   top: 78%;
   left: 8%;
   animation-delay: -4s;
 }
 
-.star-6 {
+.animated-background .star-6 {
   top: 35%;
   left: 92%;
   animation-delay: -0.5s;
 }
 
-.star-7 {
+.animated-background .star-7 {
   top: 88%;
   left: 65%;
   animation-delay: -2.5s;
 }
 
-.star-8 {
+.animated-background .star-8 {
   top: 18%;
   left: 45%;
   animation-delay: -3.5s;
 }
 
-.star-9 {
+.animated-background .star-9 {
   top: 65%;
   left: 35%;
   animation-delay: -1.5s;
 }
 
-.star-10 {
+.animated-background .star-10 {
   top: 52%;
   left: 82%;
   animation-delay: -4.5s;
