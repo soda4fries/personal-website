@@ -139,7 +139,7 @@ export const ui = {
 
       title: 'Contact',
       description:
-        "Need to reach me? Here's how.",
+        "Lets meet",
       formTitle: 'Send a message',
       firstNameLabel: 'First Name',
       lastNameLabel: 'Last Name',

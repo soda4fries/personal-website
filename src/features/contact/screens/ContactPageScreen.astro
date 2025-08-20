@@ -3,7 +3,7 @@ import Heading from '@/components/Heading.astro';
 import { buttonVariants } from '@/components/ui/button';
 import type { LanguageCode } from '@/i18n/ui';
 import { cn } from '@/lib/utils';
-import { Calendar, Github, Instagram, Mail, Phone } from 'lucide-react';
+import { Calendar, Github, Instagram, Mail } from 'lucide-react';
 
 import { ContactForm } from '../components/ContactForm.tsx';
 import type { ContactFormTranslations } from '../type';
@@ -27,7 +27,6 @@ const {
   mainHeadingDescription,
   formTitle,
   formTranslations,
-  orSeparatorText,
   calendarTitle,
   calendarDescription,
   calendarLinkLabel,
@@ -45,46 +44,39 @@ const {
   />
 
   <div class="grid lg:grid-cols-2 gap-8 mt-12 max-w-6xl mx-auto">
-    {/* Contact Information & Social Links */}
+    {/* Left Column: Contact + Calendar */}
     <div class="space-y-6">
+      {/* Contact Icons */}
       <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50">
-        <Heading title="Get in Touch" className="text-center mb-6" />
-        
-        {/* Direct Contact */}
-        <div class="space-y-4 mb-6">
-          <a href="mailto:rahmanmahdinur@gmail.com" class="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group">
-            <Mail className="size-5 text-primary" />
-            <div>
-              <div class="font-medium group-hover:text-primary transition-colors">Email</div>
-              <div class="text-sm text-muted-foreground">rahmanmahdinur@gmail.com</div>
-            </div>
-          </a>
-          
-          <a href="tel:+60177149246" class="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group">
-            <Phone className="size-5 text-primary" />
-            <div>
-              <div class="font-medium group-hover:text-primary transition-colors">Phone</div>
-              <div class="text-sm text-muted-foreground">+60 177 149 246</div>
-            </div>
-          </a>
-        </div>
+        <Heading title="My Accounts" className="text-center mb-6" />
 
-        {/* Social Media */}
-        <div class="border-t border-border/50 pt-6">
-          <h3 class="text-lg font-semibold mb-4 text-center">Connect with me</h3>
-          <div class="grid grid-cols-2 gap-3">
-            <a href="https://github.com/soda4fries" target="_blank" rel="noopener noreferrer" 
-               class="flex items-center justify-center gap-2 p-3 rounded-lg bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all group">
-              <Github className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <span class="font-medium text-sm group-hover:text-primary transition-colors">GitHub</span>
-            </a>
-            
-            <a href="https://instagram.com/mahdilikesfries" target="_blank" rel="noopener noreferrer"
-               class="flex items-center justify-center gap-2 p-3 rounded-lg bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all group">
-              <Instagram className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <span class="font-medium text-sm group-hover:text-primary transition-colors">Instagram</span>
-            </a>
-          </div>
+        <div class="flex justify-center gap-6">
+          {/* Email */}
+          <a href="mailto:rahmanmahdinur@gmail.com" 
+             class="relative group flex items-center justify-center p-3 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-110 transition-all">
+            <Mail className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
+            <span class="absolute -top-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-sm text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              rahmanmahdinur@gmail.com
+            </span>
+          </a>
+
+          {/* GitHub */}
+          <a href="https://github.com/soda4fries" target="_blank" rel="noopener noreferrer"
+             class="relative group flex items-center justify-center p-3 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-110 transition-all">
+            <Github className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
+            <span class="absolute -top-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-sm text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              @soda4fries
+            </span>
+          </a>
+
+          {/* Instagram */}
+          <a href="https://instagram.com/mahdilikesfries" target="_blank" rel="noopener noreferrer"
+             class="relative group flex items-center justify-center p-3 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-110 transition-all">
+            <Instagram className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
+            <span class="absolute -top-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-sm text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              @mahdilikesfries
+            </span>
+          </a>
         </div>
       </div>
 
@@ -100,7 +92,7 @@ const {
           target="_blank"
           rel="noopener noreferrer"
           class={cn(
-            'w-full',
+            'w-full flex justify-center items-center',
             buttonVariants({ variant: 'default', size: 'lg' })
           )}
         >
@@ -110,7 +102,7 @@ const {
       </div>
     </div>
 
-    {/* Contact Form */}
+    {/* Right Column: Contact Form */}
     <div class="bg-card p-6 md:p-8 rounded-lg shadow border border-border/50">
       <Heading title={formTitle} className="text-center mb-6" />
       <ContactForm client:load {lang} {formTranslations} />
