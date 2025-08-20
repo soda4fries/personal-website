@@ -51,6 +51,7 @@ export function ContactForm({
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [isCheckingReply, setIsCheckingReply] = useState<boolean>(false);
   const [keyToCheck, setKeyToCheck] = useState<string>('');
+  const [publicMessagesKey, setPublicMessagesKey] = useState<number>(0);
 
   useEffect(() => {
     setGlobalZodErrorMap(lang);
@@ -91,6 +92,10 @@ export function ContactForm({
       if (result.status === 'success') {
         setMessageKey(result.key);
         toast.success('Message sent successfully!');
+        // If it was a public message, refresh the public messages display
+        if (values.public) {
+          setPublicMessagesKey(prev => prev + 1);
+        }
         form.reset();
       } else {
         // Handle API error
@@ -298,7 +303,7 @@ export function ContactForm({
 
             {/* Public Messages Section */}
             <div className="border-t border-border/50 pt-6">
-              <PublicMessagesDisplay baseUrl={baseUrl} showHeader={true} />
+              <PublicMessagesDisplay key={publicMessagesKey} baseUrl={baseUrl} showHeader={true} />
             </div>
           </AccordionContent>
         </AccordionItem>

@@ -204,7 +204,7 @@ class ContactDB:
                 SELECT m.key, m.message, m.timestamp, m.replied, m.public, r.reply
                 FROM messages m
                 LEFT JOIN replies r ON m.key = r.message_key
-                ORDER BY m.created_at DESC
+                ORDER BY m.replied ASC, m.created_at DESC
             """)
             
             results = []
@@ -258,6 +258,22 @@ class ContactDB:
             )
             conn.commit()
             return True
+    
+    def delete_message(self, key: str) -> bool:
+        """Delete a message and its reply by key."""
+        if not self.key_exists(key):
+            return False
+        
+        with sqlite3.connect(self.db_path) as conn:
+            # Delete reply first (foreign key constraint)
+            conn.execute("DELETE FROM replies WHERE message_key = ?", (key,))
+            
+            # Delete message
+            conn.execute("DELETE FROM messages WHERE key = ?", (key,))
+            
+            conn.commit()
+        
+        return True
     
     def get_stats(self) -> Dict:
         """Get database statistics."""
@@ -510,7 +526,7 @@ def display_menu(options: List[str], selected: int) -> None:
         else:
             console.print(f"  {option}")
 
-def display_message_browser(messages: List[Dict], selected: int, page: int = 0, page_size: int = 10) -> None:
+def display_message_browser(messages: List[Dict], selected: int, page: int = 0, page_size: int = 6) -> None:
     """Display messages with navigation."""
     clear_screen()
     console.print(Panel.fit(
@@ -518,6 +534,7 @@ def display_message_browser(messages: List[Dict], selected: int, page: int = 0, 
         "Use ↑↓ to navigate, Enter to view/reply, B to go back",
         border_style="blue"
     ))
+    console.print()
     
     if not messages:
         console.print("[yellow]No messages found.[/yellow]")
@@ -527,37 +544,91 @@ def display_message_browser(messages: List[Dict], selected: int, page: int = 0, 
     end_idx = min(start_idx + page_size, len(messages))
     page_messages = messages[start_idx:end_idx]
     
-    console.print(f"\n[bold]Messages {start_idx + 1}-{end_idx} of {len(messages)}[/bold]")
+    console.print(f"[bold]Showing {start_idx + 1}-{end_idx} of {len(messages)} messages[/bold]")
+    console.print("─" * 80)  # Separator line
+    console.print()
     
     for i, msg in enumerate(page_messages):
         global_idx = start_idx + i
         is_selected = global_idx == selected
         
-        # Format message preview
-        message_preview = msg['message'][:60] + "..." if len(msg['message']) > 63 else msg['message']
-        
         # Format timestamp
         try:
             dt = datetime.fromisoformat(msg['timestamp'])
-            formatted_time = dt.strftime("%m/%d %H:%M")
+            formatted_time = dt.strftime("%b %d, %H:%M")
         except:
             formatted_time = msg['timestamp'][:16]
         
         # Status indicators
-        reply_status = "✅" if msg['replied'] else "⏳"
-        public_status = "🌐" if msg.get('public', False) else "🔒"
+        reply_status = "✅ Replied" if msg['replied'] else "⏳ Pending"
+        public_status = "🌐 Public" if msg.get('public', False) else "🔒 Private"
+        key_display = f"#{msg['key'][:8]}..."
+        
+        # Message text - wrap to multiple lines if needed
+        message_lines = []
+        message_text = msg['message']
+        
+        # Split message into lines that fit in the available width (leaving space for right panel)
+        max_msg_width = 65
+        words = message_text.split()
+        current_line = ""
+        
+        for word in words:
+            if len(current_line + " " + word) <= max_msg_width:
+                current_line += (" " + word) if current_line else word
+            else:
+                if current_line:
+                    message_lines.append(current_line)
+                current_line = word
+        if current_line:
+            message_lines.append(current_line)
+        
+        # Limit to max 3 lines for preview
+        if len(message_lines) > 3:
+            message_lines = message_lines[:3]
+            message_lines[-1] += "..."
+        
+        # Create the layout
+        selector = "►" if is_selected else " "
         
         if is_selected:
-            console.print(f"► {reply_status}{public_status} [bold green]{msg['key'][:8]}...[/bold green] {formatted_time}")
-            console.print(f"   [bold green]{message_preview}[/bold green]")
+            # Header line with key and metadata
+            header = f"{selector} [bold green]{key_display}[/bold green]"
+            metadata = f"[bold green]{formatted_time} │ {reply_status} │ {public_status}[/bold green]"
+            
+            # Calculate spacing to right-align metadata
+            header_len = len(key_display) + 2  # selector + space + key
+            metadata_len = len(formatted_time) + len(reply_status) + len(public_status) + 6  # separators
+            spacing = max(1, 80 - header_len - metadata_len)
+            
+            console.print(f"{header}{' ' * spacing}{metadata}")
+            
+            # Message lines
+            for line in message_lines:
+                console.print(f"  [bold green]{line}[/bold green]")
         else:
-            console.print(f"  {reply_status}{public_status} [cyan]{msg['key'][:8]}...[/cyan] {formatted_time}")
-            console.print(f"   {message_preview}")
+            # Header line with key and metadata
+            header = f"{selector} [cyan]{key_display}[/cyan]"
+            metadata = f"[dim]{formatted_time} │ {reply_status} │ {public_status}[/dim]"
+            
+            # Calculate spacing to right-align metadata
+            header_len = len(key_display) + 2
+            metadata_len = len(formatted_time) + len(reply_status) + len(public_status) + 6
+            spacing = max(1, 80 - header_len - metadata_len)
+            
+            console.print(f"{header}{' ' * spacing}{metadata}")
+            
+            # Message lines
+            for line in message_lines:
+                console.print(f"  [dim]{line}[/dim]")
+        
+        console.print()  # Spacing between messages
     
     # Pagination info
     if len(messages) > page_size:
         total_pages = (len(messages) - 1) // page_size + 1
-        console.print(f"\n[dim]Page {page + 1} of {total_pages} | Use Page Up/Down for more[/dim]")
+        console.print("─" * 80)
+        console.print(f"[dim]Page {page + 1} of {total_pages} │ Use Page Up/Down to navigate pages[/dim]")
 
 def show_message_detail(message: Dict, key: str) -> None:
     """Show detailed message view."""
@@ -583,9 +654,9 @@ def show_message_detail(message: Dict, key: str) -> None:
     ))
     
     if not message['replied']:
-        console.print("\n[bold]Options:[/bold] R=Reply, P=Toggle Public, B=Back")
+        console.print("\n[bold]Options:[/bold] R=Reply, P=Toggle Public, D=Delete, B=Back")
     else:
-        console.print("\n[bold]Options:[/bold] R=Reply, E=Edit Reply, P=Toggle Public, B=Back")
+        console.print("\n[bold]Options:[/bold] R=Reply, E=Edit Reply, P=Toggle Public, D=Delete, B=Back")
 
 def get_multiline_input(prompt: str) -> str:
     """Get multiline text input from user."""
@@ -668,10 +739,11 @@ def browse_messages():
     
     selected_message = 0
     page = 0
-    page_size = 10
+    page_size = 6
     
     while True:
         display_message_browser(messages, selected_message, page, page_size)
+        console.print(f"[dim]Press R to refresh messages[/dim]")
         
         key = readchar.readkey()
         
@@ -695,6 +767,24 @@ def browse_messages():
                 selected_message = min(len(messages) - 1, max(selected_message, page * page_size))
         elif key == readchar.key.ENTER:
             view_and_reply_message(messages[selected_message])
+            # Refresh messages after returning from message view (message could have been deleted)
+            messages = db.list_all_messages()
+            if not messages:  # All messages deleted
+                clear_screen()
+                console.print("[yellow]No messages found. Press any key to return.[/yellow]")
+                readchar.readkey()
+                return
+            # Adjust selection if it's out of bounds after refresh
+            if selected_message >= len(messages):
+                selected_message = max(0, len(messages) - 1)
+                page = selected_message // page_size
+        elif key.lower() == 'r':
+            # Manual refresh
+            messages = db.list_all_messages()
+            # Adjust selection if it's out of bounds after refresh
+            if selected_message >= len(messages):
+                selected_message = max(0, len(messages) - 1)
+                page = selected_message // page_size
         elif key.lower() == 'b':
             break
 
@@ -749,6 +839,23 @@ def view_and_reply_message(message: Dict):
             else:
                 console.print("[red]❌ Failed to update message visibility. Press any key to continue.[/red]")
             readchar.readkey()
+        elif nav_key.lower() == 'd':
+            # Delete message
+            console.print("\n[red][bold]⚠️  WARNING: This will permanently delete the message and any replies![/bold][/red]")
+            console.print("[yellow]Are you sure you want to delete this message? (y/n)[/yellow]")
+            confirm = readchar.readkey()
+            if confirm.lower() == 'y':
+                if db.delete_message(key):
+                    console.print("[green]✅ Message deleted successfully![/green]")
+                    console.print("[dim]Press any key to return to message list...[/dim]")
+                    readchar.readkey()
+                    break  # Exit back to message list
+                else:
+                    console.print("[red]❌ Failed to delete message. Press any key to continue.[/red]")
+                    readchar.readkey()
+            else:
+                console.print("[dim]Delete cancelled. Press any key to continue.[/dim]")
+                readchar.readkey()
 
 def show_stats():
     """Show statistics screen."""
