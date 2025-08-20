@@ -192,6 +192,11 @@
   backface-visibility: hidden;
 }
 
+/* Blur animated background only on content pages */
+.content-page .animated-background {
+  filter: blur(2px);
+}
+
 .animated-background .tech-grid {
   position: absolute;
   top: 0;
@@ -603,6 +608,8 @@
     transform: scale(1);
   }
 }
+
+/* Content styling - background is now blurred instead of overlaid */
 
 /* Proper code block styling for MDX content */
 .prose pre {

@@ -51,35 +51,7 @@ const aboutMeCollection = defineCollection({
     }),
 });
 
-const projectsCollection = defineCollection({
-  loader: glob({
-    pattern: '**/*.mdx',
-    base: './src/features/projects/content',
-  }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      imageUrl: image().optional(),
-      imageAltText: z.string(),
-      categoryText: z.string(),
-      dateText: z.string(),
-      tags: z.array(z.string()),
-      keyFeatures: z.array(z.object({
-        title: z.string(),
-        description: z.string(),
-      })),
-      projectUrl: z.string().optional(),
-      codeUrl: z.string().optional(),
-      technologies: z.array(z.string()).optional(),
-      isDraft: z.boolean().default(false),
-      featured: z.boolean().optional(),
-      lang: z.enum(['fr', 'en']).optional().default('en'),
-    }),
-});
-
 export const collections = {
   blog: blogCollection,
   'about-me': aboutMeCollection,
-  projects: projectsCollection,
 };

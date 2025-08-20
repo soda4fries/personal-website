@@ -38,7 +38,7 @@ const pageTitle = post.title;
 const pageDescription = post.description;
 ---
 
-<BaseLayout {pageTitle} {pageDescription}>
+<BaseLayout {pageTitle} {pageDescription} isContentPage={true}>
   <article class="container mx-auto px-4 py-8 md:py-12 max-w-3xl">
     <a
       href={getRelativeLocaleUrl(lang, '/blog')}
