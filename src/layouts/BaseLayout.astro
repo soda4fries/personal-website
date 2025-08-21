@@ -144,6 +144,10 @@ const navItems: Array<NavItem> = [
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     /> -->
+    
+    <!-- Preload hero image for LCP optimization -->
+    <link rel="preload" as="image" href="/src/assets/user-hero.webp" />
+    
     <ClientRouter />
   </head>
   <body class={`h-[100dvh] bg-background font-sans antialiased flex flex-col ${isContentPage ? 'content-page' : ''}`}>
