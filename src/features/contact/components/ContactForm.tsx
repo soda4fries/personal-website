@@ -16,14 +16,22 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import {
   type ContactFormTranslations,
-anonymousMessageSchema,
+  anonymousMessageSchema,
   type AnonymousMessageValues,
   type SendMessageApiResponse,
   type CheckReplyApiResponse,
 } from '../type';
 import { setGlobalZodErrorMap } from '@/i18n/zodErrorMap';
 import type { LanguageCode } from '@/i18n/ui';
-import { Loader2, Send, ClipboardCopy, Search, MessageSquare, Eye, EyeOff } from 'lucide-react';
+import {
+  Loader2,
+  Send,
+  ClipboardCopy,
+  Search,
+  MessageSquare,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { PublicMessagesDisplay } from './PublicMessagesDisplay';
 
@@ -40,13 +48,16 @@ export function ContactForm({
 }: ContactFormProps) {
   const [messageKey, setMessageKey] = useState<string | null>(null);
   const [replyMessage, setReplyMessage] = useState<string | null>(null);
-  const [replyStatus, setReplyStatus] = useState<'success' | 'error' | null>(null);
+  const [replyStatus, setReplyStatus] = useState<'success' | 'error' | null>(
+    null
+  );
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [isCheckingReply, setIsCheckingReply] = useState<boolean>(false);
   const [keyToCheck, setKeyToCheck] = useState<string>('');
   const [publicMessagesKey, setPublicMessagesKey] = useState<number>(0);
   const [showMessagesOnly, setShowMessagesOnly] = useState<boolean>(false);
-  const [isConstrainedLayout, setIsConstrainedLayout] = useState<boolean>(false);
+  const [isConstrainedLayout, setIsConstrainedLayout] =
+    useState<boolean>(false);
 
   useEffect(() => {
     setGlobalZodErrorMap(lang);
@@ -57,13 +68,14 @@ export function ContactForm({
     const checkLayoutConstraints = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       // Same logic as PublicMessagesDisplay for detecting constrained space
       const isSmallLandscape = viewportWidth >= 768 && viewportHeight < 600;
       const hasEnoughSideSpace = viewportWidth >= 1200; // Need wider screen for side animations
       const hasEnoughVerticalSpace = viewportHeight > 500;
-      
-      const shouldUseConstrainedLayout = isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace;
+
+      const shouldUseConstrainedLayout =
+        isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace;
       setIsConstrainedLayout(shouldUseConstrainedLayout);
     };
 
@@ -83,7 +95,6 @@ export function ContactForm({
     },
     mode: 'onBlur',
   });
-
 
   const onSendMessage = async (values: AnonymousMessageValues) => {
     setIsSendingMessage(true);
@@ -109,12 +120,13 @@ export function ContactForm({
         toast.success('Message sent successfully!');
         // If it was a public message, refresh the public messages display
         if (values.public) {
-          setPublicMessagesKey(prev => prev + 1);
+          setPublicMessagesKey((prev) => prev + 1);
         }
         form.reset();
       } else {
         // Handle API error
-        let errorMessage = result.message || formTranslations.toastErrorUnexpected;
+        let errorMessage =
+          result.message || formTranslations.toastErrorUnexpected;
         if (result.errors) {
           const errorMessages = Object.values(result.errors).flat().join('\n');
           errorMessage += `\n\n${formTranslations.toastErrorDetails}\n${errorMessages}`;
@@ -162,7 +174,10 @@ export function ContactForm({
         toast.info(result.message);
       }
     } catch (error) {
-      console.error('An unexpected error occurred while checking reply:', error);
+      console.error(
+        'An unexpected error occurred while checking reply:',
+        error
+      );
       toast.error(formTranslations.toastErrorUnexpected);
     } finally {
       setIsCheckingReply(false);
@@ -201,10 +216,13 @@ export function ContactForm({
     <div className="space-y-8">
       {/* Random Public Messages Background - only show on desktop when not in messages-only mode and layout is not constrained */}
       {!showMessagesOnly && !isConstrainedLayout && (
-        <div className="fixed inset-0 pointer-events-none hidden md:block" style={{ zIndex: -10 }}>
-          <PublicMessagesDisplay 
-            key={publicMessagesKey} 
-            baseUrl={baseUrl} 
+        <div
+          className="fixed inset-0 pointer-events-none hidden md:block"
+          style={{ zIndex: -10 }}
+        >
+          <PublicMessagesDisplay
+            key={publicMessagesKey}
+            baseUrl={baseUrl}
             popupInterval={5000}
             maxVisibleCards={2}
             containerHeight="100vh"
@@ -212,11 +230,12 @@ export function ContactForm({
         </div>
       )}
 
-
       {/* Messages-only view */}
       {showMessagesOnly && (
         <div className="relative z-10 space-y-6">
-          <div className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}>
+          <div
+            className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}
+          >
             <h2 className="text-lg font-semibold">Messages</h2>
             <Button
               variant="outline"
@@ -227,9 +246,9 @@ export function ContactForm({
               Send
             </Button>
           </div>
-          <PublicMessagesDisplay 
-            key={publicMessagesKey} 
-            baseUrl={baseUrl} 
+          <PublicMessagesDisplay
+            key={publicMessagesKey}
+            baseUrl={baseUrl}
             popupInterval={3000}
             maxVisibleCards={1}
             containerHeight="50vh"
@@ -241,7 +260,9 @@ export function ContactForm({
       {!showMessagesOnly && (
         <div className="space-y-6">
           {/* Header with Toggle Button - Mobile and Constrained Desktop */}
-          <div className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}>
+          <div
+            className={`flex items-center justify-between ${isConstrainedLayout ? '' : 'md:hidden'}`}
+          >
             <h2 className="text-lg font-semibold">Send</h2>
             <Button
               variant="outline"
@@ -255,16 +276,23 @@ export function ContactForm({
 
           {/* Send Message Section */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSendMessage)} className="space-y-4 mb-6">
+            <form
+              onSubmit={form.handleSubmit(onSendMessage)}
+              className="space-y-4 mb-6"
+            >
               <FormField
                 control={form.control}
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{formTranslations.anonymousMessageLabel}</FormLabel>
+                    <FormLabel>
+                      {formTranslations.anonymousMessageLabel}
+                    </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={formTranslations.anonymousMessagePlaceholder}
+                        placeholder={
+                          formTranslations.anonymousMessagePlaceholder
+                        }
                         rows={8}
                         {...field}
                       />
@@ -312,10 +340,20 @@ export function ContactForm({
 
           {messageKey && (
             <div className="mb-6 p-4 bg-muted rounded-md flex flex-col items-center text-center animate-in fade-in duration-500 max-w-full overflow-hidden">
-              <p className="text-lg font-semibold mb-2">{formTranslations.yourKeyIs}</p>
+              <p className="text-lg font-semibold mb-2">
+                {formTranslations.yourKeyIs}
+              </p>
               <div className="flex items-center space-x-2 max-w-full">
-                <span className="font-mono text-primary text-xl select-all break-all min-w-0 flex-1">{messageKey}</span>
-                <Button variant="ghost" size="icon" onClick={copyKeyToClipboard} aria-label={formTranslations.copyKeyButtonLabel} className="flex-shrink-0">
+                <span className="font-mono text-primary text-xl select-all break-all min-w-0 flex-1">
+                  {messageKey}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyKeyToClipboard}
+                  aria-label={formTranslations.copyKeyButtonLabel}
+                  className="flex-shrink-0"
+                >
                   <ClipboardCopy className="size-5" />
                 </Button>
               </div>
@@ -339,7 +377,12 @@ export function ContactForm({
                 disabled={isCheckingReply}
                 className="h-10"
               />
-              <Button onClick={onCheckReply} disabled={isCheckingReply} size="lg" className="w-24">
+              <Button
+                onClick={onCheckReply}
+                disabled={isCheckingReply}
+                size="lg"
+                className="w-24"
+              >
                 {isCheckingReply ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
@@ -352,17 +395,20 @@ export function ContactForm({
             </div>
 
             {replyMessage && (
-              <div className={`p-4 rounded-md animate-in fade-in duration-500 ${
-                replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
-              }`}>
+              <div
+                className={`p-4 rounded-md animate-in fade-in duration-500 ${
+                  replyStatus === 'success' ? 'bg-muted' : 'bg-secondary'
+                }`}
+              >
                 <p className="font-semibold">
-                  {replyStatus === 'success' ? formTranslations.replyReceived : 'Status'}
+                  {replyStatus === 'success'
+                    ? formTranslations.replyReceived
+                    : 'Status'}
                 </p>
                 <p className="mt-2 whitespace-pre-wrap">{replyMessage}</p>
               </div>
             )}
           </div>
-
         </div>
       )}
     </div>

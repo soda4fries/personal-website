@@ -1,11 +1,6 @@
 ---
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { LanguageCode } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/ui';
 import { formatDate } from '@/lib/utils';
@@ -42,7 +37,7 @@ const t = useTranslations(lang, 'blogPost');
         </time>
       </div>
     </CardHeader>
-    
+
     <CardContent className="flex-grow pt-0 pb-3 space-y-2">
       {
         post.data.description && (
@@ -51,17 +46,25 @@ const t = useTranslations(lang, 'blogPost');
           </p>
         )
       }
-      
+
       {
         post.data.tags && post.data.tags.length > 0 && (
           <div class="flex flex-wrap gap-1">
             {post.data.tags.slice(0, 2).map((tag: string) => (
-              <Badge variant="outline" key={tag} className="text-xs px-1.5 py-0.5 rounded-md">
+              <Badge
+                variant="outline"
+                key={tag}
+                className="text-xs px-1.5 py-0.5 rounded-md"
+              >
                 {tag}
               </Badge>
             ))}
             {post.data.tags.length > 2 && (
-              <Badge variant="outline" key="more" className="text-xs px-1.5 py-0.5 rounded-md">
+              <Badge
+                variant="outline"
+                key="more"
+                className="text-xs px-1.5 py-0.5 rounded-md"
+              >
                 +{post.data.tags.length - 2}
               </Badge>
             )}

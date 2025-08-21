@@ -14,7 +14,13 @@ interface VisibleMessage extends PublicMessage {
   id: string;
   x: number;
   y: number;
-  animationType: 'slideUp' | 'fadeIn' | 'bounceIn' | 'slideLeft' | 'slideRight' | 'zoomIn';
+  animationType:
+    | 'slideUp'
+    | 'fadeIn'
+    | 'bounceIn'
+    | 'slideLeft'
+    | 'slideRight'
+    | 'zoomIn';
   isExiting: boolean;
 }
 
@@ -22,7 +28,7 @@ export function PublicMessagesDisplay({
   baseUrl = '',
   popupInterval = 4000,
   maxVisibleCards = 3,
-  containerHeight = '400px'
+  containerHeight = '400px',
 }: PublicMessagesDisplayProps) {
   const [messages, setMessages] = useState<PublicMessage[]>([]);
   const [visibleMessages, setVisibleMessages] = useState<VisibleMessage[]>([]);
@@ -54,10 +60,13 @@ export function PublicMessagesDisplay({
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
         day: 'numeric',
-        year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+        year:
+          date.getFullYear() !== new Date().getFullYear()
+            ? 'numeric'
+            : undefined,
       });
     } catch {
       return 'Unknown date';
@@ -65,8 +74,14 @@ export function PublicMessagesDisplay({
   };
 
   // Animation types array
-  const animationTypes: VisibleMessage['animationType'][] = ['slideUp', 'fadeIn', 'bounceIn', 'slideLeft', 'slideRight', 'zoomIn'];
-
+  const animationTypes: VisibleMessage['animationType'][] = [
+    'slideUp',
+    'fadeIn',
+    'bounceIn',
+    'slideLeft',
+    'slideRight',
+    'zoomIn',
+  ];
 
   // Add a new random message
   const addRandomMessage = () => {
@@ -75,52 +90,68 @@ export function PublicMessagesDisplay({
     // Pick a random message
     const randomIndex = Math.floor(Math.random() * messages.length);
     const message = messages[randomIndex];
-    
+
     // Generate smart position based on screen size
     const viewportWidth = window.innerWidth;
-    const viewportHeight = containerHeight === '100vh' ? window.innerHeight : parseInt(containerHeight);
+    const viewportHeight =
+      containerHeight === '100vh'
+        ? window.innerHeight
+        : parseInt(containerHeight);
     const isSmallLandscape = viewportWidth >= 768 && viewportHeight < 600;
     // Use smaller cards for small landscape screens to be less intrusive
     const cardWidth = isSmallLandscape ? 240 : 300;
     const cardHeight = isSmallLandscape ? 140 : 180;
     const margin = 20;
-    
+
     let x, y;
-    
+
     // Desktop: avoid center form area, use side zones
     if (viewportWidth >= 768) {
       const formCenterWidth = 600; // approximate form width
       const leftZoneEnd = (viewportWidth - formCenterWidth) / 2 - margin;
       const rightZoneStart = (viewportWidth + formCenterWidth) / 2 + margin;
-      
+
       // Check if this is a small landscape screen (low height) or cramped layout
       const isSmallLandscape = viewportHeight < 600;
-      const hasEnoughSideSpace = leftZoneEnd > cardWidth + margin || (rightZoneStart + cardWidth < viewportWidth - margin);
+      const hasEnoughSideSpace =
+        leftZoneEnd > cardWidth + margin ||
+        rightZoneStart + cardWidth < viewportWidth - margin;
       const hasEnoughVerticalSpace = viewportHeight > cardHeight + 200; // Need at least 200px buffer for header/footer
-      
+
       // If conditions are too cramped, fall back to mobile-style positioning
       if (isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace) {
         // Use mobile-style corner positioning for cramped desktop screens
         const cornerPositions = [
           // Top corners with more margin
           { x: margin, y: margin },
-          { x: Math.max(margin, viewportWidth - cardWidth - margin), y: margin },
+          {
+            x: Math.max(margin, viewportWidth - cardWidth - margin),
+            y: margin,
+          },
           // Bottom corners
-          { x: margin, y: Math.max(margin, viewportHeight - cardHeight - margin) },
-          { x: Math.max(margin, viewportWidth - cardWidth - margin), y: Math.max(margin, viewportHeight - cardHeight - margin) }
+          {
+            x: margin,
+            y: Math.max(margin, viewportHeight - cardHeight - margin),
+          },
+          {
+            x: Math.max(margin, viewportWidth - cardWidth - margin),
+            y: Math.max(margin, viewportHeight - cardHeight - margin),
+          },
         ];
-        
+
         // Filter valid positions that don't overlap with form center
-        const validCorners = cornerPositions.filter(pos => 
-          pos.x >= margin && 
-          pos.x + cardWidth <= viewportWidth - margin &&
-          pos.y >= margin && 
-          pos.y + cardHeight <= viewportHeight - margin &&
-          (pos.x + cardWidth < leftZoneEnd || pos.x > rightZoneStart) // Don't overlap form center
+        const validCorners = cornerPositions.filter(
+          (pos) =>
+            pos.x >= margin &&
+            pos.x + cardWidth <= viewportWidth - margin &&
+            pos.y >= margin &&
+            pos.y + cardHeight <= viewportHeight - margin &&
+            (pos.x + cardWidth < leftZoneEnd || pos.x > rightZoneStart) // Don't overlap form center
         );
-        
+
         if (validCorners.length > 0) {
-          const selectedCorner = validCorners[Math.floor(Math.random() * validCorners.length)];
+          const selectedCorner =
+            validCorners[Math.floor(Math.random() * validCorners.length)];
           x = selectedCorner.x;
           y = selectedCorner.y;
         } else {
@@ -135,18 +166,26 @@ export function PublicMessagesDisplay({
           // Left zone
           x = Math.random() * (leftZoneEnd - cardWidth) + margin;
         } else if (rightZoneStart + cardWidth < viewportWidth - margin) {
-          // Right zone  
-          x = Math.random() * (viewportWidth - rightZoneStart - cardWidth - margin) + rightZoneStart;
+          // Right zone
+          x =
+            Math.random() *
+              (viewportWidth - rightZoneStart - cardWidth - margin) +
+            rightZoneStart;
         } else {
           // Fallback to top/bottom areas if sides too narrow
-          x = Math.random() * Math.max(0, viewportWidth - cardWidth - margin * 2) + margin;
+          x =
+            Math.random() *
+              Math.max(0, viewportWidth - cardWidth - margin * 2) +
+            margin;
         }
-        
+
         // Avoid header and footer areas
         const headerHeight = 100;
         const footerHeight = 100;
-        const availableHeight = viewportHeight - headerHeight - footerHeight - cardHeight;
-        y = Math.random() * Math.max(cardHeight, availableHeight) + headerHeight;
+        const availableHeight =
+          viewportHeight - headerHeight - footerHeight - cardHeight;
+        y =
+          Math.random() * Math.max(cardHeight, availableHeight) + headerHeight;
       }
     } else {
       // Mobile: use corners and edges, smaller cards
@@ -154,23 +193,31 @@ export function PublicMessagesDisplay({
         // Top corners
         { x: margin, y: margin },
         { x: viewportWidth - cardWidth - margin, y: margin },
-        // Bottom corners  
+        // Bottom corners
         { x: margin, y: viewportHeight - cardHeight - margin },
-        { x: viewportWidth - cardWidth - margin, y: viewportHeight - cardHeight - margin },
+        {
+          x: viewportWidth - cardWidth - margin,
+          y: viewportHeight - cardHeight - margin,
+        },
         // Side centers
         { x: margin, y: (viewportHeight - cardHeight) / 2 },
-        { x: viewportWidth - cardWidth - margin, y: (viewportHeight - cardHeight) / 2 }
+        {
+          x: viewportWidth - cardWidth - margin,
+          y: (viewportHeight - cardHeight) / 2,
+        },
       ];
-      
-      const validPositions = positions.filter(pos => 
-        pos.x >= margin && 
-        pos.x + cardWidth <= viewportWidth - margin &&
-        pos.y >= margin && 
-        pos.y + cardHeight <= viewportHeight - margin
+
+      const validPositions = positions.filter(
+        (pos) =>
+          pos.x >= margin &&
+          pos.x + cardWidth <= viewportWidth - margin &&
+          pos.y >= margin &&
+          pos.y + cardHeight <= viewportHeight - margin
       );
-      
+
       if (validPositions.length > 0) {
-        const pos = validPositions[Math.floor(Math.random() * validPositions.length)];
+        const pos =
+          validPositions[Math.floor(Math.random() * validPositions.length)];
         x = pos.x;
         y = pos.y;
       } else {
@@ -179,8 +226,9 @@ export function PublicMessagesDisplay({
         y = margin;
       }
     }
-    
-    const animationType = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+
+    const animationType =
+      animationTypes[Math.floor(Math.random() * animationTypes.length)];
 
     const newVisibleMessage: VisibleMessage = {
       ...message,
@@ -188,47 +236,56 @@ export function PublicMessagesDisplay({
       x,
       y,
       animationType,
-      isExiting: false
+      isExiting: false,
     };
 
-    setVisibleMessages(prev => [...prev, newVisibleMessage]);
+    setVisibleMessages((prev) => [...prev, newVisibleMessage]);
 
     // Auto-remove the message after a delay
-    setTimeout(() => {
-      setVisibleMessages(prev => 
-        prev.map(msg => 
-          msg.id === newVisibleMessage.id 
-            ? { ...msg, isExiting: true }
-            : msg
-        )
-      );
+    setTimeout(
+      () => {
+        setVisibleMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === newVisibleMessage.id ? { ...msg, isExiting: true } : msg
+          )
+        );
 
-      // Remove from DOM after exit animation
-      setTimeout(() => {
-        setVisibleMessages(prev => prev.filter(msg => msg.id !== newVisibleMessage.id));
-      }, 500);
-    }, 5000 + Math.random() * 3000);
+        // Remove from DOM after exit animation
+        setTimeout(() => {
+          setVisibleMessages((prev) =>
+            prev.filter((msg) => msg.id !== newVisibleMessage.id)
+          );
+        }, 500);
+      },
+      5000 + Math.random() * 3000
+    );
   };
-
 
   // Random popup effect
   useEffect(() => {
     if (messages.length === 0 || isLoading) return;
 
-    const interval = setInterval(() => {
-      setVisibleMessages(currentVisible => {
-        // Dynamically adjust max cards based on screen constraints
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const isConstrainedSpace = (viewportWidth >= 768 && viewportHeight < 600) || viewportWidth < 1200;
-        const dynamicMaxCards = isConstrainedSpace ? Math.min(1, maxVisibleCards) : maxVisibleCards;
-        
-        if (currentVisible.length < dynamicMaxCards) {
-          addRandomMessage();
-        }
-        return currentVisible;
-      });
-    }, popupInterval + Math.random() * 2000);
+    const interval = setInterval(
+      () => {
+        setVisibleMessages((currentVisible) => {
+          // Dynamically adjust max cards based on screen constraints
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          const isConstrainedSpace =
+            (viewportWidth >= 768 && viewportHeight < 600) ||
+            viewportWidth < 1200;
+          const dynamicMaxCards = isConstrainedSpace
+            ? Math.min(1, maxVisibleCards)
+            : maxVisibleCards;
+
+          if (currentVisible.length < dynamicMaxCards) {
+            addRandomMessage();
+          }
+          return currentVisible;
+        });
+      },
+      popupInterval + Math.random() * 2000
+    );
 
     return () => clearInterval(interval);
   }, [messages.length, isLoading, popupInterval, maxVisibleCards]);
@@ -250,9 +307,10 @@ export function PublicMessagesDisplay({
     const handleResize = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const isVeryConstrained = (viewportWidth >= 768 && viewportHeight < 500) || 
-                               (viewportWidth >= 768 && viewportWidth < 1000);
-      
+      const isVeryConstrained =
+        (viewportWidth >= 768 && viewportHeight < 500) ||
+        (viewportWidth >= 768 && viewportWidth < 1000);
+
       // Clear all animations if space becomes too cramped
       if (isVeryConstrained && visibleMessages.length > 0) {
         setVisibleMessages([]);
@@ -264,11 +322,14 @@ export function PublicMessagesDisplay({
   }, [visibleMessages.length]);
 
   // Animation CSS classes
-  const getAnimationClass = (animationType: VisibleMessage['animationType'], isExiting: boolean) => {
+  const getAnimationClass = (
+    animationType: VisibleMessage['animationType'],
+    isExiting: boolean
+  ) => {
     if (isExiting) {
       return 'animate-out fade-out zoom-out-95 duration-500';
     }
-    
+
     switch (animationType) {
       case 'slideUp':
         return 'animate-in slide-in-from-bottom-8 duration-700 ease-out';
@@ -291,7 +352,7 @@ export function PublicMessagesDisplay({
   if (error) {
     console.warn('Public messages failed to load:', error);
     return (
-      <div 
+      <div
         className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden pointer-events-none"
         style={{ height: containerHeight }}
       />
@@ -299,7 +360,7 @@ export function PublicMessagesDisplay({
   }
 
   return (
-    <div 
+    <div
       className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden pointer-events-none"
       style={{ height: containerHeight }}
     >
@@ -307,7 +368,9 @@ export function PublicMessagesDisplay({
       {isLoading && (
         <div className="absolute top-4 right-4 z-0 hidden md:flex items-center gap-2 bg-background/60 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
           <div className="w-3 h-3 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
-          <span className="text-xs text-muted-foreground/60">Loading messages...</span>
+          <span className="text-xs text-muted-foreground/60">
+            Loading messages...
+          </span>
         </div>
       )}
 
@@ -315,7 +378,9 @@ export function PublicMessagesDisplay({
       {visibleMessages.length > 0 && (
         <div className="absolute top-4 left-4 z-0 hidden md:flex items-center gap-2 bg-background/40 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
           <MessageSquare className="w-4 h-4 text-muted-foreground/60" />
-          <span className="text-sm font-medium text-muted-foreground/80">Public Messages</span>
+          <span className="text-sm font-medium text-muted-foreground/80">
+            Public Messages
+          </span>
           <span className="text-xs text-muted-foreground/60 bg-muted/30 px-2 py-0.5 rounded-full">
             {visibleMessages.length}
           </span>
@@ -333,15 +398,14 @@ export function PublicMessagesDisplay({
             zIndex: -1,
           }}
         >
-
           <CardHeader className="pb-3">
             <CardTitle className="flex items-start gap-3 text-sm">
               <MessageSquare className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
               <div className="min-w-0 flex-1">
                 <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
-                  {message.message.length > (window.innerWidth < 768 ? 80 : 120) ? 
-                    `${message.message.slice(0, window.innerWidth < 768 ? 80 : 120)}...` : 
-                    message.message}
+                  {message.message.length > (window.innerWidth < 768 ? 80 : 120)
+                    ? `${message.message.slice(0, window.innerWidth < 768 ? 80 : 120)}...`
+                    : message.message}
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
                   {formatDate(message.timestamp)}
@@ -349,16 +413,16 @@ export function PublicMessagesDisplay({
               </div>
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent className="pt-0">
             {message.replied && message.reply ? (
               <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3">
                 <Reply className="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
-                    {message.reply.length > (window.innerWidth < 768 ? 60 : 100) ? 
-                      `${message.reply.slice(0, window.innerWidth < 768 ? 60 : 100)}...` : 
-                      message.reply}
+                    {message.reply.length > (window.innerWidth < 768 ? 60 : 100)
+                      ? `${message.reply.slice(0, window.innerWidth < 768 ? 60 : 100)}...`
+                      : message.reply}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {formatDate(message.reply_timestamp!)}

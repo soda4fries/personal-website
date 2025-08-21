@@ -11,7 +11,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Clock, Search } from 'lucide-react';
-import { highlightSearchTerm, getSearchMatches, type SearchMatch } from '@/utils/searchHighlight';
+import {
+  highlightSearchTerm,
+  getSearchMatches,
+  type SearchMatch,
+} from '@/utils/searchHighlight';
 import { getRelativeLocaleUrl } from '@/utils/i18nUtils';
 import type { PostDataForFilter } from './FilteredPostsList';
 
@@ -31,11 +35,11 @@ export function BlogPostCardWithHighlight({
   post,
   searchTerm,
   lang,
-  texts
+  texts,
 }: BlogPostCardWithHighlightProps) {
   const matches = getSearchMatches(post, searchTerm);
   const hasMatches = matches.length > 0;
-  
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat(lang, {
       year: 'numeric',
@@ -43,7 +47,7 @@ export function BlogPostCardWithHighlight({
       day: 'numeric',
     }).format(date);
   };
-  
+
   return (
     <a
       href={getRelativeLocaleUrl(lang as any, `/blog/${post.id}`)}
@@ -58,7 +62,7 @@ export function BlogPostCardWithHighlight({
             </div>
           </div>
         )}
-        
+
         {/* Hero Image */}
         {post.heroImage ? (
           <div className="w-full h-48 overflow-hidden rounded-t-lg flex-shrink-0">
@@ -76,10 +80,12 @@ export function BlogPostCardWithHighlight({
         ) : (
           <div className="w-full h-12 bg-muted" />
         )}
-        
+
         <CardHeader className="flex-shrink-0">
           <CardTitle className="text-xl font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-            {searchTerm ? highlightSearchTerm(post.title, searchTerm) : post.title}
+            {searchTerm
+              ? highlightSearchTerm(post.title, searchTerm)
+              : post.title}
           </CardTitle>
           <CardDescription className="space-y-1">
             <p className="text-xs">
@@ -93,21 +99,25 @@ export function BlogPostCardWithHighlight({
             )}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="flex-grow space-y-2 flex-shrink-0">
           {post.description && (
             <p className="text-sm text-muted-foreground line-clamp-2">
-              {searchTerm ? highlightSearchTerm(post.description, searchTerm) : post.description}
+              {searchTerm
+                ? highlightSearchTerm(post.description, searchTerm)
+                : post.description}
             </p>
           )}
-          
+
           {/* Search Matches Preview */}
           {hasMatches && searchTerm && (
             <div className="mt-2 space-y-1">
               {matches.slice(0, 2).map((match, index) => (
                 <div key={index} className="text-xs">
                   <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                    <span className="capitalize">{match.field === 'body' ? 'content' : match.field}:</span>
+                    <span className="capitalize">
+                      {match.field === 'body' ? 'content' : match.field}:
+                    </span>
                   </div>
                   <p className="text-muted-foreground line-clamp-1 bg-muted/50 px-2 py-1 rounded text-xs">
                     {highlightSearchTerm(match.snippet, searchTerm)}
@@ -121,7 +131,7 @@ export function BlogPostCardWithHighlight({
               )}
             </div>
           )}
-          
+
           {post.tags && post.tags.length > 0 && (
             <div className="flex gap-2 pt-2 line-clamp-1">
               {post.tags.slice(0, 3).map((tag: string) => (
@@ -137,7 +147,7 @@ export function BlogPostCardWithHighlight({
             </div>
           )}
         </CardContent>
-        
+
         <CardFooter className="mt-auto flex-shrink-0">
           <span className="text-sm text-primary font-medium group-hover:underline">
             {texts.readMore} &rarr;

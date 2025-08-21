@@ -40,41 +40,74 @@ const {
   <div class="container mx-auto px-4 mt-6 max-w-6xl">
     <div class="flex flex-col items-center gap-4">
       {/* Social Links Section */}
-      <section class="bg-card p-3 rounded-lg shadow border border-border/50 max-w-lg w-full" aria-labelledby="social-links-title">
+      <section
+        class="bg-card p-3 rounded-lg shadow border border-border/50 max-w-lg w-full"
+        aria-labelledby="social-links-title"
+      >
         <header>
-          <h2 id="social-links-title" class="text-lg font-semibold text-center mb-2">My Accounts</h2>
+          <h2
+            id="social-links-title"
+            class="text-lg font-semibold text-center mb-2"
+          >
+            My Accounts
+          </h2>
         </header>
-        
+
         <nav aria-label="Social media and contact links">
           <ul class="flex justify-center gap-4">
             <li>
-              <a href="mailto:rahmanmahdinur@gmail.com" 
-                 class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
-                 aria-label="Send email to rahmanmahdinur@gmail.com">
-                <Mail className="size-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
-                <span class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              <a
+                href="mailto:rahmanmahdinur@gmail.com"
+                class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
+                aria-label="Send email to rahmanmahdinur@gmail.com"
+              >
+                <Mail
+                  className="size-5 text-muted-foreground group-hover:text-primary transition-colors"
+                  aria-hidden="true"
+                />
+                <span
+                  class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap"
+                >
                   rahmanmahdinur@gmail.com
                 </span>
               </a>
             </li>
 
             <li>
-              <a href="https://github.com/soda4fries" target="_blank" rel="noopener noreferrer"
-                 class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
-                 aria-label="Visit GitHub profile @soda4fries">
-                <Github className="size-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
-                <span class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              <a
+                href="https://github.com/soda4fries"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
+                aria-label="Visit GitHub profile @soda4fries"
+              >
+                <Github
+                  className="size-5 text-muted-foreground group-hover:text-primary transition-colors"
+                  aria-hidden="true"
+                />
+                <span
+                  class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap"
+                >
                   @soda4fries
                 </span>
               </a>
             </li>
 
             <li>
-              <a href="https://instagram.com/mahdilikesfries" target="_blank" rel="noopener noreferrer"
-                 class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
-                 aria-label="Visit Instagram profile @mahdilikesfries">
-                <Instagram className="size-5 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
-                <span class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap">
+              <a
+                href="https://instagram.com/mahdilikesfries"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="relative group flex items-center justify-center p-2 rounded-full bg-muted/30 hover:bg-primary/10 hover:scale-105 transition-all"
+                aria-label="Visit Instagram profile @mahdilikesfries"
+              >
+                <Instagram
+                  className="size-5 text-muted-foreground group-hover:text-primary transition-colors"
+                  aria-hidden="true"
+                />
+                <span
+                  class="absolute -top-8 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-xs text-muted-foreground bg-background border rounded px-2 py-1 shadow transition-all whitespace-nowrap"
+                >
                   @mahdilikesfries
                 </span>
               </a>
@@ -84,11 +117,20 @@ const {
       </section>
 
       {/* Contact Form Section */}
-      <section class="bg-card p-4 md:p-5 rounded-lg shadow border border-border/50 max-w-lg w-full" aria-labelledby="contact-form-title">
+      <section
+        class="bg-card p-4 md:p-5 rounded-lg shadow border border-border/50 max-w-lg w-full"
+        aria-labelledby="contact-form-title"
+      >
         <header>
-          <h2 id="contact-form-title" class="text-lg font-semibold text-center mb-1">Send Anonymous Message</h2>
+          <h2
+            id="contact-form-title"
+            class="text-lg font-semibold text-center mb-1"
+          >
+            Send Anonymous Message
+          </h2>
           <p class="text-xs text-muted-foreground text-center mb-4">
-            Drop me a message anonymously! I'll reply and give you a key to check back for my response.
+            Drop me a message anonymously! I'll reply and give you a key to
+            check back for my response.
           </p>
         </header>
         <ContactForm client:load {lang} {formTranslations} {baseUrl} />

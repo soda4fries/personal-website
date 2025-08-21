@@ -11,7 +11,9 @@ import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { ArrowLeft, Clock, Pencil } from 'lucide-react';
 import BlogPostCard from '../components/BlogPostCard.astro';
-import TableOfContents, { type Heading as TocHeading } from '../components/TableOfContents.astro';
+import TableOfContents, {
+  type Heading as TocHeading,
+} from '../components/TableOfContents.astro';
 
 type Props = {
   post: CollectionEntry<'blog'>['data'];
@@ -50,7 +52,9 @@ const pageDescription = post.description;
 
     <header class="mb-8">
       <Heading title={post.title} titleClassName="md:text-5xl" />
-      <div class="mt-3 text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+      <div
+        class="mt-3 text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4"
+      >
         <p class="flex items-center gap-1">
           <b>{t('publishedOn')}</b>
           <span>{formatDate(pubDate, lang)}</span>
@@ -134,26 +138,33 @@ const pageDescription = post.description;
     document.addEventListener('astro:page-load', () => {
       // TOC functionality - runs after all content is rendered
       const tocLinks = document.querySelectorAll('.toc-link');
-      
+
       if (tocLinks.length > 0) {
         // Scroll highlighting with improved stability
         let currentActiveId = '';
         function highlightCurrentSection() {
           const scrollPosition = window.scrollY + 100; // Reduced offset for better precision
           // Only select headings that have IDs (from our TOC)
-          const headings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'))
-            .filter(h => h.id) // Ensure they have IDs
-            .sort((a, b) => (a as HTMLElement).offsetTop - (b as HTMLElement).offsetTop) as HTMLElement[]; // Sort by position on page
-          
+          const headings = Array.from(
+            document.querySelectorAll(
+              'h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'
+            )
+          )
+            .filter((h) => h.id) // Ensure they have IDs
+            .sort(
+              (a, b) =>
+                (a as HTMLElement).offsetTop - (b as HTMLElement).offsetTop
+            ) as HTMLElement[]; // Sort by position on page
+
           if (headings.length === 0) return;
-          
+
           let newActiveId = '';
-          
+
           // Find current heading based on scroll position with better logic
           for (let i = 0; i < headings.length; i++) {
             const heading = headings[i];
             const nextHeading = headings[i + 1];
-            
+
             if (scrollPosition >= heading.offsetTop - 50) {
               if (!nextHeading || scrollPosition < nextHeading.offsetTop - 50) {
                 newActiveId = heading.id;
@@ -161,33 +172,36 @@ const pageDescription = post.description;
               }
             }
           }
-          
+
           // If no heading found and we're at the top, use first heading
           if (!newActiveId && scrollPosition < headings[0].offsetTop) {
             newActiveId = headings[0].id;
           }
-          
+
           // Only update if the active section has actually changed
           if (newActiveId !== currentActiveId) {
             // Remove previous highlighting
             if (currentActiveId) {
-              tocLinks.forEach(link => {
+              tocLinks.forEach((link) => {
                 const href = link.getAttribute('href');
                 if (href === `#${currentActiveId}`) {
-                  link.classList.remove('bg-primary', 'text-primary-foreground');
+                  link.classList.remove(
+                    'bg-primary',
+                    'text-primary-foreground'
+                  );
                   link.classList.add('text-muted-foreground');
                 }
               });
             }
-            
+
             // Add new highlighting
             if (newActiveId) {
-              tocLinks.forEach(link => {
+              tocLinks.forEach((link) => {
                 const href = link.getAttribute('href');
                 if (href === `#${newActiveId}`) {
                   link.classList.remove('text-muted-foreground');
                   link.classList.add('bg-primary', 'text-primary-foreground');
-                  
+
                   // Auto-scroll TOC to keep active item visible
                   const desktopToc = document.getElementById('desktop-toc');
                   if (desktopToc) {
@@ -195,15 +209,17 @@ const pageDescription = post.description;
                     if (tocNav) {
                       setTimeout(() => {
                         // Find the highlighted link and center it
-                        const activeLink = tocNav.querySelector('.toc-link.bg-primary') as HTMLElement;
+                        const activeLink = tocNav.querySelector(
+                          '.toc-link.bg-primary'
+                        ) as HTMLElement;
                         if (activeLink) {
                           const linkTop = activeLink.offsetTop;
                           const navHeight = tocNav.clientHeight;
-                          const targetScroll = linkTop - (navHeight / 2);
-                          
+                          const targetScroll = linkTop - navHeight / 2;
+
                           tocNav.scrollTo({
                             top: Math.max(0, targetScroll),
-                            behavior: 'smooth'
+                            behavior: 'smooth',
                           });
                         }
                       }, 150);
@@ -212,13 +228,13 @@ const pageDescription = post.description;
                 }
               });
             }
-            
+
             currentActiveId = newActiveId;
           }
         }
-        
+
         // Smooth scroll and mobile TOC close
-        tocLinks.forEach(link => {
+        tocLinks.forEach((link) => {
           link.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href')?.substring(1);
@@ -226,7 +242,9 @@ const pageDescription = post.description;
             if (target) {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
               if (window.innerWidth < 1024) {
-                const details = document.querySelector('#mobile-toc details') as HTMLDetailsElement;
+                const details = document.querySelector(
+                  '#mobile-toc details'
+                ) as HTMLDetailsElement;
                 if (details) details.open = false;
               }
             }
@@ -234,19 +252,19 @@ const pageDescription = post.description;
         });
 
         // Initialize highlighting - ensure all links start with correct classes
-        tocLinks.forEach(link => {
+        tocLinks.forEach((link) => {
           link.classList.add('text-muted-foreground');
         });
         highlightCurrentSection();
-        
+
         // Scroll event with improved throttling
         let scrollTimeout: ReturnType<typeof setTimeout>;
         let ticking = false;
-        
+
         window.addEventListener('scroll', () => {
           // Clear any existing timeout
           clearTimeout(scrollTimeout);
-          
+
           // Immediate update with throttling
           if (!ticking) {
             requestAnimationFrame(() => {
@@ -255,7 +273,7 @@ const pageDescription = post.description;
             });
             ticking = true;
           }
-          
+
           // Debounced final update to ensure we don't miss anything
           scrollTimeout = setTimeout(() => {
             highlightCurrentSection();

@@ -19,6 +19,7 @@ Kubernetes (K8s) is an open-source container orchestration platform that automat
 ## Core Concepts
 
 ### Pods
+
 The smallest deployable unit in Kubernetes, typically containing one container:
 
 ```yaml
@@ -28,13 +29,14 @@ metadata:
   name: my-app
 spec:
   containers:
-  - name: app
-    image: nginx:latest
-    ports:
-    - containerPort: 80
+    - name: app
+      image: nginx:latest
+      ports:
+        - containerPort: 80
 ```
 
 ### Services
+
 Expose your pods to network traffic:
 
 ```yaml
@@ -46,8 +48,8 @@ spec:
   selector:
     app: my-app
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
 ```
 
 ## Why Use Kubernetes?

@@ -47,7 +47,9 @@ const aboutMeCollection = defineCollection({
       lang: z.enum(['en']).optional().default('en'),
       relatedContent: z.array(reference('about-me')).optional(),
       featured: z.boolean().optional(),
-      category: z.enum(['personal', 'professional', 'skills', 'experience']).optional(),
+      category: z
+        .enum(['personal', 'professional', 'skills', 'experience'])
+        .optional(),
     }),
 });
 

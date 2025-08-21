@@ -163,9 +163,6 @@
   --shadow-2xl: 0 1px 3.5px 0px hsl(0 0% 0% / 0.25);
 }
 
-
-
-
 .dark .prose {
   @apply prose-invert;
 }
@@ -300,7 +297,6 @@ html {
   scroll-behavior: smooth;
 }
 
-
 .animated-background {
   position: fixed;
   top: 0;
@@ -327,23 +323,51 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
+  background-image:
     linear-gradient(oklch(0.75 0.183 55.934 / 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.75 0.183 55.934 / 0.03) 1px, transparent 1px),
-    radial-gradient(circle at 25% 25%, oklch(0.75 0.183 55.934 / 0.04) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, oklch(0.837 0.128 66.29 / 0.03) 1px, transparent 1px);
-  background-size: 60px 60px, 60px 60px, 120px 120px, 80px 80px;
+    linear-gradient(
+      90deg,
+      oklch(0.75 0.183 55.934 / 0.03) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 25% 25%,
+      oklch(0.75 0.183 55.934 / 0.04) 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      oklch(0.837 0.128 66.29 / 0.03) 1px,
+      transparent 1px
+    );
+  background-size:
+    60px 60px,
+    60px 60px,
+    120px 120px,
+    80px 80px;
   animation: gridShift 30s linear infinite;
   will-change: transform;
   transform: translateZ(0);
 }
 
 .dark .animated-background .tech-grid {
-  background-image: 
+  background-image:
     linear-gradient(oklch(0.837 0.128 66.29 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.837 0.128 66.29 / 0.06) 1px, transparent 1px),
-    radial-gradient(circle at 25% 25%, oklch(0.837 0.128 66.29 / 0.05) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, oklch(0.75 0.183 55.934 / 0.04) 1px, transparent 1px);
+    linear-gradient(
+      90deg,
+      oklch(0.837 0.128 66.29 / 0.06) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 25% 25%,
+      oklch(0.837 0.128 66.29 / 0.05) 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      oklch(0.75 0.183 55.934 / 0.04) 1px,
+      transparent 1px
+    );
 }
 
 .animated-background .flowing-lines {
@@ -359,7 +383,8 @@ html {
   position: absolute;
   width: 1px;
   height: 200%;
-  background: linear-gradient(0deg, 
+  background: linear-gradient(
+    0deg,
     transparent 0%,
     oklch(0.75 0.183 55.934 / 0.2) 15%,
     oklch(0.837 0.128 66.29 / 0.8) 30%,
@@ -375,7 +400,8 @@ html {
 }
 
 .dark .animated-background .line {
-  background: linear-gradient(0deg, 
+  background: linear-gradient(
+    0deg,
     transparent 0%,
     oklch(0.837 0.128 66.29 / 0.15) 15%,
     oklch(0.75 0.183 55.934 / 0.6) 30%,
@@ -464,7 +490,7 @@ html {
   border: 1px solid oklch(0.837 0.128 66.29);
   border-radius: 50%;
   animation: dataPulse 5s infinite ease-in-out;
-  box-shadow: 
+  box-shadow:
     0 0 8px oklch(0.75 0.183 55.934 / 0.6),
     0 0 16px oklch(0.837 0.128 66.29 / 0.3),
     inset 0 0 4px oklch(1 0 0 / 0.3);
@@ -473,7 +499,7 @@ html {
 .dark .animated-background .node {
   background: oklch(0.837 0.128 66.29);
   border-color: oklch(0.75 0.183 55.934);
-  box-shadow: 
+  box-shadow:
     0 0 8px oklch(0.837 0.128 66.29 / 0.5),
     0 0 16px oklch(0.75 0.183 55.934 / 0.2),
     inset 0 0 4px oklch(1 0 0 / 0.2);
@@ -569,7 +595,8 @@ html {
 }
 
 @keyframes dataPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.9;
   }
@@ -608,13 +635,16 @@ html {
 }
 
 @keyframes lineFade {
-  0%, 30% {
+  0%,
+  30% {
     opacity: 0;
   }
-  35%, 65% {
+  35%,
+  65% {
     opacity: 1;
   }
-  70%, 100% {
+  70%,
+  100% {
     opacity: 0;
   }
 }
@@ -633,7 +663,7 @@ html {
   height: 2px;
   background: oklch(0.75 0.183 55.934);
   border-radius: 50%;
-  box-shadow: 
+  box-shadow:
     0 0 4px oklch(0.75 0.183 55.934 / 0.8),
     0 0 8px oklch(0.837 0.128 66.29 / 0.4);
   animation: starTwinkle 12s infinite ease-in-out;
@@ -641,7 +671,7 @@ html {
 
 .dark .animated-background .star {
   background: oklch(0.837 0.128 66.29);
-  box-shadow: 
+  box-shadow:
     0 0 4px oklch(0.837 0.128 66.29 / 0.6),
     0 0 8px oklch(0.75 0.183 55.934 / 0.3);
 }
@@ -707,7 +737,8 @@ html {
 }
 
 @keyframes starTwinkle {
-  0%, 70% {
+  0%,
+  70% {
     opacity: 0.3;
     transform: scale(1);
   }
@@ -727,7 +758,8 @@ html {
     opacity: 0.5;
     transform: scale(1.05);
   }
-  85%, 100% {
+  85%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }
@@ -743,7 +775,7 @@ html {
   .animated-background .star {
     animation: none;
   }
-  
+
   .animated-background .line,
   .animated-background .node,
   .animated-background .star {

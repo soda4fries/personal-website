@@ -42,23 +42,22 @@ const heroImageOptimized1x = await getImage({
   src: heroImage,
   width: 600,
   height: 368,
-  quality: 'high'
+  quality: 'high',
 });
 
 const heroImageOptimized15x = await getImage({
   src: heroImage,
   width: 900, // 600 * 1.5
   height: 552, // 368 * 1.5
-  quality: 'high'
+  quality: 'high',
 });
 
 const heroImageOptimized2x = await getImage({
   src: heroImage,
   width: 1200, // 600 * 2
   height: 736, // 368 * 2
-  quality: 'high'
+  quality: 'high',
 });
-
 ---
 
 <!doctype html>
@@ -168,18 +167,20 @@ const heroImageOptimized2x = await getImage({
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     /> -->
-    
+
     <!-- Preload hero image for LCP optimization with responsive srcset -->
-    <link 
-      rel="preload" 
-      as="image" 
+    <link
+      rel="preload"
+      as="image"
       href={heroImageOptimized1x.src}
       imagesrcset={`${heroImageOptimized1x.src} 1x, ${heroImageOptimized15x.src} 1.5x, ${heroImageOptimized2x.src} 2x`}
     />
-    
+
     <ClientRouter />
   </head>
-  <body class={`h-[100dvh] bg-background font-sans antialiased flex flex-col ${isContentPage ? 'content-page' : ''}`}>
+  <body
+    class={`h-[100dvh] bg-background font-sans antialiased flex flex-col ${isContentPage ? 'content-page' : ''}`}
+  >
     <div class="animated-background">
       <div class="tech-grid"></div>
       <div class="flowing-lines">
@@ -225,9 +226,7 @@ const heroImageOptimized2x = await getImage({
     <div class="hidden md:block">
       <Footer />
     </div>
-    <BottomAppBar
-      navItems={navItems}
-    />
+    <BottomAppBar navItems={navItems} />
     <Toaster position="bottom-right" richColors client:load />
   </body>
 </html>

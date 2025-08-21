@@ -23,10 +23,10 @@ Neural networks are computational models inspired by biological neural networks 
 
 A neural network typically consists of:
 
-<Image 
-  src={neuralNetworkExample} 
+<Image
+  src={neuralNetworkExample}
   alt="Neural Network Architecture showing input layer, hidden layers, and output layer"
-  width={600} 
+  width={600}
   height={400}
   class="rounded-lg shadow-md my-6"
 />
@@ -47,7 +47,7 @@ def sigmoid(x):
 def neural_network(inputs, weights, bias):
     # Calculate weighted sum
     weighted_sum = np.dot(inputs, weights) + bias
-    
+
     # Apply activation function
     output = sigmoid(weighted_sum)
     return output
@@ -80,6 +80,7 @@ Neural networks learn through **backpropagation**:
 ## Why Neural Networks Matter
 
 Neural networks have revolutionized AI by enabling machines to:
+
 - Learn complex patterns from data
 - Adapt to new information
 - Solve problems that traditional programming couldn't handle

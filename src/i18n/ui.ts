@@ -42,25 +42,28 @@ export const ui = {
     skillsContent: {
       backendDevelopment: {
         title: 'Backend Development',
-        description: 'I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.',
+        description:
+          'I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.',
       },
       machineLearning: {
         title: 'Machine Learning & AI',
-        description: 'Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.',
+        description:
+          'Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.',
       },
       devOps: {
         title: 'DevOps & Infrastructure',
-        description: 'Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.',
+        description:
+          'Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.',
       },
       frontendDevelopment: {
         title: 'Frontend Development',
-        description: 'I am not expanding this skill tree since it moves too fast, and CSS is hard.',
+        description:
+          'I am not expanding this skill tree since it moves too fast, and CSS is hard.',
       },
     },
     site: {
       title: 'Mohammad Mahdinur Rahman',
-      description:
-        'Sodas Personal Website',
+      description: 'Sodas Personal Website',
     },
     nav: {
       home: 'Home',
@@ -73,13 +76,15 @@ export const ui = {
       rights: 'All rights reserved.',
     },
     homePage: {
-      pageTitle: 'Home | Mohammad Mahdinur Rahman - Backend Developer & ML Researcher',
+      pageTitle:
+        'Home | Mohammad Mahdinur Rahman - Backend Developer & ML Researcher',
       pageDescription:
-        'Soda\'s personal website - where documentation and useful stuff go to rest in peace until I need them again.',
+        "Soda's personal website - where documentation and useful stuff go to rest in peace until I need them again.",
       heroGreeting: "Hi, I'm Soda",
       heroSubtitlePart1: 'Computer Stuff',
       heroSubtitlePart2: 'Reading',
-      heroIntroduction: 'My favorite thing is to RTFM. This is where all the useful stuff I find goes to rest in peace until I need it again. But if it helps you, even better!',
+      heroIntroduction:
+        'My favorite thing is to RTFM. This is where all the useful stuff I find goes to rest in peace until I need it again. But if it helps you, even better!',
       heroViewWorkButton: 'Browse Stuff',
       heroContactButton: 'Contact',
       heroImageAlt:
@@ -91,16 +96,14 @@ export const ui = {
       projectCardViewCode: 'View Code',
       imageNotAvailable: 'Image not available for now',
       mySkillsTitle: 'Tech Stack',
-      mySkillsDescription:
-        'Tools I have used and am comfortable with',
+      mySkillsDescription: 'Tools I have used and am comfortable with',
     },
     blogPage: {
       pageTitle: 'My Technical Blog',
       pageDescription:
         'Articles and thoughts on web development, software architecture, and new technologies.',
       title: 'Documentation & Notes',
-      description:
-        'Random stuff I wrote down so I don\'t forget it.',
+      description: "Random stuff I wrote down so I don't forget it.",
       comingSoon: 'Blog posts will appear here soon. Check back later!',
       heroImageAlt: 'Hero image for article: ',
       publishedOn: 'Published on: ',

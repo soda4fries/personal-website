@@ -23,7 +23,10 @@ const { content, lang } = Astro.props;
 const t = useTranslations(lang, 'aboutMePage');
 ---
 
-<a href={getRelativeLocaleUrl(lang, `/about-me/${content.id}/`)} class="group block rounded-xl border border-border/50 bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/20 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 overflow-hidden h-full">
+<a
+  href={getRelativeLocaleUrl(lang, `/about-me/${content.id}/`)}
+  class="group block rounded-xl border border-border/50 bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:border-primary/20 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 overflow-hidden h-full"
+>
   <Card
     className="group bg-transparent border-none transition-none shadow-none grid grid-rows-subgrid row-span-2 h-full relative"
   >

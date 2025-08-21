@@ -44,30 +44,31 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 // Extract headings from the MDX content for TOC
 function extractHeadings(content: string) {
   const headings: Array<{ id: string; text: string; level: number }> = [];
-  
+
   // First, remove code blocks to avoid detecting # inside them
   // Remove fenced code blocks (```...```)
   let cleanContent = content.replace(/```[\s\S]*?```/g, '');
-  
+
   // Remove inline code (`...`)
   cleanContent = cleanContent.replace(/`[^`\n]*`/g, '');
-  
+
   // Now extract headings from the cleaned content
   const headingRegex = /^(#{1,6})\s+(.*)$/gm;
   let match: RegExpExecArray | null;
-  
+
   while ((match = headingRegex.exec(cleanContent)) !== null) {
     const level = match[1].length;
     const text = match[2].trim();
-    const id = text.toLowerCase()
+    const id = text
+      .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .trim();
-    
+
     headings.push({ id, text, level });
   }
-  
+
   return headings;
 }
 

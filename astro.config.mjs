@@ -20,11 +20,12 @@ export default defineConfig({
         type: 'shiki',
       },
     }),
-    (await import("@playform/compress")).default()
+    (await import('@playform/compress')).default(),
   ],
 
   prefetch: {
-    defaultStrategy: 'viewport', prefetchAll: true
+    defaultStrategy: 'viewport',
+    prefetchAll: true,
   },
 
   i18n: {
@@ -36,7 +37,6 @@ export default defineConfig({
   },
 
   vite: {
-    
     plugins: [tailwindcss()],
   },
 });

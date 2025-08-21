@@ -23,27 +23,32 @@ export function SearchResultsInfo({
   filteredPosts,
   searchTerm,
   selectedTag,
-  texts
+  texts,
 }: SearchResultsInfoProps) {
   const hasFilters = searchTerm || selectedTag;
-  
+
   return (
     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
       {hasFilters && (
         <>
           <Search className="h-4 w-4" />
           {filteredPosts === 0 ? (
-            <span className="text-destructive font-medium">{texts.noPostsFound}</span>
+            <span className="text-destructive font-medium">
+              {texts.noPostsFound}
+            </span>
           ) : (
             <span>
-              {texts.found} <span className="font-medium text-foreground">{filteredPosts}</span> {texts.of} {totalPosts} {texts.posts}
+              {texts.found}{' '}
+              <span className="font-medium text-foreground">
+                {filteredPosts}
+              </span>{' '}
+              {texts.of} {totalPosts} {texts.posts}
               {(searchTerm || selectedTag) && (
                 <span className="ml-1">
                   {texts.matching}
                   {searchTerm && (
                     <span className="ml-1 inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded-md font-mono text-xs">
-                      <Search className="h-3 w-3" />
-                      "{searchTerm}"
+                      <Search className="h-3 w-3" />"{searchTerm}"
                     </span>
                   )}
                   {selectedTag && (
@@ -58,9 +63,11 @@ export function SearchResultsInfo({
           )}
         </>
       )}
-      
+
       {!hasFilters && (
-        <span>{texts.showingAll} {totalPosts} {texts.posts}</span>
+        <span>
+          {texts.showingAll} {totalPosts} {texts.posts}
+        </span>
       )}
     </div>
   );

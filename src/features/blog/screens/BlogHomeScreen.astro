@@ -131,22 +131,14 @@ const {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {
       posts.map((post) => {
-        return (
-          <CompactBlogCard
-            post={post}
-            lang={lang}
-          />
-        );
+        return <CompactBlogCard post={post} lang={lang} />;
       })
     }
   </div>
-  
+
   {/* View All Posts Link */}
   <div class="text-center mt-8">
-    <a
-      href="/blog"
-      class={buttonVariants({ variant: 'outline' })}
-    >
+    <a href="/blog" class={buttonVariants({ variant: 'outline' })}>
       View All Posts
     </a>
   </div>
@@ -174,4 +166,3 @@ const {
     </div>
   </div>
 </section>
-

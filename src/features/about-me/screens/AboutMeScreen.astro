@@ -61,7 +61,9 @@ const regularContent = content.filter((item) => !item.data.featured);
           <div class="text-center pt-8 border-t border-border/30">
             <p class="text-sm text-muted-foreground mb-4">
               {content.length}{' '}
-              {content.length > 1 ? t('contentAvailable') : t('contentItemAvailable')}
+              {content.length > 1
+                ? t('contentAvailable')
+                : t('contentItemAvailable')}
             </p>
           </div>
         </div>

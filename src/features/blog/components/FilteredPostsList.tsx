@@ -49,7 +49,7 @@ export type PostDataForFilter = {
 
 export type FilteredPostsListProps = {
   allPosts: Array<PostDataForFilter>;
-  texts: BlogFiltersProps['texts'] & { 
+  texts: BlogFiltersProps['texts'] & {
     noPostsFound: string;
     showingAll: string;
     found: string;
@@ -148,7 +148,7 @@ export function FilteredPostsList({
         onSearchChange={handleSearchChange}
         onTagChange={handleTagChange}
       />
-      
+
       <SearchResultsInfo
         totalPosts={allPosts.length}
         filteredPosts={filteredPosts.length}
@@ -163,7 +163,7 @@ export function FilteredPostsList({
           noPostsFound: texts.noPostsFound,
         }}
       />
-      
+
       {/* Enhanced Posts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {filteredPosts.map((post) => (
@@ -181,7 +181,7 @@ export function FilteredPostsList({
           />
         ))}
       </div>
-      
+
       {filteredPosts.length === 0 && (searchQuery || selectedTag) && (
         <div className="text-center py-12">
           <p className="text-muted-foreground text-lg">{texts.noPostsFound}</p>

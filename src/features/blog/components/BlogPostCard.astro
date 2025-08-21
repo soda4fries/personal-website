@@ -56,7 +56,9 @@ const t = useTranslations(lang, 'blogPost');
         {post.data.title}
       </CardTitle>
       <CardDescription className="space-y-1">
-        <p class="text-xs">{t('publishedOn') + formatDate(post.data.pubDate, lang)}</p>
+        <p class="text-xs">
+          {t('publishedOn') + formatDate(post.data.pubDate, lang)}
+        </p>
         {
           post.data.readingTimeMinutes != null ? (
             <p class="flex items-center text-xs">
@@ -100,7 +102,7 @@ const t = useTranslations(lang, 'blogPost');
         />
       </span>
     </CardFooter>
-      <!-- Effect hover  -->
+    <!-- Effect hover  -->
     <div
       class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
     >

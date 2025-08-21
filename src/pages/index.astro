@@ -20,71 +20,76 @@ const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 3);
+const featuredPosts = sortedPosts
+  .filter((post) => post.data.featured)
+  .slice(0, 3);
 
 // Skills data based on CV and actual experience
 const skills = [
   {
-    title: "Backend Development", 
-    description: "I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.",
-    iconName: "ServerCog",
+    title: 'Backend Development',
+    description:
+      'I have experience with these backend technologies, and in general, I can weasel my way around most backend issues.',
+    iconName: 'ServerCog',
     technologies: [
-      { id: "java", name: "Java" },
-      { id: "spring", name: "Spring Ecosystem" },
-      { id: "python", name: "Python" },
-      { id: "django", name: "Django" },
-      { id: "postgresql", name: "PostgreSQL" },
-      { id: "redis", name: "Redis" },
-      { id: "kafka", name: "Kafka" },
-      { id: "nats", name: "NATS" },
-      { id: "clickhouse", name: "ClickHouse" }
-    ]
+      { id: 'java', name: 'Java' },
+      { id: 'spring', name: 'Spring Ecosystem' },
+      { id: 'python', name: 'Python' },
+      { id: 'django', name: 'Django' },
+      { id: 'postgresql', name: 'PostgreSQL' },
+      { id: 'redis', name: 'Redis' },
+      { id: 'kafka', name: 'Kafka' },
+      { id: 'nats', name: 'NATS' },
+      { id: 'clickhouse', name: 'ClickHouse' },
+    ],
   },
   {
-    title: "Machine Learning & AI",
-    description: "Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.",
-    iconName: "Brain",
+    title: 'Machine Learning & AI',
+    description:
+      'Mostly self learned but have some peer reviewed publication, I would like to do more research in this field.',
+    iconName: 'Brain',
     technologies: [
-      { id: "pytorch", name: "PyTorch" },
-      { id: "huggingface", name: "Hugging Face" },
-      { id: "python", name: "Python" },
-      { id: "computervision", name: "Computer Vision" },
-      { id: "wandb", name: "Weights & Biases" }
-    ]
+      { id: 'pytorch', name: 'PyTorch' },
+      { id: 'huggingface', name: 'Hugging Face' },
+      { id: 'python', name: 'Python' },
+      { id: 'computervision', name: 'Computer Vision' },
+      { id: 'wandb', name: 'Weights & Biases' },
+    ],
   },
   {
-    title: "DevOps & Infrastructure",
-    description: "Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.",
-    iconName: "Network",
+    title: 'DevOps & Infrastructure',
+    description:
+      'Comfortable with setting up and managing infrastructure, CI/CD pipelines, and monitoring in production environments.',
+    iconName: 'Network',
     technologies: [
-      { id: "kubernetes", name: "Kubernetes" },
-      { id: "rancher", name: "Rancher" },
-      { id: "docker", name: "Docker" },
-      { id: "cilium", name: "Cilium" },
-      { id: "prometheus", name: "Prometheus" },
-      { id: "grafana", name: "Grafana" },
-      { id: "keycloak", name: "Keycloak" },
-      { id: "linux", name: "Linux" },
-      { id: "fleetcd", name: "FleetCD" },
-      { id: "nginx", name: "NGINX" },
-      { id: "cloudflare", name: "Cloudflare" }
-    ]
+      { id: 'kubernetes', name: 'Kubernetes' },
+      { id: 'rancher', name: 'Rancher' },
+      { id: 'docker', name: 'Docker' },
+      { id: 'cilium', name: 'Cilium' },
+      { id: 'prometheus', name: 'Prometheus' },
+      { id: 'grafana', name: 'Grafana' },
+      { id: 'keycloak', name: 'Keycloak' },
+      { id: 'linux', name: 'Linux' },
+      { id: 'fleetcd', name: 'FleetCD' },
+      { id: 'nginx', name: 'NGINX' },
+      { id: 'cloudflare', name: 'Cloudflare' },
+    ],
   },
   {
-    title: "Frontend Development",
-    description: "I am not expanding this skill tree since it moves too fast, and CSS is hard.",
-    iconName: "MonitorSmartphone",
+    title: 'Frontend Development',
+    description:
+      'I am not expanding this skill tree since it moves too fast, and CSS is hard.',
+    iconName: 'MonitorSmartphone',
     technologies: [
-      { id: "javascript", name: "JavaScript" },
-      { id: "vuejs", name: "Vue.js" },
-      { id: "android", name: "Android" },
-      { id: "java", name: "Java" },
-      { id: "qt", name: "Qt" },
-      { id: "astro", name: "Astro" }
-    ]
-  }
+      { id: 'javascript', name: 'JavaScript' },
+      { id: 'vuejs', name: 'Vue.js' },
+      { id: 'android', name: 'Android' },
+      { id: 'java', name: 'Java' },
+      { id: 'qt', name: 'Qt' },
+      { id: 'astro', name: 'Astro' },
+    ],
+  },
 ];
-
 
 const layoutProps = {
   lang,
@@ -98,7 +103,8 @@ const layoutProps = {
   heroViewWorkButton: 'View My Blog',
   heroContactButton: t('heroContactButton'),
   featuredBlogsTitle: 'Latest Blog Posts',
-  featuredBlogsDescription: 'Explore my latest thoughts on technology, development, and innovation.',
+  featuredBlogsDescription:
+    'Explore my latest thoughts on technology, development, and innovation.',
   mySkillsTitle: t('mySkillsTitle'),
   mySkillsDescription: t('mySkillsDescription'),
 };

@@ -31,7 +31,11 @@ async function transformPostForClientFilter(
 ): Promise<PostDataForFilter> {
   let optimizedHeroImage = null;
   if (post.data.heroImage) {
-    const image = await getImage({ src: post.data.heroImage.url, widths: [400, 800], formats: ['webp', 'jpeg'] });
+    const image = await getImage({
+      src: post.data.heroImage.url,
+      widths: [400, 800],
+      formats: ['webp', 'jpeg'],
+    });
     optimizedHeroImage = {
       ...post.data.heroImage,
       url: {
@@ -40,7 +44,7 @@ async function transformPostForClientFilter(
         height: image.attributes.height,
         format: 'webp',
         srcset: image.srcset,
-      }
+      },
     };
   }
 
@@ -57,7 +61,9 @@ async function transformPostForClientFilter(
   };
 }
 
-const allPostsForClient = await Promise.all(posts.map(transformPostForClientFilter));
+const allPostsForClient = await Promise.all(
+  posts.map(transformPostForClientFilter)
+);
 const componentTexts = {
   searchPlaceholder: texts('searchPlaceholder'),
   filterByTagButtonLabel: texts('filterByTagButtonLabel'),
@@ -109,6 +115,5 @@ const pageDescription = t('pageDescription');
         }
       </div>
     </noscript>
-
   </div>
 </BaseLayout>

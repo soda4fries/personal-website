@@ -15,17 +15,18 @@ const { posts, lang, maxTags } = Astro.props;
 // Aggregate all tags and count their frequency
 const tagCounts = new Map<string, number>();
 
-posts.forEach(post => {
+posts.forEach((post) => {
   if (post.data.tags) {
-    post.data.tags.forEach(tag => {
+    post.data.tags.forEach((tag) => {
       tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
     });
   }
 });
 
 // Sort tags by frequency (most used first) and optionally limit to maxTags
-let sortedTagsArray = Array.from(tagCounts.entries())
-  .sort(([,a], [,b]) => b - a);
+let sortedTagsArray = Array.from(tagCounts.entries()).sort(
+  ([, a], [, b]) => b - a
+);
 
 if (maxTags) {
   sortedTagsArray = sortedTagsArray.slice(0, maxTags);
@@ -34,26 +35,28 @@ if (maxTags) {
 const sortedTags = sortedTagsArray.map(([tag, count]) => ({ tag, count }));
 ---
 
-{sortedTags.length > 0 && (
-  <div class="mb-8 max-w-4xl mx-auto">
-    <h3 class="text-sm font-medium text-muted-foreground mb-4 text-center">Popular Tags</h3>
-    <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
-      {
-        sortedTags.map(({ tag, count }) => (
-          <a 
+{
+  sortedTags.length > 0 && (
+    <div class="mb-8 max-w-4xl mx-auto">
+      <h3 class="text-sm font-medium text-muted-foreground mb-4 text-center">
+        Popular Tags
+      </h3>
+      <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+        {sortedTags.map(({ tag, count }) => (
+          <a
             data-astro-prefetch="false"
             href={`/blog?tag=${encodeURIComponent(tag)}`}
             class="group"
           >
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="text-xs px-3 py-1.5 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer whitespace-nowrap"
             >
               {tag} ({count})
             </Badge>
           </a>
-        ))
-      }
+        ))}
+      </div>
     </div>
-  </div>
-)}
+  )
+}

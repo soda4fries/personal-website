@@ -166,12 +166,16 @@ const IconComponent = iconComponents[iconName];
     <div class="flex items-center gap-3">
       <div class="relative">
         <div class="absolute inset-0 bg-primary/20 rounded-lg blur-sm"></div>
-        <span class="relative inline-flex items-center justify-center p-2 bg-primary/10 rounded-lg border border-primary/20">
+        <span
+          class="relative inline-flex items-center justify-center p-2 bg-primary/10 rounded-lg border border-primary/20"
+        >
           <IconComponent className="size-5 text-primary" />
         </span>
       </div>
       <div class="flex-grow">
-        <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+        <CardTitle
+          className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300"
+        >
           {title}
         </CardTitle>
       </div>
@@ -188,14 +192,21 @@ const IconComponent = iconComponents[iconName];
     technologies && technologies.length > 0 && (
       <CardFooter className="pt-3 pb-4 border-t border-border/50">
         <div class="w-full">
-          <h4 class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Technologies</h4>
+          <h4 class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+            Technologies
+          </h4>
           <div class="flex flex-wrap gap-2">
             {technologies.map((tech) => {
               const TechIcon = techIconComponents[tech.id.toLowerCase()];
               return TechIcon ? (
-                <div class="group/tech flex items-center gap-1.5 px-2 py-1.5 bg-muted/50 rounded-md hover:bg-primary/10 hover:scale-105 transition-all duration-200 cursor-pointer" title={tech.name}>
+                <div
+                  class="group/tech flex items-center gap-1.5 px-2 py-1.5 bg-muted/50 rounded-md hover:bg-primary/10 hover:scale-105 transition-all duration-200 cursor-pointer"
+                  title={tech.name}
+                >
                   <TechIcon className="size-3.5 text-muted-foreground group-hover/tech:text-primary transition-colors" />
-                  <span class="text-xs font-medium text-muted-foreground group-hover/tech:text-primary transition-colors">{tech.name}</span>
+                  <span class="text-xs font-medium text-muted-foreground group-hover/tech:text-primary transition-colors">
+                    {tech.name}
+                  </span>
                 </div>
               ) : null;
             })}
