@@ -40,7 +40,8 @@ const sortedTags = sortedTagsArray.map(([tag, count]) => ({ tag, count }));
     <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
       {
         sortedTags.map(({ tag, count }) => (
-          <a
+          <a 
+            data-astro-prefetch="false"
             href={`/blog?tag=${encodeURIComponent(tag)}`}
             class="group"
           >

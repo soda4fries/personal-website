@@ -21,7 +21,9 @@ export default defineConfig({
     }),
   ],
 
-  prefetch: { prefetchAll: true },
+  prefetch: {
+    defaultStrategy: 'viewport', prefetchAll: true
+  },
 
   i18n: {
     locales: ['en'],
