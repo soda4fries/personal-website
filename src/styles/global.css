@@ -164,10 +164,11 @@
 }
 
 
+
+
 .dark .prose {
   @apply prose-invert;
 }
-
 
 @layer base {
   * {
