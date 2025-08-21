@@ -9,6 +9,7 @@ import { ClientRouter } from 'astro:transitions';
 
 import { Toaster } from 'sonner';
 import heroImage from '@/assets/user-hero.webp';
+import { getImage } from 'astro:assets';
 
 type Props = {
   pageTitle: string;
@@ -35,6 +36,28 @@ const navItems: Array<NavItem> = [
   { href: '/about-me', label: tNav('aboutMe'), icon: User },
   { href: '/contact', label: tNav('contact'), icon: MessageSquare },
 ];
+
+// Generate optimized hero images for preloading (matching BlogHomeScreen Image component config)
+const heroImageOptimized1x = await getImage({
+  src: heroImage,
+  width: 600,
+  height: 368,
+  quality: 'high'
+});
+
+const heroImageOptimized15x = await getImage({
+  src: heroImage,
+  width: 900, // 600 * 1.5
+  height: 552, // 368 * 1.5
+  quality: 'high'
+});
+
+const heroImageOptimized2x = await getImage({
+  src: heroImage,
+  width: 1200, // 600 * 2
+  height: 736, // 368 * 2
+  quality: 'high'
+});
 
 ---
 
@@ -146,8 +169,13 @@ const navItems: Array<NavItem> = [
       rel="stylesheet"
     /> -->
     
-    <!-- Preload hero image for LCP optimization -->
-    <link rel="preload" as="image" href={heroImage.src} />
+    <!-- Preload hero image for LCP optimization with responsive srcset -->
+    <link 
+      rel="preload" 
+      as="image" 
+      href={heroImageOptimized1x.src}
+      imagesrcset={`${heroImageOptimized1x.src} 1x, ${heroImageOptimized15x.src} 1.5x, ${heroImageOptimized2x.src} 2x`}
+    />
     
     <ClientRouter />
   </head>
