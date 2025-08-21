@@ -8,6 +8,7 @@ import { Home, FileText, User, MessageSquare } from 'lucide-react';
 import { ClientRouter } from 'astro:transitions';
 
 import { Toaster } from 'sonner';
+import heroImage from '@/assets/user-hero.webp';
 
 type Props = {
   pageTitle: string;
@@ -146,7 +147,7 @@ const navItems: Array<NavItem> = [
     /> -->
     
     <!-- Preload hero image for LCP optimization -->
-    <link rel="preload" as="image" href="/src/assets/user-hero.webp" />
+    <link rel="preload" as="image" href={heroImage.src} />
     
     <ClientRouter />
   </head>
