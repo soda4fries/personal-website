@@ -163,6 +163,12 @@
   --shadow-2xl: 0 1px 3.5px 0px hsl(0 0% 0% / 0.25);
 }
 
+
+.dark .prose {
+  @apply prose-invert;
+}
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

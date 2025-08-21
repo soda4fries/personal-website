@@ -21,7 +21,7 @@ const blogCollection = defineCollection({
       readingTimeMinutes: z.number().optional(), // Added by remark plugin
       isDraft: z.boolean(),
       featured: z.boolean().optional(),
-      lang: z.enum(['fr', 'en']).optional().default('fr'),
+      lang: z.enum(['en']).optional().default('en'),
     }),
 });
 
@@ -44,7 +44,7 @@ const aboutMeCollection = defineCollection({
           alt: z.string(),
         })
         .optional(),
-      lang: z.enum(['fr', 'en']).optional().default('fr'),
+      lang: z.enum(['en']).optional().default('en'),
       relatedContent: z.array(reference('about-me')).optional(),
       featured: z.boolean().optional(),
       category: z.enum(['personal', 'professional', 'skills', 'experience']).optional(),

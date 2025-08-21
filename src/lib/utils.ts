@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: Date, lang: LanguageCode) {
-  return new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US', {
+  return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
