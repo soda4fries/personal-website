@@ -11,7 +11,7 @@ import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 export default defineConfig({
   output: 'static',
   compressHTML: true,
-  site: 'https://personal-website.soda4fries.workers.dev',
+  site: 'https://mahdinur.net',
   integrations: [
     react(),
     mdx({
