@@ -8,6 +8,7 @@ interface PublicMessagesDisplayProps {
   popupInterval?: number; // in milliseconds, default 4000 (4 seconds)
   maxVisibleCards?: number; // maximum cards visible at once, default 3
   containerHeight?: string; // height of the container, default "400px"
+  simpleMode?: boolean; // if true, display as simple static cards without animations/positioning
 }
 
 interface VisibleMessage extends PublicMessage {
@@ -29,6 +30,7 @@ export function PublicMessagesDisplay({
   popupInterval = 4000,
   maxVisibleCards = 3,
   containerHeight = '400px',
+  simpleMode = false,
 }: PublicMessagesDisplayProps) {
   const [messages, setMessages] = useState<PublicMessage[]>([]);
   const [visibleMessages, setVisibleMessages] = useState<VisibleMessage[]>([]);
@@ -356,6 +358,133 @@ export function PublicMessagesDisplay({
         className="relative w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden pointer-events-none"
         style={{ height: containerHeight }}
       />
+    );
+  }
+
+  // Simple mode rendering - show one card at a time that changes randomly
+  if (simpleMode) {
+    const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+    const [cardKey, setCardKey] = useState(0);
+    const [animationType, setAnimationType] = useState<VisibleMessage['animationType']>('fadeIn');
+    
+    // Animation types array
+    const animationTypes: VisibleMessage['animationType'][] = [
+      'slideUp',
+      'fadeIn',
+      'bounceIn',
+      'slideLeft',
+      'slideRight',
+      'zoomIn',
+    ];
+    
+    // Cycle through messages randomly with popup animations
+    useEffect(() => {
+      if (messages.length === 0 || isLoading) return;
+
+      const interval = setInterval(() => {
+        setCurrentMessageIndex(Math.floor(Math.random() * messages.length));
+        setAnimationType(animationTypes[Math.floor(Math.random() * animationTypes.length)]);
+        setCardKey(prev => prev + 1); // Force re-render with new animation
+      }, Math.min(popupInterval, 2500)); // Cap at 2.5 seconds max
+
+      return () => clearInterval(interval);
+    }, [messages.length, isLoading, popupInterval]);
+
+    // Set initial message when messages are loaded
+    useEffect(() => {
+      if (messages.length > 0 && !isLoading && currentMessageIndex === 0) {
+        setCurrentMessageIndex(Math.floor(Math.random() * messages.length));
+      }
+    }, [messages.length, isLoading, currentMessageIndex]);
+
+    const currentMessage = messages[currentMessageIndex];
+    
+    return (
+      <div
+        className="w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden"
+        style={{ height: containerHeight }}
+      >
+        {/* Loading indicator */}
+        {isLoading && (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
+              <span className="text-sm text-muted-foreground">Loading messages...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Single message card */}
+        {!isLoading && currentMessage && (
+          <div className="p-4 h-full flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <MessageSquare className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">
+                Public Messages
+              </span>
+            </div>
+            <div className="flex-1 flex items-center">
+              <Card key={cardKey} className={`w-full ${getAnimationClass(animationType, false)}`}>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-start gap-3 text-sm">
+                    <MessageSquare className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
+                        {currentMessage.message.length > 120
+                          ? `${currentMessage.message.slice(0, 120)}...`
+                          : currentMessage.message}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {formatDate(currentMessage.timestamp)}
+                      </p>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-0">
+                  {currentMessage.replied && currentMessage.reply ? (
+                    <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3">
+                      <Reply className="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-foreground leading-relaxed whitespace-pre-wrap break-words text-sm">
+                          {currentMessage.reply.length > 100
+                            ? `${currentMessage.reply.slice(0, 100)}...`
+                            : currentMessage.reply}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {formatDate(currentMessage.reply_timestamp!)}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+                      <Clock className="w-4 h-4 mt-0.5 text-blue-600 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-blue-800 dark:text-blue-200 font-medium text-sm">
+                          Pending reply...
+                        </p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                          Check back soon!
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {/* No messages state */}
+        {!isLoading && messages.length === 0 && (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <MessageSquare className="w-8 h-8 mx-auto text-muted-foreground/60 mb-2" />
+              <p className="text-muted-foreground/60 text-sm">No public messages yet</p>
+            </div>
+          </div>
+        )}
+      </div>
     );
   }
 

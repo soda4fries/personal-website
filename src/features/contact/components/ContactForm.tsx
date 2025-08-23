@@ -259,6 +259,7 @@ export function ContactForm({
             popupInterval={3000}
             maxVisibleCards={1}
             containerHeight="50vh"
+            simpleMode={true}
           />
         </div>
       )}
