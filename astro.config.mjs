@@ -12,6 +12,7 @@ import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 export default defineConfig({
   output: 'static',
   compressHTML: true,
+  inlineStylesheets: 'always',
   site: 'https://mahdinur.net',
   integrations: [
     expressiveCode({
