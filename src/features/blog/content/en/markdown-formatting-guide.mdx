@@ -1,0 +1,141 @@
+---
+lang: 'en'
+title: 'Complete Markdown Formatting Guide'
+description: 'A comprehensive showcase of all available markdown formatting features, MDX components, and interactive elements for this blog system.'
+pubDate: 2025-08-23
+heroImage:
+  url: '../../../../assets/placeholder.webp'
+  alt: 'Markdown formatting demonstration'
+tags: ['markdown', 'formatting', 'guide', 'mdx', 'examples']
+isDraft: false
+featured: true
+relatedPosts: []
+---
+
+import InfoAlert from '@/features/blog/components/InfoAlert.astro';
+import StackBlitzEmbed from '@/features/blog/components/StackBlitzEmbed.astro';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { CounterButton } from '@/features/blog/components/CounterButton.tsx';
+import { Image } from 'astro:assets';
+import placeholderImage from '../../../../assets/placeholder.webp';
+
+# Markdown Formatting Reference
+
+A compact showcase of all available formatting features in this blog system.
+
+## Text & Headers
+
+**Bold**, *italic*, ***both***, ~~strikethrough~~, `inline code`, [links](https://example.com)
+
+<Badge variant="secondary" className="my-2">Custom Badge</Badge>
+
+## Headers 1-6
+
+# Header 1
+## Header 2  
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
+## Lists
+- Unordered item
+  - Nested item
+- [x] Completed task
+- [ ] Incomplete task
+
+1. Ordered item
+   1. Nested ordered
+2. Another item
+
+## Alerts & Quotes
+
+> Standard blockquote with *formatting*
+
+<InfoAlert title="Custom Alert">
+  Alert component with **markdown** support!
+</InfoAlert>
+
+## Code Examples
+
+### Basic Usage
+`inline code`, plain blocks, and syntax highlighting:
+
+```javascript title="example.js" {2,5} ins={3}
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000,
+  retries: 3
+};
+```
+
+```bash title="Terminal" frame="terminal"
+npm install && npm run dev
+git add . && git commit -m "update"
+```
+
+```text title="Structure" frame="none"
+src/
+├── components/
+├── features/
+└── pages/
+```
+
+## Tables
+
+| Language | Use Case | Rating |
+|----------|----------|--------|
+| JavaScript | Web Dev | ⭐⭐⭐⭐⭐ |
+| Python | AI/Data | ⭐⭐⭐⭐⭐ |
+| Rust | Systems | ⭐⭐⭐ |
+
+## Images
+
+![Standard Image](../../../../assets/placeholder.webp "Tooltip text")
+
+<Image
+  src={placeholderImage}
+  alt="Optimized Astro image"
+  width={400}
+  height={300}
+  class="rounded-lg my-4"
+/>
+
+## Interactive Components
+
+*This is a live React component with full interactivity:*
+
+<CounterButton client:idle />
+
+<Separator className="my-4" />
+
+## Advanced Features
+
+Mathematical expressions: `E = mc²`, `a² + b² = c²`
+
+<div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-lg my-4">
+  <h4 class="font-bold">🌈 Custom HTML</h4>
+  <p>Tailwind + HTML mixed with markdown</p>
+</div>
+
+Special characters: 😀 🎉 🚀 💻 ⚡ 🔥  
+Keyboard shortcuts: <kbd>Ctrl</kbd> + <kbd>C</kbd>
+
+---
+
+## Quick Reference
+
+✅ **Text**: `**bold**`, `*italic*`, `` `code` ``, `[links](url)`  
+✅ **Code**: Syntax highlighting, line numbers, diffs, titles  
+✅ **Components**: React/Astro integration, cards, alerts  
+✅ **Media**: Optimized images, responsive design  
+✅ **HTML**: Custom styling with Tailwind CSS  
+
+<InfoAlert title="📚 Cheat Sheet">
+  Mix **markdown**, React components, and HTML for rich content!
+</InfoAlert>
+
+*Complete formatting reference for this blog system.*

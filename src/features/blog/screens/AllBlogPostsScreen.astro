@@ -23,13 +23,13 @@ const initialTag = Astro.url.searchParams.get('tag') || '';
 
 const texts = useTranslations(lang, 'blogPage');
 
-import { getImage, type ImageMetadata } from 'astro:assets';
+import { getImage } from 'astro:assets';
 
 // Helper function to transform BlogEntry to PostDataForFilter
 async function transformPostForClientFilter(
   post: AstroCollectionEntry<'blog'>
 ): Promise<PostDataForFilter> {
-  let optimizedHeroImage = null;
+  let optimizedHeroImage = undefined;
   if (post.data.heroImage) {
     const image = await getImage({
       src: post.data.heroImage.url,
@@ -40,10 +40,10 @@ async function transformPostForClientFilter(
       ...post.data.heroImage,
       url: {
         src: image.src,
-        width: image.attributes.width,
-        height: image.attributes.height,
+        width: Number(image.attributes.width),
+        height: Number(image.attributes.height),
         format: 'webp',
-        srcset: image.srcset,
+        srcSet: image.srcSet.attribute,
       },
     };
   }

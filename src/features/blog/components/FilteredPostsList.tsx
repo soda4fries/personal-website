@@ -40,7 +40,7 @@ export type PostDataForFilter = {
       width: number;
       height: number;
       format: string;
-      srcset: string;
+      srcSet: string;
     };
     alt: string;
   };
