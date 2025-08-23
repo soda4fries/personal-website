@@ -91,7 +91,7 @@ export function ContactForm({
     resolver: zodResolver(anonymousMessageSchema),
     defaultValues: {
       message: '',
-      public: false,
+      public: true,
     },
     mode: 'onBlur',
   });
