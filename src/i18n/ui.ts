@@ -77,7 +77,7 @@ export const ui = {
     },
     homePage: {
       pageTitle:
-        'Home | Mohammad Mahdinur Rahman - Backend Developer & ML Researcher',
+        'Home | Mohammad Mahdinur Rahman - Personal Website',
       pageDescription:
         "Soda's personal website - where documentation and useful stuff go to rest in peace until I need them again.",
       heroGreeting: "Hi, I'm Soda",
@@ -101,7 +101,7 @@ export const ui = {
     blogPage: {
       pageTitle: 'My Technical Blog',
       pageDescription:
-        'Articles and thoughts on web development, software architecture, and new technologies.',
+        'RTFM - Read The Friendly Manual. My personal blog where I document useful stuff I find so I do not forget it.',
       title: 'Documentation & Notes',
       description: "Random stuff I wrote down so I don't forget it.",
       comingSoon: 'Blog posts will appear here soon. Check back later!',
@@ -191,10 +191,10 @@ export const ui = {
     aboutMePage: {
       metaTitle: 'About Me | Mohammad Mahdinur Rahman',
       metaDescription:
-        'Learn more about who I am, my background, skills, and what drives my passion for technology.',
+        'Learn more about who I am',
       title: 'About Me',
       description:
-        'Learn more about who I am, my background, skills, and what drives my passion for technology.',
+        'Learn more about who I am',
       noContent: 'No content to display at the moment.',
       readMore: 'Read more',
       backToList: 'Back to list',
