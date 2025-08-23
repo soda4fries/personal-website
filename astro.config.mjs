@@ -8,6 +8,9 @@ import expressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
 import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 
+// Contact API configuration
+export const contactApiUrl = 'https://contact.mahdinur.net';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'static',

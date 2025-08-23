@@ -2,13 +2,12 @@
 import { ContactScreen } from '@/features/contact';
 import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { contactApiUrl } from '../../astro.config.mjs';
 
 const lang = defaultLanguage as LanguageCode;
 const t = useTranslations(lang, 'contactPage');
 
-// Configure the base URL for the contact server
-// Change this to point to your contact server (e.g., 'https://api.yourdomain.com' or 'http://localhost:3001')
-const contactServerBaseUrl = 'https://contact.mahdinur.net';
+const contactServerBaseUrl = contactApiUrl;
 
 const pageMeta = {
   title: t('pageTitle'),
