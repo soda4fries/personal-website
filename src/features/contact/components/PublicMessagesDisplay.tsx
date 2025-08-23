@@ -8,7 +8,6 @@ interface PublicMessagesDisplayProps {
   popupInterval?: number; // in milliseconds, default 4000 (4 seconds)
   maxVisibleCards?: number; // maximum cards visible at once, default 3
   containerHeight?: string; // height of the container, default "400px"
-  isConstrainedLayout?: boolean; // whether the layout is constrained (mobile-like)
 }
 
 interface VisibleMessage extends PublicMessage {
@@ -30,7 +29,6 @@ export function PublicMessagesDisplay({
   popupInterval = 4000,
   maxVisibleCards = 3,
   containerHeight = '400px',
-  isConstrainedLayout = false,
 }: PublicMessagesDisplayProps) {
   const [messages, setMessages] = useState<PublicMessage[]>([]);
   const [visibleMessages, setVisibleMessages] = useState<VisibleMessage[]>([]);
@@ -304,7 +302,7 @@ export function PublicMessagesDisplay({
     fetchPublicMessages();
   }, [baseUrl]);
 
-  // Handle resize to clear animations if space becomes too constrained or layout changes
+  // Handle resize to clear animations if space becomes too constrained
   useEffect(() => {
     const handleResize = () => {
       const viewportWidth = window.innerWidth;
@@ -322,13 +320,6 @@ export function PublicMessagesDisplay({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [visibleMessages.length]);
-
-  // Clear messages when layout constraint changes
-  useEffect(() => {
-    if (isConstrainedLayout) {
-      setVisibleMessages([]);
-    }
-  }, [isConstrainedLayout]);
 
   // Animation CSS classes
   const getAnimationClass = (
@@ -383,8 +374,8 @@ export function PublicMessagesDisplay({
         </div>
       )}
 
-      {/* Header - only show when there are visible messages on desktop and not in constrained layout */}
-      {visibleMessages.length > 0 && !isConstrainedLayout && (
+      {/* Header - only show when there are visible messages on desktop */}
+      {visibleMessages.length > 0 && (
         <div className="absolute top-4 left-4 z-0 hidden md:flex items-center gap-2 bg-background/40 backdrop-blur-sm px-3 py-2 rounded-full border border-muted/30">
           <MessageSquare className="w-4 h-4 text-muted-foreground/60" />
           <span className="text-sm font-medium text-muted-foreground/80">
