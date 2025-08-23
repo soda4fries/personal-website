@@ -23,7 +23,7 @@ export type ContactFormTranslations = {
 
 export const anonymousMessageSchema = z.object({
   message: z.string().min(10).max(500),
-  public: z.boolean().default(false),
+  public: z.boolean(),
 });
 
 export type AnonymousMessageValues = z.infer<typeof anonymousMessageSchema>;

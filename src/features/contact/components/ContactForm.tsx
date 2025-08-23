@@ -76,7 +76,12 @@ export function ContactForm({
 
       const shouldUseConstrainedLayout =
         isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace;
-      setIsConstrainedLayout(shouldUseConstrainedLayout);
+      
+      if (shouldUseConstrainedLayout !== isConstrainedLayout) {
+        setIsConstrainedLayout(shouldUseConstrainedLayout);
+        // Force refresh of public messages when layout constraint changes
+        setPublicMessagesKey((prev) => prev + 1);
+      }
     };
 
     // Check on mount
@@ -91,7 +96,7 @@ export function ContactForm({
     resolver: zodResolver(anonymousMessageSchema),
     defaultValues: {
       message: '',
-      public: false,
+      public: true,
     },
     mode: 'onBlur',
   });
@@ -226,6 +231,7 @@ export function ContactForm({
             popupInterval={5000}
             maxVisibleCards={2}
             containerHeight="100vh"
+            isConstrainedLayout={isConstrainedLayout}
           />
         </div>
       )}
@@ -252,6 +258,7 @@ export function ContactForm({
             popupInterval={3000}
             maxVisibleCards={1}
             containerHeight="50vh"
+            isConstrainedLayout={isConstrainedLayout}
           />
         </div>
       )}
