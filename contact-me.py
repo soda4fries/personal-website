@@ -347,7 +347,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["mahdinur.net", "https://mahdinur.net"]  
+    allow_origins=["mahdinur.net", "https://mahdinur.net"],  
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
