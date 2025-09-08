@@ -81,10 +81,10 @@ export const ui = {
       pageDescription:
         "Soda's personal website - where documentation and useful stuff go to rest in peace until I need them again.",
       heroGreeting: "Hi, I'm Soda",
-      heroSubtitlePart1: 'Computer Stuff',
-      heroSubtitlePart2: 'Reading',
+      heroSubtitlePart1: 'Under',
+      heroSubtitlePart2: 'Construction',
       heroIntroduction:
-        'My favorite thing is to RTFM. This is where all the useful stuff I find goes to rest in peace until I need it again. But if it helps you, even better!',
+        'My favorite thing is to read the manual. This is where all the useful stuff I find goes to rest in peace until I need it again. But if it helps you, even better!',
       heroViewWorkButton: 'Browse Stuff',
       heroContactButton: 'Contact',
       heroImageAlt:
