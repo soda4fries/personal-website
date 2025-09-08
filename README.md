@@ -35,34 +35,34 @@ bun run build
 bun run deploy
 ```
 
-# ✨ Features
+## ✨ Features
 
-## 📚 Blog System with MDX
+### 📚 Blog System with MDX
 - MDX support with embedded React components
 - Auto tagging and featured posts
 - Rich content with images and code blocks
 
-## 🔍 Full-Text Search
+### 🔍 Full-Text Search
 - Real-time search with highlighting
 - Tag filtering and search analytics
 
-## 💬 Anonymous Contact Form
+### 💬 Anonymous Contact Form
 - Backend to view message (Very simple)
 - Public message display with animations
 - Backend message management
 
-## 🏠 Auto Homepage Compilation
+### 🏠 Auto Homepage Compilation
 - Recent posts automatically displayed
 - Featured content with hero images
 
-## 📱 Asset Management
+### 📱 Asset Management
 - Auto image optimization in `src/assets/`
 - WebP conversion and responsive sizing
 - Lazy loading optimization
 
-# ⚙️ Configuration
+## ⚙️ Configuration
 
-## Site Settings
+### Site Settings
 
 You can customize your site's domain and other settings in `astro.config.mjs`:
 
