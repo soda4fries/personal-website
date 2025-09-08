@@ -40,11 +40,9 @@ bun run deploy
 ### 📚 Blog System with MDX
 - MDX support with embedded React components
 - Auto tagging and featured posts
-- Rich content with images and code blocks
-
-### 🔍 Full-Text Search
-- Real-time search with highlighting
-- Tag filtering and search analytics
+- Rich content with images and code blocks'
+- Search with highlighting
+- Tag filtering
 
 ### 💬 Anonymous Contact Form
 - Backend to view message (Very simple)
