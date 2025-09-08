@@ -4,7 +4,7 @@
   "icons": [
     {
       "src": "/favicons/dark-mode/web-app-manifest-192x192.png",
-      "sizes": "192x192",
+      "sizes": "192x128",
       "type": "image/png"
     },
     {
