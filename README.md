@@ -32,6 +32,31 @@ bun run dev
 bun run build
 ```
 
+## ✨ Features
+
+### 📚 Blog System with MDX
+- MDX support with embedded React components
+- Auto tagging and featured posts
+- Rich content with images and code blocks
+
+### 🔍 Full-Text Search
+- Real-time search with highlighting
+- Tag filtering and search analytics
+
+### 💬 Anonymous Contact Form
+- Backend to view message (Very simple)
+- Public message display with animations
+- Backend message management
+
+### 🏠 Auto Homepage Compilation
+- Recent posts automatically displayed
+- Featured content with hero images
+
+### 📱 Asset Management
+- Auto image optimization in `src/assets/`
+- WebP conversion and responsive sizing
+- Lazy loading optimization
+
 ## 📝 Adding Content
 
 ### Blog Posts
@@ -43,9 +68,11 @@ Create new blog posts in `src/features/blog/content/en/` as `.mdx` files:
 title: "Your Post Title"
 description: "Brief description"
 pubDate: 2025-01-01
+tags: ['tag1', 'tag2']
+featured: true
 ---
 
-Your blog content here...
+Your blog content with React components...
 ```
 
 ### About Me
