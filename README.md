@@ -30,6 +30,9 @@ bun run dev
 ```bash
 # Build for production
 bun run build
+
+# Deploy to Cloudflare Workers
+bun run deploy
 ```
 
 ## ✨ Features
@@ -106,4 +109,15 @@ This website is very fast and lightweight, achieving perfect 100/100 PageSpeed s
 - `bun run dev` - Start development server  
 - `bun run build` - Build for production
 - `bun run preview` - Preview production build
+- `bun run deploy` - Deploy to Cloudflare Workers
 - `bun run format` - Format code with Prettier
+
+## ☁️ Deployment
+
+This website is configured for deployment to Cloudflare Workers using Wrangler. The `wrangler.json` configuration file handles static asset serving from the `dist` folder.
+
+To deploy:
+1. Build the project: `bun run build`
+2. Deploy to Cloudflare: `bun run deploy`
+
+On first deployment, you'll be prompted to authenticate with Cloudflare and create a new Workers project.
