@@ -1,0 +1,70 @@
+---
+import { ChevronUp } from 'lucide-react';
+---
+
+<button
+  id="scroll-to-top"
+  class="fixed bottom-24 right-6 z-50 w-12 h-12 bg-primary text-primary-foreground rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 md:bottom-8 md:right-8 md:w-14 md:h-14"
+  aria-label="Scroll to top"
+>
+  <ChevronUp className="w-6 h-6 mx-auto md:w-7 md:h-7" />
+</button>
+
+<script>
+  const scrollToTopButton = document.getElementById('scroll-to-top');
+  
+  if (scrollToTopButton) {
+    // Show/hide button based on scroll position
+    function toggleScrollButton() {
+      if (window.scrollY > 300) {
+        scrollToTopButton.classList.remove('opacity-0', 'invisible');
+        scrollToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        scrollToTopButton.classList.remove('opacity-100', 'visible');
+        scrollToTopButton.classList.add('opacity-0', 'invisible');
+      }
+    }
+
+    // Smooth scroll to top
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Event listeners
+    window.addEventListener('scroll', toggleScrollButton);
+    scrollToTopButton.addEventListener('click', scrollToTop);
+
+    // Initial check
+    toggleScrollButton();
+  }
+
+  // Re-initialize on page transitions (for Astro view transitions)
+  document.addEventListener('astro:page-load', () => {
+    const button = document.getElementById('scroll-to-top');
+    if (button) {
+      function toggleScrollButton() {
+        if (window.scrollY > 300) {
+          button.classList.remove('opacity-0', 'invisible');
+          button.classList.add('opacity-100', 'visible');
+        } else {
+          button.classList.remove('opacity-100', 'visible');
+          button.classList.add('opacity-0', 'invisible');
+        }
+      }
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+
+      window.addEventListener('scroll', toggleScrollButton);
+      button.addEventListener('click', scrollToTop);
+      toggleScrollButton();
+    }
+  });
+</script>

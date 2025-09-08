@@ -39,6 +39,11 @@ export default defineConfig({
     defaultStrategy: 'viewport',
     prefetchAll: true,
   },
+  experimental: {
+    clientPrerender: true,
+    contentIntellisense: true,
+    chromeDevtoolsWorkspace: true,
+  },
 
   i18n: {
     locales: ['en'],

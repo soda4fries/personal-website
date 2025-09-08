@@ -104,12 +104,11 @@ const {
         <Image
           src={heroImage}
           alt={'User profile image'}
-          width={600}
-          height={368}
-          densities={[1, 1.5, 2]}
-          quality="high"
-          fetchpriority="high"
-          loading="eager"
+          widths={[320, 480, 600, 960, 1200, 1536]}
+          sizes="(max-width: 768px) 320px, (max-width: 1024px) 480px, 600px"
+          quality="max"
+          priority
+          decoding="async"
           class="h-full w-full object-cover relative z-10"
           style="object-position: center 28%;"
         />

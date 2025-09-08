@@ -4,6 +4,7 @@ import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import BottomAppBar from '@/components/BottomAppBar.astro';
+import ScrollToTop from '@/components/ScrollToTop.astro';
 import { Home, FileText, User, MessageSquare } from 'lucide-react';
 import { ClientRouter } from 'astro:transitions';
 
@@ -134,27 +135,28 @@ const heroImageOptimized2x = await getImage({
 
     <script is:inline>
       const getInitialTheme = () => {
-        if (
-          typeof localStorage !== 'undefined' &&
-          localStorage.getItem('theme')
-        ) {
-          return localStorage.getItem('theme');
+        const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null;
+        
+        if (stored) {
+          return stored;
         }
-        if (
-          window.matchMedia &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches
-        ) {
+        
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
           return 'dark';
         }
+        
         return 'dark';
       };
+      
       const theme = getInitialTheme();
+      
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
-      // Ensure localStorage is consistent if theme was derived from prefers-color-scheme
-      // or if localStorage was empty.
-      if (typeof localStorage !== 'undefined') {
+      
+      if (typeof localStorage !== 'undefined' && !localStorage.getItem('theme')) {
         localStorage.setItem('theme', theme);
       }
     </script>
@@ -227,6 +229,7 @@ const heroImageOptimized2x = await getImage({
       <Footer />
     </div>
     <BottomAppBar navItems={navItems} />
+    <ScrollToTop />
     <Toaster position="bottom-right" richColors client:load />
   </body>
 </html>
