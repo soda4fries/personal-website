@@ -189,7 +189,7 @@ export const ui = {
     },
 
     aboutMePage: {
-      metaTitle: 'About Me | Mohammad Mahdinur Rahman',
+      metaTitle: 'About Me',
       metaDescription:
         'Learn more about who I am',
       title: 'About Me',
