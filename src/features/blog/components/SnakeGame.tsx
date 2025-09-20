@@ -698,7 +698,7 @@ const SnakeGameWithQueue = () => {
 
           {/* Instructions */}
           <div className="mt-4 text-center text-sm text-gray-600">
-            <p>Arrow Keys / WASD to move • Space/Enter to start/restart</p>
+            <p>Arrow Keys / WASD to move • Enter to start/restart</p>
             {gameStarted && !gameOver && (
               <p className="mt-2 font-medium text-orange-500 animate-pulse">
                 Game in progress...
