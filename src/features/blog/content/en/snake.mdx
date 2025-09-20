@@ -1,0 +1,29 @@
+---
+lang: 'en'
+title: 'Snake Playground'
+description: 'A classic Snake game I built for my company 404 page, then got addicted and added pathfinding algorithms.'
+pubDate: 2025-09-20
+heroImage:
+  url: '../../../../assets/blog/snake-day-FEATURED-desktop.png'
+  alt: 'Classic Nokia-style Snake game on retro handheld device'
+tags: ['game', 'fun', 'interactive']
+isDraft: false
+featured: true
+relatedPosts: []
+---
+
+import SnakeGame from '@/features/blog/components/SnakeGame.tsx';
+
+# Snake Game
+
+I built this classic Snake game for my company's 404 page as a easter egg. Then I found it funny and kinda fun, got addicted for a day, and added pathfinding algorithms and efficiency tracking.
+
+The orange dots show the optimal path, and it tracks how efficiently you play compared to the computer's solution.
+
+<SnakeGame client:only="react" />
+
+The implementation uses React with a requestAnimationFrame game loop for smooth gameplay. I added an A* pathfinding algorithm that calculates the optimal route in real-time, plus an input queue system that buffers rapid key presses and applies them over two animation ticks (learned this the hard way because if you're going one way then turn the opposite direction, you'd crash into yourself). 
+
+The efficiency tracking compares your move count against the A* solution, so don't feel bad if you're "only" 70% efficient. Though if you're god-tier, you might get >100% since A* uses heuristics and isn't always perfect.
+
+Use arrow keys or WASD to play. Source code is available by clicking "Edit on GitHub" at the top of this page.
