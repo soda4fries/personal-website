@@ -1,39 +1,16 @@
 ---
 import { defaultLanguage, type LanguageCode } from '@/i18n/ui';
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LayoutDashboard } from "lucide-react"; // ⬅️ Import Lucide icon
+
 const currentLocale =
   (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
 ---
 
 <a href={getRelativeLocaleUrl(currentLocale)} class="group">
   <div class="flex items-center gap-2">
-    <!-- Simple server -->
-    <div
-      class="relative w-8 h-10 bg-gradient-to-b from-gray-700 to-gray-900 rounded shadow-sm group-hover:scale-105 transition-transform duration-200"
-    >
-      <!-- Server panels -->
-      <div class="absolute top-2 left-1 right-1 h-0.5 bg-gray-500"></div>
-      <div class="absolute top-4 left-1 right-1 h-0.5 bg-gray-500"></div>
-      <div class="absolute top-6 left-1 right-1 h-0.5 bg-gray-500"></div>
-      <!-- Status light -->
-      <div class="absolute top-1 right-1 w-1 h-1 bg-orange-500 rounded-full">
-      </div>
-      <!-- Simple flame -->
-      <div
-        class="absolute -top-2 left-1/2 transform -translate-x-1/2 text-orange-500 group-hover:scale-110 transition-transform duration-200"
-      >
-        🔥
-      </div>
-      <!-- Warning flying out on hover -->
-      <div
-        class="absolute -top-4 -right-2 text-red-500 text-xs opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300"
-      >
-        ⚠️
-      </div>
-    </div>
-    <span
-      class="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300"
-      >soda</span
-    >
+    <LayoutDashboard className="w-5 h-5 text-foreground group-hover:text-primary transition-colors duration-300" />
+    <span class="text-l text-foreground group-hover:text-primary transition-colors duration-300">
+    </span>
   </div>
 </a>
