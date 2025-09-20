@@ -42,7 +42,7 @@ interface PathNode {
   parent?: PathNode | null;
 }
 
-const GRID_SIZE = 20;
+const GRID_SIZE = 28;
 const INITIAL_SNAKE: Position[] = [{ x: 10, y: 10 }];
 const INITIAL_DIRECTION: Direction = { x: 0, y: -1 };
 const INITIAL_FOOD: Position = { x: 15, y: 15 };
@@ -98,13 +98,13 @@ const SnakeGameWithQueue = () => {
   const getGridSize = (): GridConfig => {
     if (typeof window === 'undefined') {
       return {
-        cellSize: 16,
+        cellSize: 19,
         gridSize: GRID_SIZE,
       };
     }
     const isMobile = window.innerWidth < 768;
     return {
-      cellSize: isMobile ? 12 : 16,
+      cellSize: isMobile ? 12 : 19,
       gridSize: GRID_SIZE,
     };
   };
@@ -698,7 +698,7 @@ const SnakeGameWithQueue = () => {
 
           {/* Instructions */}
           <div className="mt-4 text-center text-sm text-gray-600">
-            <p>Arrow Keys / WASD to move • Space/Enter to start/restart</p>
+            <p>Arrow Keys / WASD to move • Press Enter to start/restart</p>
             {gameStarted && !gameOver && (
               <p className="mt-2 font-medium text-orange-500 animate-pulse">
                 Game in progress...
