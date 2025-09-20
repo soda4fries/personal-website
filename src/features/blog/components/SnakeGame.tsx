@@ -137,7 +137,7 @@ const SnakeGameWithQueue = () => {
   }, []);
 
   // A* pathfinding to calculate shortest path to food
-  const findShortestPath = useCallback((start: Position, target: Position, snakeBody: Position[]): Position[] => {
+  const findShortestPath = useCallback((start: Position, target: Position, snakeBody: Position[], currentDirection?: Direction): Position[] => {
     const heuristic = (a: Position, b: Position): number => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     
     const openSet: PathNode[] = [{ ...start, g: 0, h: heuristic(start, target), f: heuristic(start, target), parent: null }];
@@ -186,6 +186,20 @@ const SnakeGameWithQueue = () => {
           continue;
         }
         
+        // Skip if this is the first move from start and it would go backwards
+        if (current.x === start.x && current.y === start.y && currentDirection) {
+          const moveDirection = { x: neighbor.x - current.x, y: neighbor.y - current.y };
+          const isOpposite = 
+            (currentDirection.x === 1 && moveDirection.x === -1) ||
+            (currentDirection.x === -1 && moveDirection.x === 1) ||
+            (currentDirection.y === 1 && moveDirection.y === -1) ||
+            (currentDirection.y === -1 && moveDirection.y === 1);
+          
+          if (isOpposite) {
+            continue;
+          }
+        }
+        
         const g = current.g + 1;
         const h = heuristic(neighbor, target);
         const f = g + h;
@@ -219,10 +233,10 @@ const SnakeGameWithQueue = () => {
   // Update shortest path whenever snake or food changes
   useEffect(() => {
     if (gameStarted && !gameOver && snake.length > 0) {
-      const path = findShortestPath(snake[0], food, snake.slice(1)); // Exclude head from obstacles
+      const path = findShortestPath(snake[0], food, snake.slice(1), direction); // Exclude head from obstacles
       setShortestPath(path);
     }
-  }, [snake, food, gameStarted, gameOver, findShortestPath]);
+  }, [snake, food, direction, gameStarted, gameOver, findShortestPath]);
 
   const resetGame = () => {
     if (gameLoopRef.current) {
@@ -249,7 +263,7 @@ const SnakeGameWithQueue = () => {
     lastMoveTimeRef.current = 0;
   };
 
-  // Smart direction change with immediate processing for first input
+  // Direction change with immediate processing for first input
   const changeDirection = useCallback((newDirection: Direction) => {
     if (!gameStateRef.current.gameStarted || gameStateRef.current.gameOver) return;
     
@@ -326,7 +340,7 @@ const SnakeGameWithQueue = () => {
     }
   }, []);
 
-  // High-frequency game loop using requestAnimationFrame
+    // Main game loop
   const gameLoop = useCallback((currentTime: number) => {
     if (!gameStateRef.current.gameStarted || gameStateRef.current.gameOver) {
       return;
@@ -415,7 +429,7 @@ const SnakeGameWithQueue = () => {
         setFood(newFood);
         
         // Calculate and store optimal path for next food
-        const newPath = findShortestPath(head, newFood, newSnake.slice(1));
+        const newPath = findShortestPath(head, newFood, newSnake.slice(1), currentDirection);
         const newOptimalMoves = newPath.length > 0 ? newPath.length - 1 : 0;
         setOptimalMoves(newOptimalMoves);
         setStoredOptimalMoves(newOptimalMoves);
@@ -427,7 +441,6 @@ const SnakeGameWithQueue = () => {
       lastMoveTimeRef.current = currentTime;
     }
 
-    // Continue the game loop
     gameLoopRef.current = requestAnimationFrame(gameLoop);
   }, [food, generateFood]);
 
@@ -571,7 +584,7 @@ const SnakeGameWithQueue = () => {
   const startGame = () => {
     setGameStarted(true);
     // Calculate and store initial optimal path when game starts
-    const initialPath = findShortestPath(INITIAL_SNAKE[0], INITIAL_FOOD, []);
+    const initialPath = findShortestPath(INITIAL_SNAKE[0], INITIAL_FOOD, [], INITIAL_DIRECTION);
     const initialOptimal = initialPath.length > 0 ? initialPath.length - 1 : 0;
     setOptimalMoves(initialOptimal);
     setStoredOptimalMoves(initialOptimal);
@@ -672,9 +685,6 @@ const SnakeGameWithQueue = () => {
                   <h3 className="text-3xl font-bold text-orange-500 mb-4">
                     Snake Game
                   </h3>
-                  <p className="text-lg mb-6 px-4 text-gray-600">
-                    Use arrow keys or WASD to move
-                  </p>
                   <button
                     onClick={startGame}
                     className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors duration-200 animate-pulse"
