@@ -99,7 +99,7 @@ export const ui = {
       mySkillsDescription: 'Tools I have used and am comfortable with',
     },
     blogPage: {
-      pageTitle: 'My Technical Blog',
+      pageTitle: 'My Blogs',
       pageDescription:
         'RTFM - Read The Friendly Manual. My personal blog where I document useful stuff I find so I do not forget it.',
       title: 'Documentation & Notes',
