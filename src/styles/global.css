@@ -297,6 +297,31 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Consistent hover pop-out effects */
+.hover-pop {
+  @apply transition-all duration-300 ease-out;
+}
+
+.hover-pop:hover {
+  @apply -translate-y-1 shadow-lg scale-[1.02];
+}
+
+.hover-pop-sm {
+  @apply transition-all duration-200 ease-out;
+}
+
+.hover-pop-sm:hover {
+  @apply -translate-y-0.5 shadow-md scale-[1.01];
+}
+
+.hover-pop-subtle {
+  @apply transition-all duration-250 ease-out;
+}
+
+.hover-pop-subtle:hover {
+  @apply shadow-md scale-[1.005];
+}
+
 .animated-background {
   position: fixed;
   top: 0;
