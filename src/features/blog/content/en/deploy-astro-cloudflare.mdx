@@ -1,0 +1,140 @@
+---
+lang: 'en'
+title: 'Deploy Your Astro Project to Cloudflare Pages'
+description: 'A complete guide to setting up an Astro project with useful integrations and deploying it to Cloudflare Pages using Wrangler.'
+pubDate: 2025-09-21
+heroImage:
+  url: '../../../../assets/blog/astro_cloudflare.webp'
+  alt: 'Astro and Cloudflare deployment guide'
+mtags: ['astro', 'cloudflare', 'deployment', 'wrangler', 'static-site']
+isDraft: false
+featured: true
+relatedPosts: []
+---
+
+import InfoAlert from '@/features/blog/components/InfoAlert.astro';
+
+# Deploy Your Astro Project to Cloudflare Pages
+
+This is how you can deploy your Astro project to Cloudflare Pages using Wrangler. You can alos use this guide to deploy any static site to Cloudflare Pages, just adjust the build commands and output directory as needed.
+
+## Creating Your Astro Project
+
+First, create a new Astro project or choose from the themes available at [astro.build/themes](https://astro.build/themes/). Follow the installation instructions provided by your chosen theme.
+
+## Useful Astro Integrations
+
+After exploring the [official integrations page](https://astro.build/integrations/), I found these most useful for my Astro projects:
+
+### Framework Integrations
+You can add popular JavaScript frameworks like **React**, **Vue**, **Svelte**, or **SolidJS** to your Astro project. These components work as [islands](https://docs.astro.build/en/concepts/islands/), only hydrating when needed for optimal performance. Check out the [official integrations page](https://astro.build/integrations/) for the complete list.
+
+### Content & Styling
+For content enhancement, **[@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/)** lets you embed interactive components directly in markdown content. **[@astrojs/tailwind](https://docs.astro.build/en/guides/integrations-guide/tailwind/)** provides a utility-first CSS framework with automatic optimization. For code highlighting, **[astro-expressive-code](https://expressive-code.com/)** offers advanced syntax highlighting with themes and interactive features. **[astro-embed](https://astro-embed.netlify.app/)** provides easy-to-use components for embedding social media posts, videos, and other external content.
+
+### Performance & SEO
+I optimize my sites with **[@playform/compress](https://github.com/PlayForm/Compress)** to automatically compress HTML, CSS, and JavaScript files. **[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)** generates XML sitemaps for better SEO. I use **[Astro Assets](https://docs.astro.build/en/guides/assets/)** for built-in image optimization with format conversion and lazy loading. **[@astrojs/partytown](https://docs.astro.build/en/guides/integrations-guide/partytown/)** runs third-party scripts in web workers for better performance.
+
+### Documentation Sites
+For documentation sites, **[@astrojs/starlight](https://starlight.astro.build/)** is pretty solid - it's a documentation theme built on Astro with search, navigation, and internationalization built in.
+
+### Install Integrations
+```bash
+# Example: Adding React and Tailwind
+npx astro add react tailwind
+
+# Or install manually
+npm install @astrojs/react @astrojs/tailwind
+```
+
+<InfoAlert>
+Check your theme's documentation to see which integrations are recommended or already configured.
+</InfoAlert>
+
+## Setting Up Cloudflare Deployment
+
+### 1. Install Wrangler
+
+Add Wrangler to your project dependencies:
+
+```bash
+npm install wrangler
+```
+
+Update your `package.json` scripts (replace `astro build` with your framework's build command):
+
+```json
+{
+  "scripts": {
+    "build": "astro build",
+    "deploy": "astro build && wrangler deploy"
+  }
+}
+```
+
+### 2. Create wrangler.json
+
+Create a `wrangler.json` file in your project root:
+
+```json
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-astro-site",
+  "compatibility_date": "2025-09-21",
+  "assets": {
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
+```
+
+### Configuration Options
+
+- **name**: Your Cloudflare Pages project name (will be used in the URL)
+- **compatibility_date**: Ensures your worker uses the latest Cloudflare features
+- **assets.directory**: Points to your build output folder (`./dist` for Astro)
+- **observability**: Enables analytics and logging in Cloudflare dashboard
+
+## Deploying to Cloudflare
+
+### First-Time Deployment
+
+1. Build your project:
+```bash
+npm run build
+```
+
+2. Deploy to Cloudflare:
+```bash
+npm run deploy
+```
+
+3. **Authentication**: Wrangler will open your browser and ask you to log in to Cloudflare
+4. **Project Creation**: A new Cloudflare worker will be created with the name from your `wrangler.json`
+5. **Deployment**: Your site will be deployed and you'll get a `.workers.dev` URL
+
+### Subsequent Deployments
+
+For future deployments, simply run:
+
+```bash
+npm run deploy
+```
+
+## Custom Domain Setup
+
+1. Go to your Cloudflare Dashboard
+2. Navigate to **Compute** → **Workers & Pages** 
+3. Select your worker
+4. Go to **Settings** → **Domains & Routes**
+5. Click "Set up a custom domain"
+6. Add your domain and follow the DNS configuration steps
+7. Cloudflare will automatically provision an SSL certificate
+
+<InfoAlert>
+If your domain is already managed by Cloudflare, the process is automatic. For external domains, you'll need to update your DNS records.
+</InfoAlert>
+
+Your Astro site is now live on Cloudflare's global edge network with automatic SSL, CDN, and lightning-fast performance!
