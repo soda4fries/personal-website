@@ -97,7 +97,7 @@
   --sidebar-accent-foreground: oklch(0.325 0 0);
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
-  --radius: 0.5rem;
+  --radius: 1rem;
   --shadow-2xs: 0 1px 3.5px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3.5px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm:
@@ -147,7 +147,7 @@
   --sidebar-accent-foreground: oklch(0.9674 0.0013 286.3752);
   --sidebar-border: oklch(0.2739 0.0055 286.0326);
   --sidebar-ring: oklch(0.8711 0.0055 286.286);
-  --radius: 0.5rem;
+  --radius: 1rem;
   --shadow-2xs: 0 1px 3.5px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3.5px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm:
@@ -196,12 +196,12 @@
 
 *::-webkit-scrollbar-track {
   background: transparent;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
 *::-webkit-scrollbar-thumb {
   background: oklch(var(--muted-foreground) / 0.15);
-  border-radius: 3px;
+  border-radius: 6px;
   border: none;
   transition: all 0.2s ease;
 }
@@ -243,7 +243,7 @@
 
 .card::-webkit-scrollbar-thumb {
   background: oklch(var(--muted-foreground) / 0.15);
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .card::-webkit-scrollbar-thumb:hover {
