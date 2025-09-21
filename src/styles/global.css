@@ -324,20 +324,20 @@ html {
   width: 100%;
   height: 100%;
   background-image:
-    linear-gradient(oklch(0.75 0.183 55.934 / 0.03) 1px, transparent 1px),
+    linear-gradient(oklch(0.75 0.183 55.934 / 0.08) 1px, transparent 1px),
     linear-gradient(
       90deg,
-      oklch(0.75 0.183 55.934 / 0.03) 1px,
+      oklch(0.75 0.183 55.934 / 0.08) 1px,
       transparent 1px
     ),
     radial-gradient(
       circle at 25% 25%,
-      oklch(0.75 0.183 55.934 / 0.04) 2px,
+      oklch(0.75 0.183 55.934 / 0.1) 2px,
       transparent 2px
     ),
     radial-gradient(
       circle at 75% 75%,
-      oklch(0.837 0.128 66.29 / 0.03) 1px,
+      oklch(0.837 0.128 66.29 / 0.08) 1px,
       transparent 1px
     );
   background-size:
