@@ -93,7 +93,7 @@ Create a `wrangler.json` file in your project root:
 ### Configuration Options
 
 - **name**: Your Cloudflare Pages project name (will be used in the URL)
-- **compatibility_date**: Ensures your worker uses the latest Cloudflare features
+- **compatibility_date**: Ensures your worker uses the correct runtime features (use today's date). Later if it won't break if cloudflare updates their runtime, for static sites it's not a big deal.
 - **assets.directory**: Points to your build output folder (`./dist` for Astro)
 - **observability**: Enables analytics and logging in Cloudflare dashboard
 
