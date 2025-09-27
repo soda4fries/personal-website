@@ -367,9 +367,6 @@ html {
     60px 60px,
     120px 120px,
     80px 80px;
-  animation: gridShift 30s linear infinite;
-  will-change: transform;
-  transform: translateZ(0);
 }
 
 .dark .animated-background .tech-grid {
@@ -584,14 +581,6 @@ html {
   animation-delay: -3s;
 }
 
-@keyframes gridShift {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(60px, 60px);
-  }
-}
 
 @keyframes flowDiagonalCorrect {
   0% {
