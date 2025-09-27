@@ -701,13 +701,11 @@ const SnakeGameWithQueue = () => {
 
           {/* Game Grid */}
           <div
-            className="relative grid gap-0 border-4 rounded-lg overflow-hidden touch-none select-none"
+            className="relative grid gap-0 border-2 rounded-lg overflow-hidden touch-none select-none bg-card border-orange-500"
             style={{
               gridTemplateColumns: `repeat(${GRID_SIZE}, ${gridConfig.cellSize}px)`,
               width: `${GRID_SIZE * gridConfig.cellSize}px`,
               height: `${GRID_SIZE * gridConfig.cellSize}px`,
-              backgroundColor: '#f9f9f9',
-              borderColor: '#FFA20C',
             }}
           >
             {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, index) => {
@@ -731,22 +729,14 @@ const SnakeGameWithQueue = () => {
               return (
                 <div
                   key={index}
-                  className={`${isFood ? 'rounded-full animate-pulse' : ''}`}
+                  className={`${isFood ? 'rounded-full animate-pulse bg-orange-600 dark:bg-orange-500' : ''} ${
+                    isHead ? 'bg-orange-600 dark:bg-orange-500' : ''
+                  } ${isSnake && !isHead ? 'bg-orange-500 dark:bg-orange-400' : ''} ${
+                    isPath ? 'border border-orange-500 dark:border-orange-400' : ''
+                  }`}
                   style={{
                     width: `${gridConfig.cellSize}px`,
                     height: `${gridConfig.cellSize}px`,
-                    backgroundColor: isFood
-                      ? '#FF6F00'
-                      : isHead
-                        ? '#FF6F00'
-                        : isSnake
-                          ? '#FFA20C'
-                          : isPath
-                            ? 'rgba(255, 111, 0, 0.2)'
-                            : 'transparent',
-                    border: isPath
-                      ? '1px solid rgba(255, 111, 0, 0.4)'
-                      : 'none',
                   }}
                 />
               );
@@ -754,17 +744,17 @@ const SnakeGameWithQueue = () => {
 
             {/* Game Over Overlay */}
             {gameOver && (
-              <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+              <div className="absolute inset-0 bg-card/95 backdrop-blur-sm flex items-center justify-center">
                 <div className="text-center px-4">
-                  <h3 className="text-3xl font-bold text-red-600 mb-4">
+                  <h3 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">
                     Game Over!
                   </h3>
-                  <p className="text-xl mb-6 text-orange-600">
+                  <p className="text-xl mb-6 text-orange-600 dark:text-orange-400">
                     Final Score: {score}
                   </p>
                   <button
                     onClick={resetGame}
-                    className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors duration-200"
+                    className="px-6 py-3 bg-orange-500 dark:bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-600 dark:hover:bg-orange-700 transition-colors duration-200"
                   >
                     Play Again
                   </button>
@@ -774,14 +764,14 @@ const SnakeGameWithQueue = () => {
 
             {/* Start Game Overlay */}
             {!gameStarted && !gameOver && (
-              <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+              <div className="absolute inset-0 bg-card/95 backdrop-blur-sm flex items-center justify-center">
                 <div className="text-center">
-                  <h3 className="text-3xl font-bold text-orange-500 mb-4">
+                  <h3 className="text-3xl font-bold text-orange-500 dark:text-orange-400 mb-4">
                     Snake Game
                   </h3>
                   <button
                     onClick={startGame}
-                    className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors duration-200 animate-pulse"
+                    className="px-6 py-3 bg-orange-500 dark:bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-600 dark:hover:bg-orange-700 transition-colors duration-200 animate-pulse"
                   >
                     Start Game
                   </button>
@@ -791,10 +781,10 @@ const SnakeGameWithQueue = () => {
           </div>
 
           {/* Instructions */}
-          <div className="mt-4 text-center text-sm text-gray-600">
+          <div className="mt-4 text-center text-sm text-muted-foreground">
             <p>Arrow Keys / WASD to move • Press Enter to start/restart</p>
             {gameStarted && !gameOver && (
-              <p className="mt-2 font-medium text-orange-500 animate-pulse">
+              <p className="mt-2 font-medium text-orange-500 dark:text-orange-400 animate-pulse">
                 Game in progress...
               </p>
             )}
@@ -804,24 +794,24 @@ const SnakeGameWithQueue = () => {
         {/* Stats and Queue Panels */}
         <div className="flex flex-col md:flex-row gap-4 w-full max-w-2xl">
           {/* Enhanced Stats Panel */}
-          <div className="bg-white rounded-lg shadow-md p-3 flex-1">
-            <h4 className="text-sm font-bold text-gray-800 mb-3">Game Stats</h4>
+          <div className="bg-card rounded-lg shadow-md p-3 flex-1">
+            <h4 className="text-sm font-bold text-foreground mb-3">Game Stats</h4>
 
             <div className="space-y-2">
               {/* Score & Length */}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Score:</span>
-                <span className="font-bold text-orange-500">{score}</span>
+                <span className="text-muted-foreground">Score:</span>
+                <span className="font-bold text-orange-500 dark:text-orange-400">{score}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Length:</span>
-                <span className="font-mono">{snake.length}</span>
+                <span className="text-muted-foreground">Length:</span>
+                <span className="font-mono text-foreground">{snake.length}</span>
               </div>
 
               {/* Move Efficiency */}
               <div className="border-t pt-2">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Current Efficiency:</span>
+                  <span className="text-muted-foreground">Current Efficiency:</span>
                   <span
                     className={`font-bold ${currentEfficiency >= 80 ? 'text-green-600' : currentEfficiency >= 60 ? 'text-yellow-600' : 'text-red-600'}`}
                   >
@@ -829,22 +819,22 @@ const SnakeGameWithQueue = () => {
                   </span>
                 </div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Average Efficiency:</span>
+                  <span className="text-muted-foreground">Average Efficiency:</span>
                   <span
                     className={`font-bold ${averageEfficiency >= 80 ? 'text-green-600' : averageEfficiency >= 60 ? 'text-yellow-600' : 'text-red-600'}`}
                   >
                     {averageEfficiency}%
                   </span>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Moves made:</span>
                   <span>{moveCount}</span>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Optimal moves:</span>
                   <span>{storedOptimalMoves}</span>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Food collected:</span>
                   <span>{totalFoodCollected}</span>
                 </div>
@@ -853,25 +843,25 @@ const SnakeGameWithQueue = () => {
               {/* Path Info */}
               <div className="border-t pt-2">
                 <div className="flex justify-between items-center text-sm mb-2">
-                  <span className="text-gray-600">Training Path:</span>
+                  <span className="text-muted-foreground">Training Path:</span>
                   <button
                     onClick={() => setShowTrainingPath(!showTrainingPath)}
                     className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
                       showTrainingPath
-                        ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-orange-500 text-white hover:bg-orange-600'
+                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
                     }`}
                   >
                     {showTrainingPath ? 'ON' : 'OFF'}
                   </button>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Current path:</span>
-                  <span className="text-blue-600">
+                  <span className="text-muted-foreground">Current path:</span>
+                  <span className="text-blue-600 dark:text-blue-400">
                     {shortestPath.length > 0 ? shortestPath.length - 1 : 0}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-muted-foreground mt-1">
                   {shortestPath.length === 0
                     ? 'No path available'
                     : showTrainingPath
@@ -881,9 +871,9 @@ const SnakeGameWithQueue = () => {
               </div>
 
               {/* Game Status */}
-              <div className="border-t pt-2 text-sm">
+              <div className="border-t border-border pt-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Status:</span>
+                  <span className="text-muted-foreground">Status:</span>
                   <span
                     className={
                       gameOver
@@ -901,41 +891,41 @@ const SnakeGameWithQueue = () => {
           </div>
 
           {/* Queue Action Panel */}
-          <div className="bg-white rounded-lg shadow-md p-3 flex-1">
-            <h4 className="text-sm font-bold text-gray-800 mb-3">
+          <div className="bg-card rounded-lg shadow-md p-3 flex-1">
+            <h4 className="text-sm font-bold text-foreground mb-3">
               Queue Action
             </h4>
 
             <div className="space-y-2">
               {/* Current Direction */}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-600">Current:</span>
-                <span className="text-lg font-bold text-orange-500">
+                <span className="text-muted-foreground">Current:</span>
+                <span className="text-lg font-bold text-orange-500 dark:text-orange-400">
                   {getDirectionName(direction)}
                 </span>
               </div>
 
               {/* Direction Queue */}
-              <div className="border-t pt-2">
+              <div className="border-t border-border pt-2">
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-gray-600">Queue:</span>
-                  <span className="text-gray-500">
+                  <span className="text-muted-foreground">Queue:</span>
+                  <span className="text-muted-foreground">
                     {directionQueue.length}/2
                   </span>
                 </div>
                 <div className="min-h-[40px] space-y-1">
                   {directionQueue.length === 0 ? (
-                    <div className="text-gray-400 italic text-xs text-center py-2">
+                    <div className="text-muted-foreground italic text-xs text-center py-2">
                       Empty
                     </div>
                   ) : (
                     directionQueue.map((dir, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-blue-50 px-2 py-1 rounded text-xs"
+                        className="flex items-center justify-between bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded text-xs"
                       >
-                        <span className="text-lg">{getDirectionName(dir)}</span>
-                        <span className="bg-blue-200 text-blue-800 px-1 rounded text-xs">
+                        <span className="text-lg text-foreground">{getDirectionName(dir)}</span>
+                        <span className="bg-blue-500 text-white px-1 rounded text-xs">
                           #{index + 1}
                         </span>
                       </div>
@@ -945,8 +935,8 @@ const SnakeGameWithQueue = () => {
               </div>
 
               {/* Action History */}
-              <div className="border-t pt-2">
-                <h5 className="text-xs text-gray-600 mb-1">
+              <div className="border-t border-border pt-2">
+                <h5 className="text-xs text-muted-foreground mb-1">
                   Action History (last 10):
                 </h5>
                 <div className="max-h-32 overflow-y-auto space-y-1">
@@ -957,17 +947,17 @@ const SnakeGameWithQueue = () => {
                       const getActionColor = (type: string) => {
                         switch (type) {
                           case 'applied_immediate':
-                            return 'bg-green-100 text-green-800';
+                            return 'bg-green-500/10 text-green-700 dark:text-green-400';
                           case 'applied_queue':
-                            return 'bg-blue-100 text-blue-800';
+                            return 'bg-blue-500/10 text-blue-700 dark:text-blue-400';
                           case 'queued':
-                            return 'bg-yellow-100 text-yellow-800';
+                            return 'bg-orange-500/10 text-orange-700 dark:text-orange-400';
                           case 'cancelled':
-                            return 'bg-red-100 text-red-800';
+                            return 'bg-red-500/10 text-red-700 dark:text-red-400';
                           case 'game_over':
-                            return 'bg-purple-100 text-purple-800';
+                            return 'bg-red-500/10 text-red-700 dark:text-red-400';
                           default:
-                            return 'bg-gray-100 text-gray-800';
+                            return 'bg-muted text-muted-foreground';
                         }
                       };
 
@@ -977,19 +967,19 @@ const SnakeGameWithQueue = () => {
                       ) => {
                         switch (type) {
                           case 'applied_immediate':
-                            return 'Applied ↗';
+                            return 'Applied';
                           case 'applied_queue':
-                            return 'Applied ⚡';
+                            return 'Applied';
                           case 'queued':
-                            return 'Queued 📝';
+                            return 'Queued';
                           case 'cancelled':
                             return reason === 'opposite'
-                              ? 'Blocked ⚠'
-                              : 'Ignored 🔄';
+                              ? 'Blocked'
+                              : 'Ignored';
                           case 'game_over':
                             return reason === 'wall'
-                              ? 'Hit Wall 💥'
-                              : 'Hit Self 💀';
+                              ? 'Hit Wall'
+                              : 'Hit Self';
                           default:
                             return type;
                         }
@@ -1001,16 +991,16 @@ const SnakeGameWithQueue = () => {
                           className="flex items-center justify-between text-xs"
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-base">
+                            <span className="text-base text-foreground">
                               {getDirectionName(action.direction)}
                             </span>
                             <span
-                              className={`px-1 rounded text-xs ${getActionColor(action.type)}`}
+                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${getActionColor(action.type)}`}
                             >
                               {getActionLabel(action.type, action.reason)}
                             </span>
                           </div>
-                          <span className="text-gray-400 text-xs">
+                          <span className="text-muted-foreground text-xs">
                             {new Date(action.timestamp)
                               .toLocaleTimeString()
                               .split(' ')[0]
@@ -1022,7 +1012,7 @@ const SnakeGameWithQueue = () => {
                       );
                     })}
                   {actionHistory.length === 0 && (
-                    <div className="text-gray-400 italic text-xs text-center py-2">
+                    <div className="text-muted-foreground italic text-xs text-center py-2">
                       No actions yet
                     </div>
                   )}
@@ -1030,13 +1020,13 @@ const SnakeGameWithQueue = () => {
               </div>
 
               {/* Compact Game State */}
-              <div className="border-t pt-2 text-xs space-y-1">
+              <div className="border-t border-border pt-2 text-xs space-y-1">
                 <div className="flex justify-between">
-                  <span>Length:</span>
-                  <span className="font-mono">{snake.length}</span>
+                  <span className="text-muted-foreground">Length:</span>
+                  <span className="font-mono text-foreground">{snake.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Status:</span>
+                  <span className="text-muted-foreground">Status:</span>
                   <span
                     className={
                       gameOver
