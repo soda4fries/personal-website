@@ -337,10 +337,7 @@ html {
   backface-visibility: hidden;
 }
 
-/* Blur animated background only on content pages */
-.content-page .animated-background {
-  filter: blur(2px);
-}
+/* Background styling for content pages*/
 
 .animated-background .tech-grid {
   position: absolute;
