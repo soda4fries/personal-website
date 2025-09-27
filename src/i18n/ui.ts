@@ -76,8 +76,7 @@ export const ui = {
       rights: 'All rights reserved.',
     },
     homePage: {
-      pageTitle:
-        'Home | Mohammad Mahdinur Rahman - Personal Website',
+      pageTitle: 'Home | Mohammad Mahdinur Rahman - Personal Website',
       pageDescription:
         "Soda's personal website - where documentation and useful stuff go to rest in peace until I need them again.",
       heroGreeting: "Hi, I'm Soda",
@@ -190,11 +189,9 @@ export const ui = {
 
     aboutMePage: {
       metaTitle: 'About Me',
-      metaDescription:
-        'Learn more about who I am',
+      metaDescription: 'Learn more about who I am',
       title: 'About Me',
-      description:
-        'Learn more about who I am',
+      description: 'Learn more about who I am',
       noContent: 'No content to display at the moment.',
       readMore: 'Read more',
       backToList: 'Back to list',

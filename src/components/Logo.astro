@@ -1,7 +1,7 @@
 ---
 import { defaultLanguage, type LanguageCode } from '@/i18n/ui';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { LayoutDashboard } from "lucide-react"; // ⬅️ Import Lucide icon
+import { LayoutDashboard } from 'lucide-react'; // ⬅️ Import Lucide icon
 
 const currentLocale =
   (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
@@ -9,8 +9,12 @@ const currentLocale =
 
 <a href={getRelativeLocaleUrl(currentLocale)} class="group">
   <div class="flex items-center gap-2">
-    <LayoutDashboard className="w-5 h-5 text-foreground group-hover:text-primary transition-colors duration-300" />
-    <span class="text-l text-foreground group-hover:text-primary transition-colors duration-300">
+    <LayoutDashboard
+      className="w-5 h-5 text-foreground group-hover:text-primary transition-colors duration-300"
+    />
+    <span
+      class="text-l text-foreground group-hover:text-primary transition-colors duration-300"
+    >
     </span>
   </div>
 </a>

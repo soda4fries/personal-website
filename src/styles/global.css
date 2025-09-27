@@ -389,7 +389,6 @@ html {
     );
 }
 
-
 .animated-background .flowing-lines {
   position: absolute;
   top: 0;
@@ -581,7 +580,6 @@ html {
   left: 85%;
   animation-delay: -3s;
 }
-
 
 @keyframes flowDiagonalCorrect {
   0% {

@@ -365,8 +365,9 @@ export function PublicMessagesDisplay({
   if (simpleMode) {
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
     const [cardKey, setCardKey] = useState(0);
-    const [animationType, setAnimationType] = useState<VisibleMessage['animationType']>('fadeIn');
-    
+    const [animationType, setAnimationType] =
+      useState<VisibleMessage['animationType']>('fadeIn');
+
     // Animation types array
     const animationTypes: VisibleMessage['animationType'][] = [
       'slideUp',
@@ -376,16 +377,21 @@ export function PublicMessagesDisplay({
       'slideRight',
       'zoomIn',
     ];
-    
+
     // Cycle through messages randomly with popup animations
     useEffect(() => {
       if (messages.length === 0 || isLoading) return;
 
-      const interval = setInterval(() => {
-        setCurrentMessageIndex(Math.floor(Math.random() * messages.length));
-        setAnimationType(animationTypes[Math.floor(Math.random() * animationTypes.length)]);
-        setCardKey(prev => prev + 1); // Force re-render with new animation
-      }, Math.min(popupInterval, 2500)); // Cap at 2.5 seconds max
+      const interval = setInterval(
+        () => {
+          setCurrentMessageIndex(Math.floor(Math.random() * messages.length));
+          setAnimationType(
+            animationTypes[Math.floor(Math.random() * animationTypes.length)]
+          );
+          setCardKey((prev) => prev + 1); // Force re-render with new animation
+        },
+        Math.min(popupInterval, 2500)
+      ); // Cap at 2.5 seconds max
 
       return () => clearInterval(interval);
     }, [messages.length, isLoading, popupInterval]);
@@ -398,7 +404,7 @@ export function PublicMessagesDisplay({
     }, [messages.length, isLoading, currentMessageIndex]);
 
     const currentMessage = messages[currentMessageIndex];
-    
+
     return (
       <div
         className="w-full bg-gradient-to-br from-background/20 via-muted/5 to-muted/10 rounded-lg overflow-hidden"
@@ -409,7 +415,9 @@ export function PublicMessagesDisplay({
           <div className="flex items-center justify-center h-full">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
-              <span className="text-sm text-muted-foreground">Loading messages...</span>
+              <span className="text-sm text-muted-foreground">
+                Loading messages...
+              </span>
             </div>
           </div>
         )}
@@ -424,7 +432,10 @@ export function PublicMessagesDisplay({
               </span>
             </div>
             <div className="flex-1 flex items-center">
-              <Card key={cardKey} className={`w-full ${getAnimationClass(animationType, false)}`}>
+              <Card
+                key={cardKey}
+                className={`w-full ${getAnimationClass(animationType, false)}`}
+              >
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-start gap-3 text-sm">
                     <MessageSquare className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
@@ -480,7 +491,9 @@ export function PublicMessagesDisplay({
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <MessageSquare className="w-8 h-8 mx-auto text-muted-foreground/60 mb-2" />
-              <p className="text-muted-foreground/60 text-sm">No public messages yet</p>
+              <p className="text-muted-foreground/60 text-sm">
+                No public messages yet
+              </p>
             </div>
           </div>
         )}

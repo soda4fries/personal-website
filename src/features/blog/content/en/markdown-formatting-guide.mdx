@@ -14,7 +14,12 @@ relatedPosts: []
 
 import InfoAlert from '@/features/blog/components/InfoAlert.astro';
 import StackBlitzEmbed from '@/features/blog/components/StackBlitzEmbed.astro';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { Button } from '@/components/ui/button.tsx';
@@ -28,20 +33,28 @@ A showcase of all available formatting features in this blog system.
 
 ## Text & Headers
 
-**Bold**, *italic*, ***both***, ~~strikethrough~~, `inline code`, [links](https://example.com)
+**Bold**, _italic_, **_both_**, ~~strikethrough~~, `inline code`, [links](https://example.com)
 
-<Badge variant="secondary" className="my-2">Custom Badge</Badge>
+<Badge variant="secondary" className="my-2">
+  Custom Badge
+</Badge>
 
 ## Headers 1-6
 
 # Header 1
-## Header 2  
+
+## Header 2
+
 ### Header 3
+
 #### Header 4
+
 ##### Header 5
+
 ###### Header 6
 
 ## Lists
+
 - Unordered item
   - Nested item
 - [x] Completed task
@@ -53,7 +66,7 @@ A showcase of all available formatting features in this blog system.
 
 ## Alerts & Quotes
 
-> Standard blockquote with *formatting*
+> Standard blockquote with _formatting_
 
 <InfoAlert title="Custom Alert">
   Alert component with **markdown** support!
@@ -62,13 +75,14 @@ A showcase of all available formatting features in this blog system.
 ## Code Examples
 
 ### Basic Usage
+
 `inline code`, plain blocks, and syntax highlighting:
 
 ```javascript title="example.js" {2,5} ins={3}
 const config = {
   apiUrl: 'https://api.example.com',
   timeout: 5000,
-  retries: 3
+  retries: 3,
 };
 ```
 
@@ -86,15 +100,15 @@ src/
 
 ## Tables
 
-| Language | Use Case | Rating |
-|----------|----------|--------|
-| JavaScript | Web Dev | ⭐⭐⭐⭐⭐ |
-| Python | AI/Data | ⭐⭐⭐⭐⭐ |
-| Rust | Systems | ⭐⭐⭐ |
+| Language   | Use Case | Rating     |
+| ---------- | -------- | ---------- |
+| JavaScript | Web Dev  | ⭐⭐⭐⭐⭐ |
+| Python     | AI/Data  | ⭐⭐⭐⭐⭐ |
+| Rust       | Systems  | ⭐⭐⭐     |
 
 ## Images
 
-![Standard Image](../../../../assets/placeholder.webp "Tooltip text")
+![Standard Image](../../../../assets/placeholder.webp 'Tooltip text')
 
 <Image
   src={placeholderImage}
@@ -106,7 +120,7 @@ src/
 
 ## Interactive Components
 
-*This is a live React component with full interactivity:*
+_This is a live React component with full interactivity:_
 
 <CounterButton client:idle />
 
@@ -132,10 +146,10 @@ Keyboard shortcuts: <kbd>Ctrl</kbd> + <kbd>C</kbd>
 ✅ **Code**: Syntax highlighting, line numbers, diffs, titles  
 ✅ **Components**: React/Astro integration, cards, alerts  
 ✅ **Media**: Optimized images, responsive design  
-✅ **HTML**: Custom styling with Tailwind CSS  
+✅ **HTML**: Custom styling with Tailwind CSS
 
 <InfoAlert title="📚 Cheat Sheet">
   Mix **markdown**, React components, and HTML for rich content!
 </InfoAlert>
 
-*Complete formatting reference for this blog system.*
+_Complete formatting reference for this blog system._

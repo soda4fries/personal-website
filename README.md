@@ -38,6 +38,7 @@ bun run deploy
 ## ✨ Features
 
 ### 📚 Blog System with MDX
+
 - MDX support with embedded React components
 - Auto tagging and featured posts
 - Rich content with images and code blocks'
@@ -45,15 +46,18 @@ bun run deploy
 - Tag filtering
 
 ### 💬 Anonymous Contact Form
+
 - Backend to view message (Very simple)
 - Public message display with animations
 - Backend message management
 
 ### 🏠 Auto Homepage Compilation
+
 - Recent posts automatically displayed
 - Featured content with hero images
 
 ### 📱 Asset Management
+
 - Auto image optimization in `src/assets/`
 - WebP conversion and responsive sizing
 - Lazy loading optimization
@@ -73,7 +77,7 @@ You can customize your site's domain and other settings in `astro.config.mjs`:
 
 ```javascript
 export default defineConfig({
-  site: 'https://yourdomain.com',    // Your site URL
+  site: 'https://yourdomain.com', // Your site URL
   // ... other settings
 });
 
@@ -89,8 +93,8 @@ Create new blog posts in `src/features/blog/content/en/` as `.mdx` files:
 
 ```markdown
 ---
-title: "Your Post Title"
-description: "Brief description"
+title: 'Your Post Title'
+description: 'Brief description'
 pubDate: 2025-01-01
 tags: ['tag1', 'tag2']
 featured: true
@@ -121,16 +125,18 @@ The contact form uses a Python FastAPI backend (`contact-me.py`) that provides b
 ### Setup
 
 Set your admin password as an environment variable:
+
 ```bash
 export CONTACT_ADMIN_PASSWORD=your_secure_password
 ```
 
 Run the setup script to configure:
+
 ```bash
 # Linux/Mac
 ./setup-contact.sh
 
-# Windows  
+# Windows
 setup-contact.bat
 ```
 
@@ -147,13 +153,13 @@ The backend starts both the API server and an interactive CLI for message manage
 
 This website is very fast and lightweight, achieving perfect 100/100 PageSpeed scores on both desktop and mobile.
 
-| Desktop | Mobile |
-|---------|--------|
+| Desktop                                   | Mobile                                    |
+| ----------------------------------------- | ----------------------------------------- |
 | ![Desktop PageSpeed](pagespeed/image.png) | ![Mobile PageSpeed](pagespeed/mobile.png) |
 
 ## 🛠️ Available Scripts
 
-- `bun run dev` - Start development server  
+- `bun run dev` - Start development server
 - `bun run build` - Build for production
 - `bun run preview` - Preview production build
 - `bun run deploy` - Deploy to Cloudflare Workers
@@ -164,6 +170,7 @@ This website is very fast and lightweight, achieving perfect 100/100 PageSpeed s
 This website is configured for deployment to Cloudflare Workers using Wrangler. The `wrangler.json` configuration file handles static asset serving from the `dist` folder.
 
 To deploy:
+
 1. Build the project: `bun run build`
 2. Deploy to Cloudflare: `bun run deploy`
 

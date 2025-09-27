@@ -76,13 +76,17 @@ export function ContactForm({
 
       const shouldUseConstrainedLayout =
         isSmallLandscape || !hasEnoughSideSpace || !hasEnoughVerticalSpace;
-      
+
       // If transitioning from constrained to non-constrained layout while in messages mode,
       // automatically switch back to send mode to prevent getting stuck
-      if (isConstrainedLayout && !shouldUseConstrainedLayout && showMessagesOnly) {
+      if (
+        isConstrainedLayout &&
+        !shouldUseConstrainedLayout &&
+        showMessagesOnly
+      ) {
         setShowMessagesOnly(false);
       }
-      
+
       setIsConstrainedLayout(shouldUseConstrainedLayout);
     };
 

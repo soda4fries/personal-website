@@ -135,28 +135,37 @@ const heroImageOptimized2x = await getImage({
 
     <script is:inline>
       const getInitialTheme = () => {
-        const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null;
-        
+        const stored =
+          typeof localStorage !== 'undefined'
+            ? localStorage.getItem('theme')
+            : null;
+
         if (stored) {
           return stored;
         }
-        
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+
+        if (
+          window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches
+        ) {
           return 'dark';
         }
-        
+
         return 'dark';
       };
-      
+
       const theme = getInitialTheme();
-      
+
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
-      
-      if (typeof localStorage !== 'undefined' && !localStorage.getItem('theme')) {
+
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
         localStorage.setItem('theme', theme);
       }
     </script>

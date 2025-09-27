@@ -43,7 +43,10 @@ function BreadcrumbLink({
   return (
     <Comp
       data-slot="breadcrumb-link"
-      className={cn('hover:text-foreground transition-all duration-200 ease-out hover:scale-105', className)}
+      className={cn(
+        'hover:text-foreground transition-all duration-200 ease-out hover:scale-105',
+        className
+      )}
       {...props}
     />
   );

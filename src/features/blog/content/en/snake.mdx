@@ -20,7 +20,7 @@ The orange dots show the optimal path, and it tracks how efficiently you play co
 
 <SnakeGame client:only="react" />
 
-The implementation uses React with a requestAnimationFrame game loop. I added an A* pathfinding algorithm that calculates the optimal route in real-time, plus an input queue system that buffers rapid key presses and applies them over two animation ticks (learned this the hard way because if you're going one way, then turn, then go the opposite direction of before turn, you'd crash into yourself). 
+The implementation uses React with a requestAnimationFrame game loop. I added an A\* pathfinding algorithm that calculates the optimal route in real-time, plus an input queue system that buffers rapid key presses and applies them over two animation ticks (learned this the hard way because if you're going one way, then turn, then go the opposite direction of before turn, you'd crash into yourself).
 
 The efficiency tracking compares your move count against the A* solution, so don't feel bad if you're "only" 70% efficient. Though if you're god-tier, you might get >100% since A* uses heuristics and isn't always perfect.
 

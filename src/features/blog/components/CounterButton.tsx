@@ -6,7 +6,7 @@ export function CounterButton() {
 
   return (
     <div className="flex items-center justify-center p-6 bg-card border rounded-lg">
-      <Button 
+      <Button
         variant="default"
         onClick={() => setCount(count + 1)}
         className="text-lg px-6 py-3"

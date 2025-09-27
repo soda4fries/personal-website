@@ -27,18 +27,23 @@ First, create a new Astro project or choose from the themes available at [astro.
 After exploring the [official integrations page](https://astro.build/integrations/), I found these most useful for my Astro projects:
 
 ### Framework Integrations
+
 You can add popular JavaScript frameworks like **React**, **Vue**, **Svelte**, or **SolidJS** to your Astro project. These components work as [islands](https://docs.astro.build/en/concepts/islands/), only hydrating when needed for optimal performance. Check out the [official integrations page](https://astro.build/integrations/) for the complete list.
 
 ### Content & Styling
+
 For content, **[@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/)** lets you embed interactive components directly in markdown content. **[@astrojs/tailwind](https://docs.astro.build/en/guides/integrations-guide/tailwind/)** is good for CSS. For code highlighting, **[astro-expressive-code](https://expressive-code.com/)** gives syntax highlighting and the code sections you in this blog. **[astro-embed](https://astro-embed.netlify.app/)** provides easy-to-use components for embedding social media posts, videos, and other external content.
 
 ### Performance & SEO
-You can use **[@playform/compress](https://github.com/PlayForm/Compress)** to automatically compress HTML, CSS, and JavaScript files. **[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)** generates XML sitemaps for better SEO. I use **[Astro Assets](https://docs.astro.build/en/guides/assets/)** for built-in image optimization with format conversion, It will auto generate various image of various sizes automatically if you create the srcsets. 
+
+You can use **[@playform/compress](https://github.com/PlayForm/Compress)** to automatically compress HTML, CSS, and JavaScript files. **[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)** generates XML sitemaps for better SEO. I use **[Astro Assets](https://docs.astro.build/en/guides/assets/)** for built-in image optimization with format conversion, It will auto generate various image of various sizes automatically if you create the srcsets.
 
 ### Documentation Sites
+
 For documentation sites, **[@astrojs/starlight](https://starlight.astro.build/)** is pretty good - it's a documentation theme built on Astro with search, navigation, and internationalization built in.
 
 ### Install Integrations
+
 ```bash
 # Example: Adding React and Tailwind
 npx astro add react tailwind
@@ -48,7 +53,8 @@ npm install @astrojs/react @astrojs/tailwind
 ```
 
 <InfoAlert>
-Check your theme's documentation to see which integrations are recommended or already configured.
+  Check your theme's documentation to see which integrations are recommended or
+  already configured.
 </InfoAlert>
 
 ## Setting Up Cloudflare Deployment
@@ -102,11 +108,13 @@ Create a `wrangler.json` file in your project root:
 ### First-Time Deployment
 
 1. Build your project:
+
 ```bash
 npm run build
 ```
 
 2. Deploy to Cloudflare:
+
 ```bash
 npm run deploy
 ```
@@ -126,7 +134,7 @@ npm run deploy
 ## Custom Domain Setup
 
 1. Go to your [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Navigate to **Compute** → **Workers & Pages** 
+2. Navigate to **Compute** → **Workers & Pages**
 3. Select your worker
 4. Go to **Settings** → **Domains & Routes**
 5. Click "Set up a custom domain"
@@ -134,7 +142,8 @@ npm run deploy
 7. Cloudflare will automatically provision an SSL certificate
 
 <InfoAlert>
-If your domain is already managed by Cloudflare, the process is automatic. For external domains, you'll need to update your DNS records.
+  If your domain is already managed by Cloudflare, the process is automatic. For
+  external domains, you'll need to update your DNS records.
 </InfoAlert>
 
 Your Astro site is now live on Cloudflare's global edge network with automatic SSL, CDN, and lightning-fast performance!
