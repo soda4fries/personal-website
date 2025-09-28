@@ -553,7 +553,7 @@ For temporary data that doesn't need to be persisted or that important, it is fa
 https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-UNLOGGED
 
 #### Partitioning
-For large tables, it is useful to partition them to improve performance but make sure the tables are large and you have good key where queries are in the same partition and can prune other partitions.
+For large tables, it is useful to partition them to improve performance but make sure the tables are large, you have good key where queries are in the same partition and can prune other partitions.
 
 #### JSONB
 For semi-structured data, it is different from json data type, and it can actually parse and index the data. 
