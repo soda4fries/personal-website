@@ -415,8 +415,8 @@ spec:
       wal_level: "logical" # read the documentation for more details.
       effective_cache_size: "150GB" # 75% of RAM
       maintenance_work_mem: "2GB" # for vacuum and index creation, default is much lower
-      min_wal_size: "1GB" # minimum size of WAL files. It's not the size of each segment, rather for wal file recycling
-      max_wal_size: "4GB" # maximum size of WAL files before a checkpoint is triggered
+      min_wal_size: "2GB" # minimum size of WAL files. It's not the size of each segment, rather for wal file recycling
+      max_wal_size: "16GB" # maximum size of WAL files before a checkpoint is triggered
       random_page_cost: "1.2" # for planner heuristics (seq scan vs index scan), set lower for SSDs, higher for HDDs 
 ```
 
@@ -569,5 +569,7 @@ https://www.postgresql.org/docs/current/datatype-textsearch.html
 This is by default on, but you can turn it off for better performance if you can afford some data loss in case of crash. It is different from fsync off options, which can cause data corruption and you probably shouldn't use. Making it off will make the commit return as soon as the data is written to the WAL buffer, but not flushed to disk. So in case of crash you can lose some transactions that are not flushed to disk, this can cause transaction to be lost but will cleanly rollback - client will think it's committed but it is not in the database. 
 
 The max amount of transaction lost will be 3*wal_writer_delay, which is 200ms by default, so 600ms of transactions can be lost in case of crash worst case, but if any sync transaction is committed nothing will be lost. The good thing about this is it can be applied per session or per transaction, so you can use it for non-critical transactions. 
+
+This will not make all write actually asynchronous, only the commit to wal, so if your write latency is bottenecked by the more common `max_wal_size`, it will still block because WAL checkpointing will block you.
 
 https://www.postgresql.org/docs/current/runtime-config-wal.html#GUC-SYNCHRONOUS-COMMIT
