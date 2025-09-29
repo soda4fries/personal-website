@@ -416,7 +416,7 @@ spec:
       effective_cache_size: "150GB" # 75% of RAM
       maintenance_work_mem: "2GB" # for vacuum and index creation, default is much lower
       min_wal_size: "2GB" # minimum size of WAL files. It's not the size of each segment, rather for wal file recycling
-      max_wal_size: "16GB" # maximum size of WAL files before a checkpoint is triggered
+      max_wal_size: "16GB" # maximum size of WAL files before a checkpoint is triggered, too big will increase crash recovery time.
       random_page_cost: "1.2" # for planner heuristics (seq scan vs index scan), set lower for SSDs, higher for HDDs 
 ```
 
