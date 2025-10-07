@@ -4,6 +4,8 @@ import react from '@astrojs/react';
 
 import mdx from '@astrojs/mdx';
 import expressiveCode from 'astro-expressive-code';
+import sitemap from '@astrojs/sitemap';
+
 
 import tailwindcss from '@tailwindcss/vite';
 import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
@@ -32,6 +34,7 @@ export default defineConfig({
       remarkPlugins: [remarkReadingTime],
       syntaxHighlight: false, // Disable MDX syntax highlighting since expressive-code handles it
     }),
+    sitemap(),
     (await import('@playform/compress')).default(),
   ],
 
